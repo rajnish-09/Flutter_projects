@@ -1,3 +1,17 @@
+# Sensitive Information (Crucial!)
+.env
+.env.*
+*.jks
+*.keystore
+local.properties
+
+# Web Related
+.web_entrypoint.dart
+.tool-cache/
+
+# Testing related
+/test_driver/
+
 # Miscellaneous
 *.class
 *.log
