@@ -1,3 +1,4 @@
+import 'package:bmi_calculator/bmi_display.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import './gender_card.dart';
@@ -12,6 +13,7 @@ class BmiCalculator extends StatefulWidget {
 class _BmiCalculatorState extends State<BmiCalculator> {
   double weight = 50;
   double age = 18;
+  double height = 188;
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +70,7 @@ class _BmiCalculatorState extends State<BmiCalculator> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          "180",
+                          '${height.round()}',
                           style: TextStyle(
                             fontSize: 40,
                             fontWeight: FontWeight.bold,
@@ -120,6 +122,34 @@ class _BmiCalculatorState extends State<BmiCalculator> {
                     },
                   ),
                 ],
+              ),
+              SizedBox(height: 10),
+              GestureDetector(
+                onTap: () {
+                  double heightInM = height / 100;
+                  double bmi = weight / (heightInM * heightInM);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => BmiDisplay(bmiValue: bmi),
+                    ),
+                  );
+                },
+                child: Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: const Color.fromARGB(237, 228, 63, 51),
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: Text(
+                      "CALCULATE",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ),
               ),
             ],
           ),
