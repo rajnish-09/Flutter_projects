@@ -54,11 +54,46 @@ class BmiCalculator extends StatelessWidget {
                       "HEIGHT",
                       style: TextStyle(fontSize: 18, color: Colors.grey),
                     ),
+                    SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "180",
+                          style: TextStyle(
+                            fontSize: 40,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                        SizedBox(width: 5),
+                        Text(
+                          "cm",
+                          style: TextStyle(fontSize: 15, color: Colors.white),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 30),
+                    buildProgressBar(),
                   ],
                 ),
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildProgressBar() {
+    return SizedBox(
+      height: 10,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(15),
+        child: LinearProgressIndicator(
+          value: 0.5,
+          backgroundColor: Colors.white,
+          valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue),
         ),
       ),
     );
