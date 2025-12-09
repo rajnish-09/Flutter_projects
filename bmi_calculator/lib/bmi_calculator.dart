@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import './gender_card.dart';
 
 class BmiCalculator extends StatelessWidget {
   const BmiCalculator({super.key});
@@ -78,6 +79,74 @@ class BmiCalculator extends StatelessWidget {
                   ],
                 ),
               ),
+              SizedBox(height: 10),
+              Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      height: 200,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        color: const Color.fromARGB(94, 158, 158, 158),
+                      ),
+                      child: Column(
+                        children: [
+                          SizedBox(height: 10),
+                          Text(
+                            "tt",
+                            style: TextStyle(fontSize: 18, color: Colors.grey),
+                          ),
+                          Text(
+                            "60",
+                            style: TextStyle(fontSize: 50, color: Colors.white),
+                          ),
+                          SizedBox(height: 20),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              GestureDetector(
+                                onTap: () {},
+                                child: Container(
+                                  width: 40,
+                                  height: 40,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: const Color.fromARGB(
+                                      65,
+                                      158,
+                                      158,
+                                      158,
+                                    ),
+                                  ),
+                                  child: Icon(Icons.add, size: 20),
+                                ),
+                              ),
+                              SizedBox(width: 10),
+                              GestureDetector(
+                                onTap: () {},
+                                child: Container(
+                                  width: 40,
+                                  height: 40,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: const Color.fromARGB(
+                                      65,
+                                      158,
+                                      158,
+                                      158,
+                                    ),
+                                  ),
+                                  child: Icon(Icons.remove, size: 20),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
         ),
@@ -94,39 +163,6 @@ class BmiCalculator extends StatelessWidget {
           value: 0.5,
           backgroundColor: Colors.white,
           valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue),
-        ),
-      ),
-    );
-  }
-}
-
-class GenderCardBox extends StatelessWidget {
-  final String genderLabel;
-  final IconData icon;
-  const GenderCardBox({
-    super.key,
-    required this.icon,
-    required this.genderLabel,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: Container(
-        height: 200,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
-          color: const Color.fromARGB(94, 158, 158, 158),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            FaIcon(icon, size: 50, color: Colors.white),
-            Text(
-              genderLabel,
-              style: TextStyle(fontSize: 18, color: Colors.grey),
-            ),
-          ],
         ),
       ),
     );
