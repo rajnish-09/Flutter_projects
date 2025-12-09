@@ -17,6 +17,7 @@ class _QuizAppHomeScreenState extends State<QuizAppHomeScreen> {
   bool isQuizStarted = false;
   QuizLogic quiz = QuizLogic();
   int score = 0;
+  String? errorMessage;
 
   @override
   Widget build(BuildContext context) {
@@ -79,6 +80,7 @@ class _QuizAppHomeScreenState extends State<QuizAppHomeScreen> {
           controller: nameController,
           decoration: InputDecoration(
             labelText: "Enter your name",
+            errorText: errorMessage,
             border: OutlineInputBorder(),
             filled: true,
             fillColor: Colors.white,
@@ -91,7 +93,11 @@ class _QuizAppHomeScreenState extends State<QuizAppHomeScreen> {
         ElevatedButton(
           onPressed: () {
             setState(() {
-              isQuizStarted = true;
+              if (nameController.text.trim().isEmpty) {
+                errorMessage = 'Please enter your name to start';
+              } else {
+                isQuizStarted = true;
+              }
             });
           },
           child: Text("Start", style: TextStyle(fontSize: 18)),
