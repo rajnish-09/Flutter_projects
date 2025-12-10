@@ -13,7 +13,7 @@ class BmiCalculator extends StatefulWidget {
 class _BmiCalculatorState extends State<BmiCalculator> {
   double weight = 50;
   double age = 18;
-  double height = 188;
+  double height = 150;
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +70,7 @@ class _BmiCalculatorState extends State<BmiCalculator> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          '${height.round()}',
+                          height.toStringAsFixed(0),
                           style: TextStyle(
                             fontSize: 40,
                             fontWeight: FontWeight.bold,
@@ -85,7 +85,19 @@ class _BmiCalculatorState extends State<BmiCalculator> {
                       ],
                     ),
                     SizedBox(height: 30),
-                    SliderTheme(data: data, child: Slider(value: value, onChanged: onChanged))
+                    SliderTheme(
+                      data: SliderTheme.of(context),
+                      child: Slider(
+                        value: height,
+                        min: 80,
+                        max: 250,
+                        onChanged: (value) {
+                          setState(() {
+                            height = value.toDouble();
+                          });
+                        },
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -157,8 +169,6 @@ class _BmiCalculatorState extends State<BmiCalculator> {
       ),
     );
   }
-
-  
 }
 
 class WeightAgeCard extends StatelessWidget {
