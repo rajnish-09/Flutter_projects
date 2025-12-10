@@ -17,7 +17,7 @@ class GenderCardBox extends StatelessWidget {
         height: 200,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
-          color: const Color.fromARGB(94, 158, 158, 158),
+          color: const Color.fromARGB(65, 158, 158, 158),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
