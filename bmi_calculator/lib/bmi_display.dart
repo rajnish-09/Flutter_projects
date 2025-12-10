@@ -27,9 +27,19 @@ class _BmiDisplayState extends State<BmiDisplay> {
       ),
       body: SafeArea(
         child: Center(
-          child: Text(
-            "Your BMI is : ${widget.bmiValue.toStringAsFixed(2)}",
-            style: TextStyle(fontSize: 25, color: Colors.white),
+          child: Column(
+            children: [
+              Text(
+                "Your BMI is : ${widget.bmiValue.toStringAsFixed(2)}",
+                style: TextStyle(fontSize: 25, color: Colors.white),
+              ),
+              Text("Your details", style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),),
+              Text("Name: "),
+              Text("Height: "),
+              Text("Weight: "),
+              Text("Age: "),
+              Text("BMI: ")
+            ],
           ),
         ),
       ),
