@@ -15,6 +15,7 @@ class _BmiCalculatorState extends State<BmiCalculator> {
   double age = 18;
   double height = 150;
   bool isMaleSelected = false, isFemaleSelected = false;
+  String? genderError;
 
   void selectedGender(String gender) {
     setState(() {
@@ -26,6 +27,17 @@ class _BmiCalculatorState extends State<BmiCalculator> {
         isFemaleSelected = true;
       }
     });
+  }
+
+  void validateGender() {
+    if (isMaleSelected && isFemaleSelected) {
+      setState(() {
+        genderError = 'Please select a gender';
+      });
+      return;
+    } else {
+      genderError = null;
+    }
   }
 
   @override
@@ -56,14 +68,14 @@ class _BmiCalculatorState extends State<BmiCalculator> {
                     icon: FontAwesomeIcons.mars,
                     genderLabel: 'MALE',
                     isSelected: isMaleSelected,
-                    onTap: ()=>selectedGender('male'),
+                    onTap: () => selectedGender('male'),
                   ),
                   SizedBox(width: 10),
                   GenderCardBox(
                     icon: FontAwesomeIcons.venus,
                     genderLabel: 'FEMALE',
                     isSelected: isFemaleSelected,
-                    onTap: ()=>selectedGender('female'),
+                    onTap: () => selectedGender('female'),
                   ),
                 ],
               ),
@@ -155,12 +167,25 @@ class _BmiCalculatorState extends State<BmiCalculator> {
               SizedBox(height: 10),
               GestureDetector(
                 onTap: () {
+                  String gender;
+                  if (isFemaleSelected) {
+                    gender = 'female';
+                  } else {
+                    gender = 'male';
+                  }
                   double heightInM = height / 100;
                   double bmi = weight / (heightInM * heightInM);
+                  validateGender();
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => BmiDisplay(bmiValue: bmi),
+                      builder: (context) => BmiDisplay(
+                        bmiValue: bmi,
+                        gender: gender,
+                        height: height,
+                        weight: weight,
+                        age: age,
+                      ),
                     ),
                   );
                 },
