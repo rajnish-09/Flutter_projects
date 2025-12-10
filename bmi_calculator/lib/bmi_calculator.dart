@@ -55,7 +55,7 @@ class _BmiCalculatorState extends State<BmiCalculator> {
                 width: double.infinity,
                 height: 200,
                 decoration: BoxDecoration(
-                  color: const Color.fromARGB(94, 158, 158, 158),
+                  color: const Color.fromARGB(65, 158, 158, 158),
                   borderRadius: BorderRadius.circular(15),
                 ),
                 child: Column(
@@ -85,7 +85,7 @@ class _BmiCalculatorState extends State<BmiCalculator> {
                       ],
                     ),
                     SizedBox(height: 30),
-                    buildProgressBar(),
+                    SliderTheme(data: data, child: Slider(value: value, onChanged: onChanged))
                   ],
                 ),
               ),
@@ -158,19 +158,7 @@ class _BmiCalculatorState extends State<BmiCalculator> {
     );
   }
 
-  Widget buildProgressBar() {
-    return SizedBox(
-      height: 10,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(15),
-        child: LinearProgressIndicator(
-          value: 0.5,
-          backgroundColor: Colors.white,
-          valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue),
-        ),
-      ),
-    );
-  }
+  
 }
 
 class WeightAgeCard extends StatelessWidget {
@@ -191,40 +179,30 @@ class WeightAgeCard extends StatelessWidget {
         height: 200,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
-          color: const Color.fromARGB(94, 158, 158, 158),
+          color: const Color.fromARGB(65, 158, 158, 158),
         ),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(height: 10),
+            // SizedBox(height: 10),
             Text(title, style: TextStyle(fontSize: 18, color: Colors.grey)),
             Text(value, style: TextStyle(fontSize: 50, color: Colors.white)),
-            SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                GestureDetector(
-                  onTap: onDecrement,
-                  child: Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: const Color.fromARGB(65, 158, 158, 158),
-                    ),
-                    child: Icon(Icons.remove, size: 20),
+                CircleAvatar(
+                  backgroundColor: const Color.fromARGB(24, 158, 158, 158),
+                  child: IconButton(
+                    onPressed: onDecrement,
+                    icon: Icon(Icons.remove, color: Colors.white),
                   ),
                 ),
                 SizedBox(width: 10),
-                GestureDetector(
-                  onTap: onIncrement,
-                  child: Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: const Color.fromARGB(65, 158, 158, 158),
-                    ),
-                    child: Icon(Icons.add, size: 20),
+                CircleAvatar(
+                  backgroundColor: const Color.fromARGB(24, 158, 158, 158),
+                  child: IconButton(
+                    onPressed: onIncrement,
+                    icon: Icon(Icons.add, color: Colors.white),
                   ),
                 ),
               ],
