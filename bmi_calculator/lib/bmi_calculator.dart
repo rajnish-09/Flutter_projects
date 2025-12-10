@@ -14,6 +14,19 @@ class _BmiCalculatorState extends State<BmiCalculator> {
   double weight = 50;
   double age = 18;
   double height = 150;
+  bool isMaleSelected = false, isFemaleSelected = false;
+
+  void selectedGender(String gender) {
+    setState(() {
+      if (gender == 'male') {
+        isMaleSelected = true;
+        isFemaleSelected = false;
+      } else {
+        isMaleSelected = false;
+        isFemaleSelected = true;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,11 +55,15 @@ class _BmiCalculatorState extends State<BmiCalculator> {
                   GenderCardBox(
                     icon: FontAwesomeIcons.mars,
                     genderLabel: 'MALE',
+                    isSelected: isMaleSelected,
+                    onTap: ()=>selectedGender('male'),
                   ),
                   SizedBox(width: 10),
                   GenderCardBox(
                     icon: FontAwesomeIcons.venus,
                     genderLabel: 'FEMALE',
+                    isSelected: isFemaleSelected,
+                    onTap: ()=>selectedGender('female'),
                   ),
                 ],
               ),
