@@ -9,7 +9,8 @@ class CurrencyConverterScreen extends StatefulWidget {
 }
 
 class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
-  List<String> items = ['NPR','INR','USD','AUD','YEN','WON'];
+  TextEditingController inputController = TextEditingController();
+  List<String> items = ['NPR', 'INR', 'USD', 'AUD', 'YEN', 'WON'];
   String? selectedValue = 'NPR';
   @override
   Widget build(BuildContext context) {
@@ -34,19 +35,32 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  DropdownButton<String>(
-                    items: items.map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                    value: selectedValue,
-                    onChanged: (String? newValue) {
-                      selectedValue = newValue;
-                    },
+                  SizedBox(
+                    width: 100,
+                    child: DropdownButton<String>(
+                      items: items.map<DropdownMenuItem<String>>((
+                        String value,
+                      ) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      value: selectedValue,
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          selectedValue = newValue;
+                        });
+                      },
+                    ),
                   ),
-                  Text("Input"),
+                  SizedBox(
+                    width: 200,
+                    child: TextField(
+                      controller: inputController,
+                      decoration: InputDecoration(labelText: 'Enter amount'),
+                    ),
+                  ),
                 ],
               ),
               SizedBox(height: 30),
