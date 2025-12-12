@@ -156,6 +156,10 @@ class _ExpenseTrackerState extends State<ExpenseTracker> {
                       itemCount: expenses.length,
                       itemBuilder: (context, index) {
                         return ListTile(
+                          leading: Text(
+                            '${index + 1}.',
+                            style: TextStyle(fontSize: 20),
+                          ),
                           title: Text(expenses[index].title),
                           subtitle: Text('${expenses[index].amount}'),
                         );
