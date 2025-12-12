@@ -14,6 +14,7 @@ class ExpenseTracker extends StatefulWidget {
 }
 
 class _ExpenseTrackerState extends State<ExpenseTracker> {
+  String? titleError, amountError;
   List<Expense> expenses = [];
   double total = 0;
   TextEditingController titleController = TextEditingController();
@@ -46,7 +47,13 @@ class _ExpenseTrackerState extends State<ExpenseTracker> {
                         SizedBox(height: 15),
                         TextField(
                           controller: titleController,
+                          onChanged: (_) {
+                            bottomSetState(() {
+                              titleError = null;
+                            });
+                          },
                           decoration: InputDecoration(
+                            errorText: titleError,
                             border: OutlineInputBorder(),
                             focusedBorder: OutlineInputBorder(
                               borderSide: BorderSide(style: BorderStyle.solid),
@@ -58,8 +65,14 @@ class _ExpenseTrackerState extends State<ExpenseTracker> {
                         SizedBox(height: 10),
                         TextField(
                           controller: amountController,
+                          onChanged: (_) {
+                            bottomSetState(() {
+                              amountError = null;
+                            });
+                          },
                           keyboardType: TextInputType.number,
                           decoration: InputDecoration(
+                            errorText: amountError,
                             border: OutlineInputBorder(),
                             focusedBorder: OutlineInputBorder(
                               borderSide: BorderSide(style: BorderStyle.solid),
@@ -71,10 +84,24 @@ class _ExpenseTrackerState extends State<ExpenseTracker> {
                         SizedBox(height: 15),
                         ElevatedButton(
                           onPressed: () {
+                            if (titleController.text.isEmpty) {
+                              bottomSetState(() {
+                                titleError = 'Please enter expense title';
+                              });
+                              return;
+                            } else if (amountController.text.isEmpty) {
+                              bottomSetState(() {
+                                amountError = 'Please enter amount';
+                              });
+                              return;
+                            }
                             addToList(
                               titleController.text,
-                              double.parse(amountController.text),
+                              double.tryParse(amountController.text)!,
                             );
+                            Navigator.pop(context);
+                            titleController.text = '';
+                            amountController.text = '';
                           },
                           child: Text("Add expense"),
                         ),
@@ -91,8 +118,13 @@ class _ExpenseTrackerState extends State<ExpenseTracker> {
   }
 
   void addToList(String title, double amount) {
-    final data = Expense(title: title, amount: amount);
-    expenses.add(data);
+    setState(() {
+      final data = Expense(title: title, amount: amount);
+      expenses.add(data);
+    });
+    for (var e in expenses) {
+      total += e.amount;
+    }
   }
 
   @override
@@ -106,6 +138,31 @@ class _ExpenseTrackerState extends State<ExpenseTracker> {
             showBottomSheet();
           },
           child: Icon(Icons.add),
+        ),
+      ),
+      body: Padding(
+        padding: EdgeInsets.all(10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Total: $total",
+              style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+            ),
+            Expanded(
+              child: expenses.isEmpty
+                  ? Text("No data found.")
+                  : ListView.builder(
+                      itemCount: expenses.length,
+                      itemBuilder: (context, index) {
+                        return ListTile(
+                          title: Text(expenses[index].title),
+                          subtitle: Text('${expenses[index].amount}'),
+                        );
+                      },
+                    ),
+            ),
+          ],
         ),
       ),
     );
