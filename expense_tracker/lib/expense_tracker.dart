@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
 
+class Expense {
+  String title;
+  double amount;
+  Expense({required this.title, required this.amount});
+}
+
 class ExpenseTracker extends StatefulWidget {
   const ExpenseTracker({super.key});
 
@@ -8,6 +14,8 @@ class ExpenseTracker extends StatefulWidget {
 }
 
 class _ExpenseTrackerState extends State<ExpenseTracker> {
+  List<Expense> expenses = [];
+  double total = 0;
   TextEditingController titleController = TextEditingController();
   TextEditingController amountController = TextEditingController();
 
@@ -62,7 +70,12 @@ class _ExpenseTrackerState extends State<ExpenseTracker> {
                         ),
                         SizedBox(height: 15),
                         ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            addToList(
+                              titleController.text,
+                              double.parse(amountController.text),
+                            );
+                          },
                           child: Text("Add expense"),
                         ),
                       ],
@@ -75,6 +88,11 @@ class _ExpenseTrackerState extends State<ExpenseTracker> {
         );
       },
     );
+  }
+
+  void addToList(String title, double amount) {
+    final data = Expense(title: title, amount: amount);
+    expenses.add(data);
   }
 
   @override
