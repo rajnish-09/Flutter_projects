@@ -70,6 +70,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                       titleController.text,
                       contentController.text,
                     );
+                    Navigator.pop(context, Note(title: titleController.text, content: contentController.text));
                   }
                 },
                 child: Text("Save", style: TextStyle(fontSize: 20)),

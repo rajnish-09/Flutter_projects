@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:notes_app/note_editor_screen.dart';
+import 'package:notes_app/note_logic.dart';
 
 class NotesMainScreen extends StatefulWidget {
   const NotesMainScreen({super.key});
@@ -9,6 +10,8 @@ class NotesMainScreen extends StatefulWidget {
 }
 
 class _NotesMainScreenState extends State<NotesMainScreen> {
+  // NoteLogic note = NoteLogic();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,6 +30,20 @@ class _NotesMainScreenState extends State<NotesMainScreen> {
           );
         },
         child: Icon(Icons.add),
+      ),
+      body: Padding(
+        padding: EdgeInsets.all(10),
+        child: note.notes.isEmpty
+            ? Text("No notes yet!", style: TextStyle(fontSize: 20))
+            : ListView.builder(
+                itemCount: note.notes.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Text(note.getTitle()),
+                    subtitle: Text(note.getContent()),
+                  );
+                },
+              ),
       ),
     );
   }
