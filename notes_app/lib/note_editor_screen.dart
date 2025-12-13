@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:notes_app/note_logic.dart';
 
 class NoteEditorScreen extends StatefulWidget {
   const NoteEditorScreen({super.key});
@@ -10,9 +11,14 @@ class NoteEditorScreen extends StatefulWidget {
 class _NoteEditorScreenState extends State<NoteEditorScreen> {
   TextEditingController titleController = TextEditingController();
   TextEditingController contentController = TextEditingController();
+  String? titleError;
+
+  NoteLogic notes = NoteLogic();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.all(10),
@@ -25,10 +31,16 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
               SizedBox(height: 15),
               TextField(
                 controller: titleController,
+                onChanged: (_) {
+                  setState(() {
+                    titleError = null;
+                  });
+                },
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   focusedBorder: OutlineInputBorder(),
                   hintText: "Enter title",
+                  errorText: titleError,
                 ),
               ),
               SizedBox(height: 10),
@@ -47,7 +59,19 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
               ),
               SizedBox(height: 10),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  if (titleController.text.isEmpty) {
+                    setState(() {
+                      titleError = 'Please enter title';
+                    });
+                    return;
+                  } else {
+                    notes.addNotes(
+                      titleController.text,
+                      contentController.text,
+                    );
+                  }
+                },
                 child: Text("Save", style: TextStyle(fontSize: 20)),
               ),
             ],
@@ -56,4 +80,6 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
       ),
     );
   }
+
+  void addNotesToList(String title, String content) {}
 }
