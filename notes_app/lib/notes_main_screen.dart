@@ -10,7 +10,7 @@ class NotesMainScreen extends StatefulWidget {
 }
 
 class _NotesMainScreenState extends State<NotesMainScreen> {
-  // NoteLogic note = NoteLogic();
+  NoteLogic note = NoteLogic();
 
   @override
   Widget build(BuildContext context) {
