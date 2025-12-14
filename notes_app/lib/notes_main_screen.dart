@@ -44,7 +44,7 @@ class _NotesMainScreenState extends State<NotesMainScreen> {
                 itemBuilder: (context, index) {
                   return GestureDetector(
                     onLongPress: () {
-                      
+                      showDialogBox(index);
                     },
                     onTap: () {
                       Navigator.push(
@@ -70,7 +70,31 @@ class _NotesMainScreenState extends State<NotesMainScreen> {
     );
   }
 
-  void deleteNote(){
-    
+  void showDialogBox(int index) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Are you sure you want to delete"),
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  noteLogic.notes.removeAt(index);
+                });
+                Navigator.pop(context);
+              },
+              child: Text("Yes"),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text("No"),
+            ),
+          ],
+        );
+      },
+    );
   }
 }
