@@ -3,7 +3,8 @@ import 'package:notes_app/note_logic.dart';
 
 class NoteEditorScreen extends StatefulWidget {
   final NoteLogic noteLogic;
-  const NoteEditorScreen({super.key, required this.noteLogic});
+  final String? title;
+  const NoteEditorScreen({super.key, required this.noteLogic, this.title});
 
   @override
   State<NoteEditorScreen> createState() => _NoteEditorScreenState();

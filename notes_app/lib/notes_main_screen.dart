@@ -42,9 +42,23 @@ class _NotesMainScreenState extends State<NotesMainScreen> {
             : ListView.builder(
                 itemCount: noteLogic.notes.length,
                 itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(noteLogic.notes[index].title),
-                    subtitle: Text(noteLogic.notes[index].content),
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => NoteEditorScreen(
+                            noteLogic: noteLogic,
+                            title: noteLogic.notes[index].title,
+                          ),
+                        ),
+                      );
+                      print(index + 1);
+                    },
+                    child: ListTile(
+                      title: Text(noteLogic.notes[index].title),
+                      subtitle: Text(noteLogic.notes[index].content),
+                    ),
                   );
                 },
               ),
