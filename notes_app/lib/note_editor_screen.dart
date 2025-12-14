@@ -3,8 +3,13 @@ import 'package:notes_app/note_logic.dart';
 
 class NoteEditorScreen extends StatefulWidget {
   final NoteLogic noteLogic;
-  final String? title;
-  const NoteEditorScreen({super.key, required this.noteLogic, this.title});
+  final String? title, content;
+  const NoteEditorScreen({
+    super.key,
+    required this.noteLogic,
+    this.title,
+    this.content,
+  });
 
   @override
   State<NoteEditorScreen> createState() => _NoteEditorScreenState();
@@ -14,6 +19,13 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
   TextEditingController titleController = TextEditingController();
   TextEditingController contentController = TextEditingController();
   String? titleError;
+
+  @override
+  void initState() {
+    super.initState();
+    titleController = TextEditingController(text: widget.title);
+    contentController = TextEditingController(text: widget.content);
+  }
 
   // NoteLogic notes = NoteLogic();
 
@@ -73,7 +85,6 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                       contentController.text,
                     );
                     Navigator.pop(context);
-                    setState(() {});
                   }
                 },
                 child: Text("Save", style: TextStyle(fontSize: 20)),

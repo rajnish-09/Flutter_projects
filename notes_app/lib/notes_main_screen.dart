@@ -43,6 +43,9 @@ class _NotesMainScreenState extends State<NotesMainScreen> {
                 itemCount: noteLogic.notes.length,
                 itemBuilder: (context, index) {
                   return GestureDetector(
+                    onLongPress: () {
+                      
+                    },
                     onTap: () {
                       Navigator.push(
                         context,
@@ -52,8 +55,9 @@ class _NotesMainScreenState extends State<NotesMainScreen> {
                             title: noteLogic.notes[index].title,
                           ),
                         ),
-                      );
-                      print(index + 1);
+                      ).then((_) {
+                        setState(() {});
+                      });
                     },
                     child: ListTile(
                       title: Text(noteLogic.notes[index].title),
@@ -64,5 +68,9 @@ class _NotesMainScreenState extends State<NotesMainScreen> {
               ),
       ),
     );
+  }
+
+  void deleteNote(){
+    
   }
 }
