@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:notes_app/note_logic.dart';
 
 class NoteEditorScreen extends StatefulWidget {
-  const NoteEditorScreen({super.key});
+  final NoteLogic noteLogic;
+  const NoteEditorScreen({super.key, required this.noteLogic});
 
   @override
   State<NoteEditorScreen> createState() => _NoteEditorScreenState();
@@ -13,7 +14,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
   TextEditingController contentController = TextEditingController();
   String? titleError;
 
-  NoteLogic notes = NoteLogic();
+  // NoteLogic notes = NoteLogic();
 
   @override
   Widget build(BuildContext context) {
@@ -66,11 +67,12 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                     });
                     return;
                   } else {
-                    notes.addNotes(
+                    widget.noteLogic.addNotes(
                       titleController.text,
                       contentController.text,
                     );
-                    Navigator.pop(context, Note(title: titleController.text, content: contentController.text));
+                    Navigator.pop(context);
+                    setState(() {});
                   }
                 },
                 child: Text("Save", style: TextStyle(fontSize: 20)),

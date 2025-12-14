@@ -12,11 +12,11 @@ class NoteLogic {
     notes.add(Note(title: noteTitle, content: noteContent));
   }
 
-  String getTitle() {
-    return notes[currentIndex].title;
-  }
+  // String getTitle() {
+  //   return notes[currentIndex].title;
+  // }
 
-  String getContent() {
-    return notes[currentIndex].content;
-  }
+  // String getContent() {
+  //   return notes[currentIndex].content;
+  // }
 }

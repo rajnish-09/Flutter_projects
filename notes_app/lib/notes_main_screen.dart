@@ -10,7 +10,7 @@ class NotesMainScreen extends StatefulWidget {
 }
 
 class _NotesMainScreenState extends State<NotesMainScreen> {
-  NoteLogic note = NoteLogic();
+  NoteLogic noteLogic = NoteLogic();
 
   @override
   Widget build(BuildContext context) {
@@ -26,21 +26,25 @@ class _NotesMainScreenState extends State<NotesMainScreen> {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => NoteEditorScreen()),
-          );
+            MaterialPageRoute(
+              builder: (context) => NoteEditorScreen(noteLogic: noteLogic),
+            ),
+          ).then((_) {
+            setState(() {});
+          });
         },
         child: Icon(Icons.add),
       ),
       body: Padding(
         padding: EdgeInsets.all(10),
-        child: note.notes.isEmpty
+        child: noteLogic.notes.isEmpty
             ? Text("No notes yet!", style: TextStyle(fontSize: 20))
             : ListView.builder(
-                itemCount: note.notes.length,
+                itemCount: noteLogic.notes.length,
                 itemBuilder: (context, index) {
                   return ListTile(
-                    title: Text(note.getTitle()),
-                    subtitle: Text(note.getContent()),
+                    title: Text(noteLogic.notes[index].title),
+                    subtitle: Text(noteLogic.notes[index].content),
                   );
                 },
               ),
