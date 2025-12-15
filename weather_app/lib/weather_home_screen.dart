@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:weather_app/api_service.dart';
 import 'package:weather_app/weather_report_screen.dart';
 
 String backgroundImageURL =
@@ -12,6 +13,9 @@ class WeatherHomeScreen extends StatefulWidget {
 }
 
 class _WeatherHomeScreenState extends State<WeatherHomeScreen> {
+  final ApiService apiService = ApiService();
+  String? cityError;
+
   TextEditingController cityController = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -45,7 +49,13 @@ class _WeatherHomeScreenState extends State<WeatherHomeScreen> {
                 SizedBox(height: 20),
                 TextField(
                   controller: cityController,
+                  onChanged: (_) {
+                    setState(() {
+                      cityError = null;
+                    });
+                  },
                   decoration: InputDecoration(
+                    errorText: cityError,
                     prefixIcon: Icon(Icons.search, size: 25),
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(width: 0),
@@ -62,13 +72,23 @@ class _WeatherHomeScreenState extends State<WeatherHomeScreen> {
                 ),
                 SizedBox(height: 15),
                 ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => WeatherReportScreen(),
-                      ),
-                    );
+                  onPressed: () async {
+                    String cityName = cityController.text;
+                    if (cityName.isNotEmpty) {
+                      final data = await apiService.getWeather(cityName);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              WeatherReportScreen(weatherData: data, cityName: cityName,),
+                        ),
+                      );
+                    } else {
+                      setState(() {
+                        cityError = 'Please enter a city name';
+                        return;
+                      });
+                    }
                   },
                   child: Text(
                     "Get weather",

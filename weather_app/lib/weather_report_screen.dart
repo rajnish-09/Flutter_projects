@@ -2,9 +2,17 @@
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:weather_app/weather_model.dart';
+// import 'package:weather_app/api_service.dart';
 
 class WeatherReportScreen extends StatefulWidget {
-  const WeatherReportScreen({super.key});
+  final WeatherModel weatherData;
+  final String cityName;
+  const WeatherReportScreen({
+    super.key,
+    required this.weatherData,
+    required this.cityName,
+  });
 
   @override
   State<WeatherReportScreen> createState() => _WeatherReportScreenState();
@@ -34,7 +42,7 @@ class _WeatherReportScreenState extends State<WeatherReportScreen> {
                 ),
                 title: Center(
                   child: Text(
-                    "Dhading",
+                    widget.cityName,
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                   ),
                 ),
