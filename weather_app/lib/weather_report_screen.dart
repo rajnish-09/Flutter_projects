@@ -26,6 +26,11 @@ class _WeatherReportScreenState extends State<WeatherReportScreen> {
     String month = DateFormat('MMMM').format(today);
     String time = DateFormat('hh:mm a').format(today);
 
+    double kelvin = widget.weatherData.main.temp;
+    double celsius = kelvin - 273.15;
+    double minTempCelsius = widget.weatherData.main.tempMin - 273.15;
+    double windSpeed = widget.weatherData.wind.speed * 3.6;
+
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 210, 210, 210),
       body: SafeArea(
@@ -38,7 +43,12 @@ class _WeatherReportScreenState extends State<WeatherReportScreen> {
                 leading: CircleAvatar(
                   backgroundColor: Colors.white,
                   radius: 20,
-                  child: Icon(Icons.arrow_back_ios_new_sharp, size: 20),
+                  child: IconButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    icon: Icon(Icons.arrow_back_ios_new_sharp, size: 20),
+                  ),
                 ),
                 title: Center(
                   child: Text(
@@ -56,7 +66,7 @@ class _WeatherReportScreenState extends State<WeatherReportScreen> {
               SizedBox(height: 15),
               Container(
                 width: double.infinity,
-                height: 400,
+                // height: 500,
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(30),
@@ -85,7 +95,7 @@ class _WeatherReportScreenState extends State<WeatherReportScreen> {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Text(
-                            "42\u2103",
+                            "${celsius.toStringAsFixed(0)}\u2103",
                             style: TextStyle(
                               fontSize: 70,
                               fontWeight: FontWeight.bold,
@@ -106,23 +116,25 @@ class _WeatherReportScreenState extends State<WeatherReportScreen> {
                           WeatherInfoCard(
                             icon: Icons.wind_power,
                             label: "Wind",
-                            value: '6-7',
+                            value: "${windSpeed.toStringAsFixed(2)} km/hr",
                           ),
                           SizedBox(width: 10),
                           WeatherInfoCard(
                             icon: Icons.wind_power,
-                            label: "Wind",
-                            value: '6-7',
+                            label: "Min Temp",
+                            value: '${minTempCelsius.toStringAsFixed(0)}\u2103',
                           ),
                           SizedBox(width: 10),
 
                           WeatherInfoCard(
                             icon: Icons.wind_power,
-                            label: "Wind",
-                            value: '6-7',
+                            label: "Humidity",
+                            value: '${widget.weatherData.main.humidity}%',
                           ),
                         ],
                       ),
+                      SizedBox(height: 10),
+                      Text(widget.weatherData.weather[0].main),
                     ],
                   ),
                 ),
@@ -150,6 +162,7 @@ class WeatherInfoCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: Container(
+        height: 130,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
           color: const Color.fromARGB(88, 182, 227, 248),
@@ -162,9 +175,9 @@ class WeatherInfoCard extends StatelessWidget {
               children: [
                 Icon(icon),
                 SizedBox(height: 10),
-                Text(label),
+                Text(label, style: TextStyle(fontSize: 12)),
                 SizedBox(height: 10),
-                Text(value),
+                Text(value, style: TextStyle(fontSize: 10)),
               ],
             ),
           ),
