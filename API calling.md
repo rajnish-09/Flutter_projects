@@ -52,3 +52,7 @@ To tell Flutter:
 
 “Data changed, rebuild UI”
 
+
+-------------------------------------------------------------
+
+Geolocation services: taught in 12/16/2025
