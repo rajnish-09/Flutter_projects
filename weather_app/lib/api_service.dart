@@ -7,24 +7,32 @@ class ApiService {
   final String apiKey = 'c39503790fbe755bf7fb32c6a57e4f68';
 
   Future<WeatherModel> getWeather(String cityName) async {
-    final response = await http.get(
-      Uri.parse(
-        'https://api.openweathermap.org/data/2.5/weather?q=$cityName&APPID=c39503790fbe755bf7fb32c6a57e4f68',
-      ),
-    );
-    final jsonData = jsonDecode(response.body);
-    WeatherModel weatherModel = WeatherModel.fromJson(jsonData);
-    return weatherModel;
+    try {
+      final response = await http.get(
+        Uri.parse(
+          'https://api.openweathermap.org/data/2.5/weather?q=$cityName&APPID=c39503790fbe755bf7fb32c6a57e4f68',
+        ),
+      );
+      final jsonData = jsonDecode(response.body);
+      WeatherModel weatherModel = WeatherModel.fromJson(jsonData);
+      return weatherModel;
+    } catch (e) {
+      throw e.toString();
+    }
   }
 
   Future<WeatherModel> getCurrentLocation(double lat, double lon) async {
-    final response = await http.get(
-      Uri.parse(
-        'https://api.openweathermap.org/data/2.5/weather?lat=$lat&lon=$lon&appid=$apiKey',
-      ),
-    );
-    final jsonData = jsonDecode(response.body);
-    WeatherModel weatherModel = WeatherModel.fromJson(jsonData);
-    return weatherModel;
+    try {
+      final response = await http.get(
+        Uri.parse(
+          'https://api.openweathermap.org/data/2.5/weather?lat=$lat&lon=$lon&appid=$apiKey',
+        ),
+      );
+      final jsonData = jsonDecode(response.body);
+      WeatherModel weatherModel = WeatherModel.fromJson(jsonData);
+      return weatherModel;
+    } catch (e) {
+      throw e.toString();
+    }
   }
 }

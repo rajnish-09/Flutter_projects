@@ -61,7 +61,8 @@ class _WeatherReportScreenState extends State<WeatherReportScreen> {
           final Position position = await determinePosition();
           double lat = position.latitude;
           double lon = position.longitude;
-          widget.apiService.getCurrentLocation(lat, lon);
+          final data = widget.apiService.getCurrentLocation(lat, lon);
+          print(data);
         },
         child: Icon(Icons.my_location),
       ),
