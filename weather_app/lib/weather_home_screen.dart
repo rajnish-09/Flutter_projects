@@ -80,7 +80,7 @@ class _WeatherHomeScreenState extends State<WeatherHomeScreen> {
                         context,
                         MaterialPageRoute(
                           builder: (context) =>
-                              WeatherReportScreen(weatherData: data, cityName: cityName,),
+                              WeatherReportScreen(weatherData: data, cityName: cityName, apiService: apiService,),
                         ),
                       );
                     } else {

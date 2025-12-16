@@ -1,17 +1,21 @@
 // import 'dart:collection';
 
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
+import 'package:weather_app/api_service.dart';
 import 'package:weather_app/weather_model.dart';
 // import 'package:weather_app/api_service.dart';
 
 class WeatherReportScreen extends StatefulWidget {
   final WeatherModel weatherData;
   final String cityName;
+  final ApiService apiService;
   const WeatherReportScreen({
     super.key,
     required this.weatherData,
     required this.cityName,
+    required this.apiService,
   });
 
   @override
@@ -31,7 +35,36 @@ class _WeatherReportScreenState extends State<WeatherReportScreen> {
     double minTempCelsius = widget.weatherData.main.tempMin - 273.15;
     double windSpeed = widget.weatherData.wind.speed * 3.6;
 
+    Future<Position> determinePosition() async {
+      bool serviceEnabled;
+      LocationPermission permission;
+
+      serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      permission = await Geolocator.checkPermission();
+
+      if (!serviceEnabled) {
+        return Future.error("Location is not enabled.");
+      }
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+          return Future.error('Location permissions are denied.');
+        }
+      }
+
+      return await Geolocator.getCurrentPosition();
+    }
+
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          final Position position = await determinePosition();
+          double lat = position.latitude;
+          double lon = position.longitude;
+          widget.apiService.getCurrentLocation(lat, lon);
+        },
+        child: Icon(Icons.my_location),
+      ),
       backgroundColor: Color.fromARGB(255, 210, 210, 210),
       body: SafeArea(
         child: Padding(

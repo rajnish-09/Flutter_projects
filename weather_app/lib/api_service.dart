@@ -16,4 +16,15 @@ class ApiService {
     WeatherModel weatherModel = WeatherModel.fromJson(jsonData);
     return weatherModel;
   }
+
+  Future<WeatherModel> getCurrentLocation(double lat, double lon) async {
+    final response = await http.get(
+      Uri.parse(
+        'https://api.openweathermap.org/data/2.5/weather?lat=$lat&lon=$lon&appid=$apiKey',
+      ),
+    );
+    final jsonData = jsonDecode(response.body);
+    WeatherModel weatherModel = WeatherModel.fromJson(jsonData);
+    return weatherModel;
+  }
 }
