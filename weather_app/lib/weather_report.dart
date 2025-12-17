@@ -123,7 +123,7 @@ class _WeatherReportState extends State<WeatherReport> {
               children: [
                 BottomNavigationIcon(icon: Icons.home),
                 BottomNavigationIcon(icon: Icons.search),
-                BottomNavigationIcon(icon: FontAwesomeIcons.compass),
+                BottomNavigationIcon(icon: Icons.location_on),
                 BottomNavigationIcon(icon: Icons.person),
               ],
             ),
