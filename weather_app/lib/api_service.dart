@@ -13,10 +13,13 @@ class ApiService {
           'https://api.openweathermap.org/data/2.5/weather?q=$cityName&APPID=$apiKey',
         ),
       );
-
-      final jsonData = jsonDecode(response.body);
-      WeatherModel weatherModel = WeatherModel.fromJson(jsonData);
-      return weatherModel;
+      if (response.statusCode == 200) {
+        final jsonData = jsonDecode(response.body);
+        WeatherModel weatherModel = WeatherModel.fromJson(jsonData);
+        return weatherModel;
+      } else {
+        throw Exception("Failed to load weather");
+      }
     } catch (e) {
       throw e.toString();
     }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:weather_app/api_service.dart';
 import 'package:weather_app/weather_model.dart';
 
 class WeatherReport extends StatefulWidget {
@@ -16,6 +17,17 @@ class WeatherReport extends StatefulWidget {
 }
 
 class _WeatherReportState extends State<WeatherReport> {
+  ApiService apiService = ApiService();
+  WeatherModel? weatherModel;
+  String currentCityName = '';
+
+  @override
+  void initState() {
+    super.initState();
+    weatherModel = widget.weatherData;
+    currentCityName = widget.cityName;
+  }
+
   String capitalize(String s) {
     if (s.isEmpty) {
       return s;
@@ -24,17 +36,20 @@ class _WeatherReportState extends State<WeatherReport> {
     }
   }
 
+  String? selectedValue;
+
   @override
   Widget build(BuildContext context) {
     String weatherDescription = capitalize(
-      widget.weatherData.weather[0].description,
+      weatherModel!.weather[0].description,
     );
-    double tempInKelvin = widget.weatherData.main.temp;
+    double tempInKelvin = weatherModel!.main.temp;
     double tempInCelsius = tempInKelvin - 273.15;
-    double speedInMPerS = widget.weatherData.wind.speed;
+    double speedInMPerS = weatherModel!.wind.speed;
     double speedInKmPerHr = speedInMPerS * 3.6;
-    int humidity = widget.weatherData.main.humidity;
-    int pressure = widget.weatherData.main.pressure;
+    int humidity = weatherModel!.main.humidity;
+    int pressure = weatherModel!.main.pressure;
+    String weatherIcon = weatherModel!.weather[0].icon;
     return Scaffold(
       backgroundColor: Color(0xFF0B0C1E),
       appBar: AppBar(
@@ -45,30 +60,47 @@ class _WeatherReportState extends State<WeatherReport> {
           },
           icon: Icon(Icons.arrow_back_ios_new_sharp, color: Colors.white),
         ),
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.location_on,
-              color: const Color.fromARGB(255, 255, 255, 255),
-            ),
-            SizedBox(width: 5),
-            Text(widget.cityName, style: TextStyle(color: Colors.white)),
-          ],
-        ),
+        // title: Row(
+        //   mainAxisAlignment: MainAxisAlignment.center,
+        //   children: [
+        //     Icon(
+        //       Icons.location_on,
+        //       color: const Color.fromARGB(255, 255, 255, 255),
+        //     ),
+        //     SizedBox(width: 5),
+        //     Text(widget.cityName, style: TextStyle(color: Colors.white)),
+        //   ],
+        // ),
         actions: [
-          PopupMenuButton<String>(
-            icon: Icon(Icons.more_vert), // the icon user taps
-            onSelected: (String value) {
-              print('Selected: $value');
-            },
-            itemBuilder: (BuildContext context) {
-              return [
-                PopupMenuItem(value: 'Option 1', child: Text('Option 1')),
-                PopupMenuItem(value: 'Option 2', child: Text('Option 2')),
-                PopupMenuItem(value: 'Option 3', child: Text('Option 3')),
-              ];
-            },
+          DropdownButtonHideUnderline(
+            child: DropdownButton(
+              value: selectedValue,
+              dropdownColor: Color.fromARGB(255, 19, 20, 48),
+              style: TextStyle(color: Colors.white),
+              hint: Text("Select a city", style: TextStyle(color: Colors.grey)),
+              items: [
+                DropdownMenuItem(value: 'Kathmandu', child: Text("Kathmandu")),
+                DropdownMenuItem(value: 'New delhi', child: Text("New delhi")),
+                DropdownMenuItem(value: 'Beijing', child: Text("Beijing")),
+                DropdownMenuItem(value: 'London', child: Text("London")),
+                DropdownMenuItem(
+                  value: 'Washington dc',
+                  child: Text("Washington dc"),
+                ),
+              ],
+              onChanged: (value) async {
+                setState(() {
+                  selectedValue = value;
+                });
+                if (value != null) {
+                  final data = await apiService.getWeather(value);
+                  setState(() {
+                    weatherModel = data;
+                    currentCityName = value;
+                  });
+                }
+              },
+            ),
           ),
           SizedBox(width: 20),
         ],
@@ -117,8 +149,8 @@ class _WeatherReportState extends State<WeatherReport> {
                   ),
                 ),
                 SizedBox(height: 10),
-                Image.asset(
-                  'assets/images/weather.png',
+                Image.network(
+                  'https://openweathermap.org/img/wn/$weatherIcon.png',
                   width: MediaQuery.of(context).size.width * 0.6,
                 ),
                 SizedBox(height: 10),
@@ -151,7 +183,7 @@ class _WeatherReportState extends State<WeatherReport> {
                   children: [
                     DataDisplayCard(
                       icon: FontAwesomeIcons.wind,
-                      value: '${speedInKmPerHr.toStringAsFixed(0)} km/Hr',
+                      value: '${speedInKmPerHr.toStringAsFixed(2)} km/Hr',
                       label: 'Wind',
                     ),
                     DataDisplayCard(
