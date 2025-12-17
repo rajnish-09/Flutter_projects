@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:weather_app/weather_report.dart';
 
 class WeatherHomeScreen extends StatefulWidget {
   const WeatherHomeScreen({super.key});
@@ -78,7 +79,12 @@ class _WeatherHomeScreenState extends State<WeatherHomeScreen> {
                           });
                           return;
                         } else {
-                          print(nameController.text);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => WeatherReport(),
+                            ),
+                          );
                         }
                       },
                       style: ElevatedButton.styleFrom(
