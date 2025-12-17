@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:weather_app/api_service.dart';
 import 'package:weather_app/weather_model.dart';
+import 'package:weather_app/weather_icons.dart';
 
 class WeatherReport extends StatefulWidget {
   final WeatherModel weatherData;
@@ -18,6 +19,7 @@ class WeatherReport extends StatefulWidget {
 
 class _WeatherReportState extends State<WeatherReport> {
   ApiService apiService = ApiService();
+  WeatherIcons weatherIcons = WeatherIcons();
   WeatherModel? weatherModel;
   String currentCityName = '';
 
@@ -49,7 +51,8 @@ class _WeatherReportState extends State<WeatherReport> {
     double speedInKmPerHr = speedInMPerS * 3.6;
     int humidity = weatherModel!.main.humidity;
     int pressure = weatherModel!.main.pressure;
-    String weatherIcon = weatherModel!.weather[0].icon;
+    String weatherMain = weatherModel!.weather[0].main;
+
     return Scaffold(
       backgroundColor: Color(0xFF0B0C1E),
       appBar: AppBar(
@@ -149,9 +152,11 @@ class _WeatherReportState extends State<WeatherReport> {
                   ),
                 ),
                 SizedBox(height: 10),
-                Image.network(
-                  'https://openweathermap.org/img/wn/$weatherIcon.png',
-                  width: MediaQuery.of(context).size.width * 0.6,
+                Text(
+                  weatherIcons.getWeatherSymbol(weatherMain),
+                  style: TextStyle(
+                    fontSize: MediaQuery.of(context).size.width * 0.4,
+                  ),
                 ),
                 SizedBox(height: 10),
                 Text(
