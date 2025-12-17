@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:weather_app/api_service.dart';
 import 'package:weather_app/weather_report.dart';
 
 class WeatherHomeScreen extends StatefulWidget {
@@ -9,6 +10,7 @@ class WeatherHomeScreen extends StatefulWidget {
 }
 
 class _WeatherHomeScreenState extends State<WeatherHomeScreen> {
+  ApiService apiService = ApiService();
   TextEditingController nameController = TextEditingController();
   String? nameError;
 
@@ -72,17 +74,22 @@ class _WeatherHomeScreenState extends State<WeatherHomeScreen> {
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: () {
-                        if (nameController.text.isEmpty) {
+                      onPressed: () async {
+                        String cityName = nameController.text;
+                        if (cityName.isEmpty) {
                           setState(() {
                             nameError = 'Please enter city name';
                           });
                           return;
                         } else {
+                          final data = await apiService.getWeather(cityName);
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => WeatherReport(),
+                              builder: (context) => WeatherReport(
+                                weatherData: data,
+                                cityName: cityName,
+                              ),
                             ),
                           );
                         }

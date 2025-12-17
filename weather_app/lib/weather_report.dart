@@ -1,21 +1,50 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:weather_app/weather_model.dart';
 
 class WeatherReport extends StatefulWidget {
-  const WeatherReport({super.key});
+  final WeatherModel weatherData;
+  final String cityName;
+  const WeatherReport({
+    super.key,
+    required this.weatherData,
+    required this.cityName,
+  });
 
   @override
   State<WeatherReport> createState() => _WeatherReportState();
 }
 
 class _WeatherReportState extends State<WeatherReport> {
+  String capitalize(String s) {
+    if (s.isEmpty) {
+      return s;
+    } else {
+      return s[0].toUpperCase() + s.substring(1);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    String weatherDescription = capitalize(
+      widget.weatherData.weather[0].description,
+    );
+    double tempInKelvin = widget.weatherData.main.temp;
+    double tempInCelsius = tempInKelvin - 273.15;
+    double speedInMPerS = widget.weatherData.wind.speed;
+    double speedInKmPerHr = speedInMPerS * 3.6;
+    int humidity = widget.weatherData.main.humidity;
+    int pressure = widget.weatherData.main.pressure;
     return Scaffold(
       backgroundColor: Color(0xFF0B0C1E),
       appBar: AppBar(
         backgroundColor: Color(0xFF0B0C1E),
-        leading: Icon(Icons.arrow_back_ios_new_sharp, color: Colors.white),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(Icons.arrow_back_ios_new_sharp, color: Colors.white),
+        ),
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -24,11 +53,23 @@ class _WeatherReportState extends State<WeatherReport> {
               color: const Color.fromARGB(255, 255, 255, 255),
             ),
             SizedBox(width: 5),
-            Text("Dhading", style: TextStyle(color: Colors.white)),
+            Text(widget.cityName, style: TextStyle(color: Colors.white)),
           ],
         ),
         actions: [
-          Icon(Icons.menu, color: const Color.fromARGB(255, 221, 221, 222)),
+          PopupMenuButton<String>(
+            icon: Icon(Icons.more_vert), // the icon user taps
+            onSelected: (String value) {
+              print('Selected: $value');
+            },
+            itemBuilder: (BuildContext context) {
+              return [
+                PopupMenuItem(value: 'Option 1', child: Text('Option 1')),
+                PopupMenuItem(value: 'Option 2', child: Text('Option 2')),
+                PopupMenuItem(value: 'Option 3', child: Text('Option 3')),
+              ];
+            },
+          ),
           SizedBox(width: 20),
         ],
       ),
@@ -82,7 +123,7 @@ class _WeatherReportState extends State<WeatherReport> {
                 ),
                 SizedBox(height: 10),
                 Text(
-                  'It\'s cloudy',
+                  weatherDescription,
                   style: TextStyle(fontSize: 20, color: Colors.white),
                 ),
                 SizedBox(height: 10),
@@ -90,7 +131,7 @@ class _WeatherReportState extends State<WeatherReport> {
                   TextSpan(
                     children: [
                       TextSpan(
-                        text: '29',
+                        text: tempInCelsius.toStringAsFixed(0),
                         style: TextStyle(
                           fontSize: 60,
                           fontWeight: FontWeight.bold,
@@ -109,19 +150,19 @@ class _WeatherReportState extends State<WeatherReport> {
                 Row(
                   children: [
                     DataDisplayCard(
-                      icon: Icons.wind_power,
-                      value: '22',
+                      icon: FontAwesomeIcons.wind,
+                      value: '${speedInKmPerHr.toStringAsFixed(0)} km/Hr',
                       label: 'Wind',
                     ),
                     DataDisplayCard(
-                      icon: Icons.wind_power,
-                      value: '22',
-                      label: 'Wind',
+                      icon: FontAwesomeIcons.cloudRain,
+                      value: '$humidity%',
+                      label: 'Humidity',
                     ),
                     DataDisplayCard(
-                      icon: Icons.wind_power,
-                      value: '22',
-                      label: 'Wind',
+                      icon: FontAwesomeIcons.gauge,
+                      value: '$pressure hPa',
+                      label: 'Pressure',
                     ),
                   ],
                 ),
@@ -176,7 +217,7 @@ class DataDisplayCard extends StatelessWidget {
           children: [
             Icon(icon, color: Colors.white),
             SizedBox(height: 5),
-            Text(value, style: TextStyle(fontSize: 18, color: Colors.white)),
+            Text(value, style: TextStyle(fontSize: 15, color: Colors.white)),
             SizedBox(height: 5),
             Text(label, style: TextStyle(fontSize: 12, color: Colors.white)),
           ],
