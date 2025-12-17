@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class WeatherReport extends StatefulWidget {
   const WeatherReport({super.key});
@@ -30,6 +31,28 @@ class _WeatherReportState extends State<WeatherReport> {
           Icon(Icons.menu, color: const Color.fromARGB(255, 221, 221, 222)),
           SizedBox(width: 20),
         ],
+      ),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(15),
+        child: Container(
+          height: 100,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: Color(0xFF161729),
+            borderRadius: BorderRadius.circular(15),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(15),
+            child: Row(
+              children: [
+                BottomNavigationIcon(icon: Icons.home),
+                BottomNavigationIcon(icon: Icons.search),
+                BottomNavigationIcon(icon: FontAwesomeIcons.compass),
+                BottomNavigationIcon(icon: Icons.person),
+              ],
+            ),
+          ),
+        ),
       ),
       body: SafeArea(
         child: Padding(
@@ -104,6 +127,27 @@ class _WeatherReportState extends State<WeatherReport> {
                 ),
               ],
             ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class BottomNavigationIcon extends StatelessWidget {
+  final IconData icon;
+  const BottomNavigationIcon({super.key, required this.icon});
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Center(
+        child: IconButton(
+          onPressed: () {},
+          icon: Icon(
+            icon,
+            size: 30,
+            color: const Color.fromARGB(255, 103, 103, 103),
           ),
         ),
       ),
