@@ -109,13 +109,16 @@ class _WeatherReportState extends State<WeatherReport> {
                     SizedBox(height: 15),
                     OutlinedButton(
                       onPressed: () async {
-                        if (bottomSheetNameController.text.isEmpty) {
+                        String cityName = capitalize(
+                          bottomSheetNameController.text,
+                        );
+
+                        if (cityName.isEmpty) {
                           bottomState(() {
                             bottomSheetNameError = 'Please enter city name';
                           });
                           return;
                         } else {
-                          String cityName = bottomSheetNameController.text;
                           final data = await apiService.getWeather(cityName);
                           setState(() {
                             weatherModel = data;
@@ -196,7 +199,10 @@ class _WeatherReportState extends State<WeatherReport> {
               color: const Color.fromARGB(255, 255, 255, 255),
             ),
             SizedBox(width: 5),
-            Text(currentCityName, style: TextStyle(color: Colors.white)),
+            Text(
+              capitalize(currentCityName),
+              style: TextStyle(color: Colors.white),
+            ),
           ],
         ),
 

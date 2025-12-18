@@ -1,5 +1,5 @@
-
 import 'package:flutter/material.dart';
+
 class DataDisplayCard extends StatelessWidget {
   final IconData icon;
   final String value;
@@ -20,9 +20,9 @@ class DataDisplayCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(icon, color: Colors.white),
-            SizedBox(height: 5),
-            Text(value, style: TextStyle(fontSize: 15, color: Colors.white)),
-            SizedBox(height: 5),
+            SizedBox(height: 8),
+            Text(value, style: TextStyle(fontSize: 13, color: Colors.white)),
+            SizedBox(height: 8),
             Text(label, style: TextStyle(fontSize: 12, color: Colors.white)),
           ],
         ),
