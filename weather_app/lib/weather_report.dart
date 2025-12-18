@@ -152,11 +152,10 @@ class _WeatherReportState extends State<WeatherReport> {
                   ),
                 ),
                 SizedBox(height: 10),
-                Text(
+                Image.asset(
                   weatherIcons.getWeatherSymbol(weatherMain),
-                  style: TextStyle(
-                    fontSize: MediaQuery.of(context).size.width * 0.4,
-                  ),
+                  width: MediaQuery.of(context).size.width * 0.4,
+                  height: MediaQuery.of(context).size.width * 0.6,
                 ),
                 SizedBox(height: 10),
                 Text(

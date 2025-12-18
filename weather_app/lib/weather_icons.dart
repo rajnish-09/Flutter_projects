@@ -2,17 +2,17 @@ class WeatherIcons {
   String getWeatherSymbol(String weatherMain) {
     switch (weatherMain) {
       case 'Thunderstorm':
-        return "⛈️";
+        return "assets/icons/thunderstorms.png";
       case 'Drizzle':
-        return "🌦️";
+        return "assets/icons/drizzle.png";
       case 'Rain':
-        return "🌧️";
+        return "assets/icons/rain.png";
       case 'Snow':
-        return "❄️";
+        return "assets/icons/snow.png";
       case 'Clear':
-        return "☀️";
+        return "assets/icons/clear.png";
       case 'Clouds':
-        return "☁️";
+        return "assets/icons/clouds.png";
       case 'Mist':
       case 'Smoke':
       case 'Haze':
@@ -22,9 +22,9 @@ class WeatherIcons {
       case 'Ash':
       case 'Squall':
       case 'Tornado':
-        return "🌫️";
+        return "assets/icons/hazze.png";
       default:
-        return "❓";
+        return "assets/icons/error.png";
     }
   }
 }
