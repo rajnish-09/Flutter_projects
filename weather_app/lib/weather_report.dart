@@ -70,50 +70,40 @@ class _WeatherReportState extends State<WeatherReport> {
           },
           icon: Icon(Icons.arrow_back_ios_new_sharp, color: Colors.white),
         ),
-        // title: Row(
-        //   mainAxisAlignment: MainAxisAlignment.center,
-        //   children: [
-        //     Icon(
-        //       Icons.location_on,
-        //       color: const Color.fromARGB(255, 255, 255, 255),
-        //     ),
-        //     SizedBox(width: 5),
-        //     Text(widget.cityName, style: TextStyle(color: Colors.white)),
-        //   ],
-        // ),
-        actions: [
-          DropdownButtonHideUnderline(
-            child: DropdownButton(
-              value: selectedValue,
-              dropdownColor: Color.fromARGB(255, 19, 20, 48),
-              style: TextStyle(color: Colors.white),
-              hint: Text("Select a city", style: TextStyle(color: Colors.grey)),
-              items: [
-                DropdownMenuItem(value: 'Kathmandu', child: Text("Kathmandu")),
-                DropdownMenuItem(value: 'New delhi', child: Text("New delhi")),
-                DropdownMenuItem(value: 'Beijing', child: Text("Beijing")),
-                DropdownMenuItem(value: 'London', child: Text("London")),
-                DropdownMenuItem(
-                  value: 'Washington dc',
-                  child: Text("Washington dc"),
-                ),
-              ],
-              onChanged: (value) async {
-                setState(() {
-                  selectedValue = value;
-                });
-                if (value != null) {
-                  final data = await apiService.getWeather(value);
-                  setState(() {
-                    weatherModel = data;
-                    currentCityName = value;
-                  });
-                }
-              },
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.location_on,
+              color: const Color.fromARGB(255, 255, 255, 255),
             ),
-          ),
-          SizedBox(width: 20),
-        ],
+            SizedBox(width: 5),
+            Text(currentCityName, style: TextStyle(color: Colors.white)),
+          ],
+        ),
+
+        iconTheme: IconThemeData(color: Colors.white),
+      ),
+
+      endDrawer: Drawer(
+        backgroundColor: Color(0xFF161729),
+        child: ListView(
+          children: [
+            DrawerHeader(
+              child: Center(
+                child: Text(
+                  "Saved locations",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ),
+            DrawerListItem(title: 'Kathmandu', changeWeather: updateWeather),
+            DrawerListItem(title: 'New delhi', changeWeather: updateWeather),
+            DrawerListItem(title: 'Beijing', changeWeather: updateWeather),
+            DrawerListItem(title: 'London', changeWeather: updateWeather),
+            DrawerListItem(title: 'Paris', changeWeather: updateWeather),
+          ],
+        ),
       ),
 
       bottomNavigationBar: Padding(
@@ -150,28 +140,6 @@ class _WeatherReportState extends State<WeatherReport> {
         ),
       ),
 
-      // bottomNavigationBar: Padding(
-      //   padding: const EdgeInsets.all(15),
-      //   child: Container(
-      //     height: 100,
-      //     width: double.infinity,
-      //     decoration: BoxDecoration(
-      //       color: Color(0xFF161729),
-      //       borderRadius: BorderRadius.circular(15),
-      //     ),
-      //     child: Padding(
-      //       padding: const EdgeInsets.all(15),
-      //       child: Row(
-      //         children: [
-      //           BottomNavigationIcon(icon: Icons.home),
-      //           BottomNavigationIcon(icon: Icons.search),
-      //           BottomNavigationIcon(icon: Icons.location_on),
-      //           BottomNavigationIcon(icon: Icons.person),
-      //         ],
-      //       ),
-      //     ),
-      //   ),
-      // ),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.all(10),
@@ -204,7 +172,7 @@ class _WeatherReportState extends State<WeatherReport> {
                   weatherDescription,
                   style: TextStyle(fontSize: 20, color: Colors.white),
                 ),
-                SizedBox(height: 10),
+                SizedBox(height: 15),
                 Text.rich(
                   TextSpan(
                     children: [
@@ -224,7 +192,7 @@ class _WeatherReportState extends State<WeatherReport> {
                   ),
                 ),
 
-                SizedBox(height: 15),
+                SizedBox(height: 20),
                 Row(
                   children: [
                     DataDisplayCard(
@@ -249,6 +217,36 @@ class _WeatherReportState extends State<WeatherReport> {
           ),
         ),
       ),
+    );
+  }
+
+  void updateWeather(String cityName) async {
+    final data = await apiService.getWeather(cityName);
+    setState(() {
+      weatherModel = data;
+      currentCityName = cityName;
+    });
+  }
+}
+
+class DrawerListItem extends StatelessWidget {
+  final String title;
+  final Function(String) changeWeather;
+  const DrawerListItem({
+    super.key,
+    required this.title,
+    required this.changeWeather,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: Icon(Icons.location_on, color: Colors.white),
+      title: Text(title, style: TextStyle(color: Colors.white)),
+      onTap: () {
+        changeWeather(title);
+        Navigator.pop(context);
+      },
     );
   }
 }
