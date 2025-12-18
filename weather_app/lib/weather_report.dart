@@ -108,13 +108,21 @@ class _WeatherReportState extends State<WeatherReport> {
                     ),
                     SizedBox(height: 15),
                     OutlinedButton(
-                      onPressed: () {
+                      onPressed: () async {
                         if (bottomSheetNameController.text.isEmpty) {
                           bottomState(() {
                             bottomSheetNameError = 'Please enter city name';
                           });
-                          print(bottomSheetNameError);
                           return;
+                        } else {
+                          String cityName = bottomSheetNameController.text;
+                          final data = await apiService.getWeather(cityName);
+                          setState(() {
+                            weatherModel = data;
+                            currentCityName = cityName;
+                          });
+                          bottomSheetNameController.text = '';
+                          Navigator.pop(context);
                         }
                       },
                       child: Text(
@@ -202,7 +210,7 @@ class _WeatherReportState extends State<WeatherReport> {
             DrawerHeader(
               child: Center(
                 child: Text(
-                  "Saved locations",
+                  "Default locations",
                   style: TextStyle(color: Colors.white),
                 ),
               ),
