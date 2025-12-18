@@ -22,6 +22,7 @@ class _WeatherReportState extends State<WeatherReport> {
   WeatherIcons weatherIcons = WeatherIcons();
   WeatherModel? weatherModel;
   String currentCityName = '';
+  int currentIndex = 0;
 
   @override
   void initState() {
@@ -36,6 +37,12 @@ class _WeatherReportState extends State<WeatherReport> {
     } else {
       return s[0].toUpperCase() + s.substring(1);
     }
+  }
+
+  void _changeNavigationItem(int index) {
+    setState(() {
+      currentIndex = index;
+    });
   }
 
   String? selectedValue;
@@ -108,28 +115,63 @@ class _WeatherReportState extends State<WeatherReport> {
           SizedBox(width: 20),
         ],
       ),
+
       bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(15),
-        child: Container(
-          height: 100,
-          width: double.infinity,
-          decoration: BoxDecoration(
+        padding: EdgeInsets.all(15),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(15),
+          child: Container(
+            padding: EdgeInsets.symmetric(vertical: 10),
             color: Color(0xFF161729),
-            borderRadius: BorderRadius.circular(15),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(15),
-            child: Row(
-              children: [
-                BottomNavigationIcon(icon: Icons.home),
-                BottomNavigationIcon(icon: Icons.search),
-                BottomNavigationIcon(icon: Icons.location_on),
-                BottomNavigationIcon(icon: Icons.person),
+            child: BottomNavigationBar(
+              currentIndex: currentIndex,
+              onTap: _changeNavigationItem,
+              backgroundColor: Colors.transparent,
+              type: BottomNavigationBarType.fixed,
+              unselectedItemColor: Colors.white,
+              selectedItemColor: Colors.blue,
+              items: [
+                BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.search),
+                  label: 'Search',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.location_on),
+                  label: 'Location',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.person),
+                  label: 'Account',
+                ),
               ],
             ),
           ),
         ),
       ),
+
+      // bottomNavigationBar: Padding(
+      //   padding: const EdgeInsets.all(15),
+      //   child: Container(
+      //     height: 100,
+      //     width: double.infinity,
+      //     decoration: BoxDecoration(
+      //       color: Color(0xFF161729),
+      //       borderRadius: BorderRadius.circular(15),
+      //     ),
+      //     child: Padding(
+      //       padding: const EdgeInsets.all(15),
+      //       child: Row(
+      //         children: [
+      //           BottomNavigationIcon(icon: Icons.home),
+      //           BottomNavigationIcon(icon: Icons.search),
+      //           BottomNavigationIcon(icon: Icons.location_on),
+      //           BottomNavigationIcon(icon: Icons.person),
+      //         ],
+      //       ),
+      //     ),
+      //   ),
+      // ),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.all(10),
