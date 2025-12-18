@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:weather_app/api_service.dart';
+import 'package:weather_app/dummy_page.dart';
 import 'package:weather_app/weather_model.dart';
 import 'package:weather_app/weather_icons.dart';
+import 'package:weather_app/drawer_listItem_widget.dart';
+import 'package:weather_app/report_home_page.dart';
 
 class WeatherReport extends StatefulWidget {
   final WeatherModel weatherData;
@@ -23,7 +25,8 @@ class _WeatherReportState extends State<WeatherReport> {
   WeatherModel? weatherModel;
   String currentCityName = '';
   int currentIndex = 0;
-
+  TextEditingController bottomSheetNameController = TextEditingController();
+  String? bottomSheetNameError;
   @override
   void initState() {
     super.initState();
@@ -40,9 +43,93 @@ class _WeatherReportState extends State<WeatherReport> {
   }
 
   void _changeNavigationItem(int index) {
+    if (index == 1) {
+      _showModalBottomSheet();
+    }
     setState(() {
       currentIndex = index;
     });
+  }
+
+  void _showModalBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) {
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+          ),
+          child: StatefulBuilder(
+            builder: (context, bottomState) {
+              return Container(
+                padding: EdgeInsets.all(10),
+                width: double.infinity,
+                color: Color.fromARGB(255, 20, 21, 52),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(height: 10),
+                    Text(
+                      "Enter city name",
+                      style: TextStyle(fontSize: 20, color: Colors.white),
+                    ),
+                    SizedBox(height: 15),
+                    TextField(
+                      controller: bottomSheetNameController,
+                      onChanged: (_) {
+                        bottomState(() {
+                          bottomSheetNameError = null;
+                        });
+                      },
+                      style: TextStyle(color: Colors.white),
+                      decoration: InputDecoration(
+                        hintText: 'Enter city name',
+                        hintStyle: TextStyle(color: Colors.grey),
+                        errorText: bottomSheetNameError,
+                        border: OutlineInputBorder(),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        errorBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.red),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        focusedErrorBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 15),
+                    OutlinedButton(
+                      onPressed: () {
+                        if (bottomSheetNameController.text.isEmpty) {
+                          bottomState(() {
+                            bottomSheetNameError = 'Please enter city name';
+                          });
+                          print(bottomSheetNameError);
+                          return;
+                        }
+                      },
+                      child: Text(
+                        "Get weather",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        );
+      },
+    );
   }
 
   String? selectedValue;
@@ -59,6 +146,29 @@ class _WeatherReportState extends State<WeatherReport> {
     int humidity = weatherModel!.main.humidity;
     int pressure = weatherModel!.main.pressure;
     String weatherMain = weatherModel!.weather[0].main;
+
+    List<Widget> _pages = [
+      HomePage(
+        weatherIcons: weatherIcons,
+        weatherMain: weatherMain,
+        weatherDescription: weatherDescription,
+        tempInCelsius: tempInCelsius,
+        speedInKmPerHr: speedInKmPerHr,
+        humidity: humidity,
+        pressure: pressure,
+      ),
+      HomePage(
+        weatherIcons: weatherIcons,
+        weatherMain: weatherMain,
+        weatherDescription: weatherDescription,
+        tempInCelsius: tempInCelsius,
+        speedInKmPerHr: speedInKmPerHr,
+        humidity: humidity,
+        pressure: pressure,
+      ),
+      DummyPage(),
+      DummyPage(),
+    ];
 
     return Scaffold(
       backgroundColor: Color(0xFF0B0C1E),
@@ -143,78 +253,7 @@ class _WeatherReportState extends State<WeatherReport> {
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.all(10),
-          child: SingleChildScrollView(
-            child: Column(
-              // mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(height: 10),
-                SizedBox(
-                  width: double.infinity,
-                  child: Text(
-                    "Today's Report",
-                    style: TextStyle(
-                      fontSize: 25,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                    textAlign: TextAlign.start,
-                  ),
-                ),
-                SizedBox(height: 10),
-                Image.asset(
-                  weatherIcons.getWeatherSymbol(weatherMain),
-                  width: MediaQuery.of(context).size.width * 0.4,
-                  height: MediaQuery.of(context).size.width * 0.6,
-                ),
-                SizedBox(height: 10),
-                Text(
-                  weatherDescription,
-                  style: TextStyle(fontSize: 20, color: Colors.white),
-                ),
-                SizedBox(height: 15),
-                Text.rich(
-                  TextSpan(
-                    children: [
-                      TextSpan(
-                        text: tempInCelsius.toStringAsFixed(0),
-                        style: TextStyle(
-                          fontSize: 60,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                      TextSpan(
-                        text: "°",
-                        style: TextStyle(color: Colors.blue, fontSize: 60),
-                      ),
-                    ],
-                  ),
-                ),
-
-                SizedBox(height: 20),
-                Row(
-                  children: [
-                    DataDisplayCard(
-                      icon: FontAwesomeIcons.wind,
-                      value: '${speedInKmPerHr.toStringAsFixed(2)} km/Hr',
-                      label: 'Wind',
-                    ),
-                    DataDisplayCard(
-                      icon: FontAwesomeIcons.cloudRain,
-                      value: '$humidity%',
-                      label: 'Humidity',
-                    ),
-                    DataDisplayCard(
-                      icon: FontAwesomeIcons.gauge,
-                      value: '$pressure hPa',
-                      label: 'Pressure',
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
+          child: _pages[currentIndex],
         ),
       ),
     );
@@ -226,79 +265,5 @@ class _WeatherReportState extends State<WeatherReport> {
       weatherModel = data;
       currentCityName = cityName;
     });
-  }
-}
-
-class DrawerListItem extends StatelessWidget {
-  final String title;
-  final Function(String) changeWeather;
-  const DrawerListItem({
-    super.key,
-    required this.title,
-    required this.changeWeather,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      leading: Icon(Icons.location_on, color: Colors.white),
-      title: Text(title, style: TextStyle(color: Colors.white)),
-      onTap: () {
-        changeWeather(title);
-        Navigator.pop(context);
-      },
-    );
-  }
-}
-
-class BottomNavigationIcon extends StatelessWidget {
-  final IconData icon;
-  const BottomNavigationIcon({super.key, required this.icon});
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: Center(
-        child: IconButton(
-          onPressed: () {},
-          icon: Icon(
-            icon,
-            size: 30,
-            color: const Color.fromARGB(255, 103, 103, 103),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class DataDisplayCard extends StatelessWidget {
-  final IconData icon;
-  final String value;
-  final String label;
-  const DataDisplayCard({
-    super.key,
-    required this.icon,
-    required this.value,
-    required this.label,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: Padding(
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, color: Colors.white),
-            SizedBox(height: 5),
-            Text(value, style: TextStyle(fontSize: 15, color: Colors.white)),
-            SizedBox(height: 5),
-            Text(label, style: TextStyle(fontSize: 12, color: Colors.white)),
-          ],
-        ),
-      ),
-    );
   }
 }
