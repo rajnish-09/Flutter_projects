@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:weather_app/api_service.dart';
+import 'package:weather_app/determine_location.dart';
 import 'package:weather_app/dummy_page.dart';
 import 'package:weather_app/weather_model.dart';
 import 'package:weather_app/weather_icons.dart';
 import 'package:weather_app/drawer_listItem_widget.dart';
 import 'package:weather_app/report_home_page.dart';
+import 'package:geolocator/geolocator.dart';
 
 class WeatherReport extends StatefulWidget {
   final WeatherModel weatherData;
@@ -22,6 +24,8 @@ class WeatherReport extends StatefulWidget {
 class _WeatherReportState extends State<WeatherReport> {
   ApiService apiService = ApiService();
   WeatherIcons weatherIcons = WeatherIcons();
+  DetermineLocation determineLocation = DetermineLocation();
+
   WeatherModel? weatherModel;
   String currentCityName = '';
   int currentIndex = 0;
@@ -42,9 +46,18 @@ class _WeatherReportState extends State<WeatherReport> {
     }
   }
 
-  void _changeNavigationItem(int index) {
+  void _changeNavigationItem(int index) async {
     if (index == 1) {
       _showModalBottomSheet();
+    } else if (index == 2) {
+      Position position = await determineLocation.getLocation();
+      double lat = position.latitude;
+      double lon = position.longitude;
+      final data = await apiService.getCurrentLocation(lat, lon);
+      currentCityName = data.name;
+      setState(() {
+        weatherModel = data;
+      });
     }
     setState(() {
       currentIndex = index;
@@ -177,7 +190,16 @@ class _WeatherReportState extends State<WeatherReport> {
         humidity: humidity,
         pressure: pressure,
       ),
-      DummyPage(),
+      HomePage(
+        weatherIcons: weatherIcons,
+        weatherMain: weatherMain,
+        weatherDescription: weatherDescription,
+        tempInCelsius: tempInCelsius,
+        speedInKmPerHr: speedInKmPerHr,
+        humidity: humidity,
+        pressure: pressure,
+      ),
+
       DummyPage(),
     ];
 

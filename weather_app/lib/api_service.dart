@@ -24,4 +24,23 @@ class ApiService {
       throw e.toString();
     }
   }
+
+  Future<WeatherModel> getCurrentLocation(double lat, double lon) async {
+    try {
+      final response = await http.get(
+        Uri.parse(
+          'https://api.openweathermap.org/data/2.5/weather?lat=$lat&lon=$lon&appid=$apiKey',
+        ),
+      );
+      if (response.statusCode == 200) {
+        final jsonData = jsonDecode(response.body);
+        WeatherModel weatherModel = WeatherModel.fromJson(jsonData);
+        return weatherModel;
+      } else {
+        throw Exception('Failed to get current location');
+      }
+    } catch (e) {
+      throw e.toString();
+    }
+  }
 }
