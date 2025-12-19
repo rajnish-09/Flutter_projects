@@ -200,7 +200,7 @@ class _WeatherReportState extends State<WeatherReport> {
         pressure: pressure,
       ),
 
-      DummyPage(),
+      // DummyPage(),
     ];
 
     return Scaffold(
@@ -276,10 +276,10 @@ class _WeatherReportState extends State<WeatherReport> {
                   icon: Icon(Icons.location_on),
                   label: 'Location',
                 ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.person),
-                  label: 'Account',
-                ),
+                // BottomNavigationBarItem(
+                //   icon: Icon(Icons.person),
+                //   label: 'Account',
+                // ),
               ],
             ),
           ),
