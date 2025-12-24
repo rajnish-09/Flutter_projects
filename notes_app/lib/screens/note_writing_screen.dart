@@ -15,11 +15,10 @@ class _NoteWritingScreenState extends State<NoteWritingScreen> {
   TextEditingController descriptionController = TextEditingController();
 
   NoteDatabase noteDatabase = NoteDatabase();
-  List<NoteModel> notes = [];
 
   String? titleErrorMessage;
 
-  void createNote() async {
+  Future<void> createNote() async {
     final title = titleController.text;
     final description = descriptionController.text;
     if (title.isEmpty && description.isEmpty) {
@@ -33,12 +32,9 @@ class _NoteWritingScreenState extends State<NoteWritingScreen> {
       });
     } else {
       final note = NoteModel(title: title, description: description);
-      final result = await noteDatabase.insertNote(note);
-      if (result > 0) {
-        notes = await noteDatabase.fetchNote();
-        setState(() {});
-        Navigator.pop(context);
-      }
+      await noteDatabase.insertNote(note);
+      if (!mounted) return;
+      Navigator.pop(context, true);
     }
   }
 

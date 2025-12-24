@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:notes_app/database/note_database.dart';
+import 'package:notes_app/models/note_model.dart';
 import 'package:notes_app/screens/note_writing_screen.dart';
-import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class NoteHomeScreen extends StatefulWidget {
   const NoteHomeScreen({super.key});
@@ -10,16 +11,35 @@ class NoteHomeScreen extends StatefulWidget {
 }
 
 class _NoteHomeScreenState extends State<NoteHomeScreen> {
+  NoteDatabase noteDatabase = NoteDatabase();
+
+  List<NoteModel> notes = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchNotes();
+  }
+
+  void fetchNotes() async {
+    notes = await noteDatabase.fetchNote();
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
+        onPressed: () async {
+          final result = await Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => NoteWritingScreen()),
           );
+          if (result == true) {
+            notes = await noteDatabase.fetchNote();
+            setState(() {});
+          }
         },
         shape: CircleBorder(),
         backgroundColor: const Color.fromARGB(133, 158, 158, 158),
@@ -46,6 +66,18 @@ class _NoteHomeScreenState extends State<NoteHomeScreen> {
                 ),
               ),
               SizedBox(height: 20),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: notes.length,
+                  itemBuilder: (context, index) {
+                    final data = notes[index];
+                    return ListTile(
+                      title: Text(data.title),
+                      subtitle: Text(data.description),
+                    );
+                  },
+                ),
+              ),
             ],
           ),
         ),
