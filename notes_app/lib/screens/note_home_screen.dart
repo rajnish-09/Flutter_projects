@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:notes_app/screens/note_writing_screen.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class NoteHomeScreen extends StatefulWidget {
   const NoteHomeScreen({super.key});
@@ -12,6 +14,17 @@ class _NoteHomeScreenState extends State<NoteHomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => NoteWritingScreen()),
+          );
+        },
+        shape: CircleBorder(),
+        backgroundColor: const Color.fromARGB(133, 158, 158, 158),
+        child: Icon(Icons.note_alt_outlined, color: Colors.white),
+      ),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.all(10),
