@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:notes_app/database/note_database.dart';
+import 'package:notes_app/models/note_model.dart';
+import 'package:notes_app/screens/note_home_screen.dart';
 
 class NoteWritingScreen extends StatefulWidget {
   const NoteWritingScreen({super.key});
@@ -10,6 +13,34 @@ class NoteWritingScreen extends StatefulWidget {
 class _NoteWritingScreenState extends State<NoteWritingScreen> {
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
+
+  NoteDatabase noteDatabase = NoteDatabase();
+  List<NoteModel> notes = [];
+
+  String? titleErrorMessage;
+
+  void createNote() async {
+    final title = titleController.text;
+    final description = descriptionController.text;
+    if (title.isEmpty && description.isEmpty) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => NoteHomeScreen()),
+      );
+    } else if (title.isEmpty && description.isNotEmpty) {
+      setState(() {
+        titleErrorMessage = 'Title is required';
+      });
+    } else {
+      final note = NoteModel(title: title, description: description);
+      final result = await noteDatabase.insertNote(note);
+      if (result > 0) {
+        notes = await noteDatabase.fetchNote();
+        setState(() {});
+        Navigator.pop(context);
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +57,9 @@ class _NoteWritingScreenState extends State<NoteWritingScreen> {
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              createNote();
+            },
             icon: Icon(Icons.check),
             color: const Color.fromARGB(255, 203, 203, 203),
             style: IconButton.styleFrom(
@@ -48,7 +81,14 @@ class _NoteWritingScreenState extends State<NoteWritingScreen> {
                   border: InputBorder.none,
                   enabledBorder: InputBorder.none,
                   focusedBorder: InputBorder.none,
+                  errorText: titleErrorMessage,
+                  errorBorder: InputBorder.none,
                 ),
+                onChanged: (value) {
+                  setState(() {
+                    titleErrorMessage = null;
+                  });
+                },
                 style: TextStyle(
                   color: const Color.fromARGB(255, 208, 205, 205),
                 ),
