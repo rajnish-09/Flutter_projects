@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:notes_app/database/note_database.dart';
 import 'package:notes_app/models/note_model.dart';
 import 'package:notes_app/screens/note_writing_screen.dart';
+// import 'package:google_fonts/google_fonts.dart';
 
 class NoteHomeScreen extends StatefulWidget {
   const NoteHomeScreen({super.key});
@@ -49,6 +50,7 @@ class _NoteHomeScreenState extends State<NoteHomeScreen> {
         child: Padding(
           padding: EdgeInsets.all(10),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 "Notes",
@@ -59,7 +61,7 @@ class _NoteHomeScreenState extends State<NoteHomeScreen> {
                 ),
               ),
               Text(
-                "6 Notes",
+                '${notes.length} Notes',
                 style: TextStyle(
                   fontSize: 15,
                   color: const Color.fromARGB(255, 110, 110, 110),
@@ -67,13 +69,45 @@ class _NoteHomeScreenState extends State<NoteHomeScreen> {
               ),
               SizedBox(height: 20),
               Expanded(
-                child: ListView.builder(
+                child: ListView.separated(
+                  separatorBuilder: (context, index) {
+                    return SizedBox(height: 10);
+                  },
                   itemCount: notes.length,
                   itemBuilder: (context, index) {
                     final data = notes[index];
-                    return ListTile(
-                      title: Text(data.title),
-                      subtitle: Text(data.description),
+                    return Container(
+                      // height: 100,
+                      // width: double.infinity,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        color: Color(0xFF1c1c1e),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 30,
+                          vertical: 10,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              data.title,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'Montserrat-Bold',
+                              ),
+                            ),
+                            Text(
+                              data.description,
+                              style: TextStyle(color: Colors.white),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                      ),
                     );
                   },
                 ),
