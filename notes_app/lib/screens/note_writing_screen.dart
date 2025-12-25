@@ -4,23 +4,33 @@ import 'package:notes_app/models/note_model.dart';
 import 'package:notes_app/screens/note_home_screen.dart';
 
 class NoteWritingScreen extends StatefulWidget {
-  const NoteWritingScreen({super.key});
+  final NoteModel? note;
+  const NoteWritingScreen({super.key, this.note});
 
   @override
   State<NoteWritingScreen> createState() => _NoteWritingScreenState();
 }
 
 class _NoteWritingScreenState extends State<NoteWritingScreen> {
-  TextEditingController titleController = TextEditingController();
-  TextEditingController descriptionController = TextEditingController();
+  late TextEditingController titleController;
+  late TextEditingController descriptionController;
 
   NoteDatabase noteDatabase = NoteDatabase();
 
   String? titleErrorMessage;
 
+  @override
+  void initState() {
+    super.initState();
+    titleController = TextEditingController(text: widget.note?.title ?? '');
+    descriptionController = TextEditingController(
+      text: widget.note?.description ?? '',
+    );
+  }
+
   Future<void> createNote() async {
-    final title = titleController.text;
-    final description = descriptionController.text;
+    final title = titleController.text.trim();
+    final description = descriptionController.text.trim();
     if (title.isEmpty && description.isEmpty) {
       Navigator.push(
         context,
@@ -38,13 +48,27 @@ class _NoteWritingScreenState extends State<NoteWritingScreen> {
     }
   }
 
+  void updateNote() async {
+    if (widget.note == null) return;
+    final updatedNote = NoteModel(
+      id: widget.note!.id,
+      title: titleController.text,
+      description: descriptionController.text,
+    );
+    await noteDatabase.updateNote(updatedNote);
+    if (!mounted) return;
+    Navigator.pop(context, true);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
         leading: IconButton(
-          onPressed: () {},
+          onPressed: () {
+            widget.note == null ? createNote() : updateNote();
+          },
           icon: Icon(Icons.arrow_back),
           color: const Color.fromARGB(255, 203, 203, 203),
           style: IconButton.styleFrom(
@@ -54,7 +78,7 @@ class _NoteWritingScreenState extends State<NoteWritingScreen> {
         actions: [
           IconButton(
             onPressed: () {
-              createNote();
+              widget.note == null ? createNote() : updateNote();
             },
             icon: Icon(Icons.check),
             color: const Color.fromARGB(255, 203, 203, 203),
