@@ -57,3 +57,8 @@ To tell Flutter:
 -------------------------------------------------------------
 
 Geolocation services: taught in 12/16/2025
+
+-------------------------------------------------------------
+
+to generate launcher icon 
+dart run flutter_launcher_icons
