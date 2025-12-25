@@ -27,6 +27,43 @@ class _NoteHomeScreenState extends State<NoteHomeScreen> {
     setState(() {});
   }
 
+  void deleteData(int index) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: const Color.fromARGB(255, 0, 0, 0),
+          title: Text(
+            "Are you sure you want to delete?",
+            style: TextStyle(fontSize: 20, color: Colors.white),
+          ),
+          actions: [
+            ElevatedButton(
+              onPressed: () async {
+                final noteId = notes[index].id;
+                if (noteId == null) return;
+                final res = await noteDatabase.deleteNote(noteId);
+                if (res > 0) {
+                  print('delete');
+                  Navigator.pop(context);
+                  notes = await noteDatabase.fetchNote();
+                  setState(() {});
+                }
+              },
+              child: Text("Yes"),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text("No"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,7 +98,7 @@ class _NoteHomeScreenState extends State<NoteHomeScreen> {
                 ),
               ),
               Text(
-                '${notes.length} Notes',
+                notes.isEmpty ? 'Empty Notes' : '${notes.length} Notes',
                 style: TextStyle(
                   fontSize: 15,
                   color: const Color.fromARGB(255, 110, 110, 110),
@@ -88,22 +125,34 @@ class _NoteHomeScreenState extends State<NoteHomeScreen> {
                           horizontal: 30,
                           vertical: 10,
                         ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        child: Row(
                           children: [
-                            Text(
-                              data.title,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: 'Montserrat-Bold',
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    data.title,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: 'Montserrat-Bold',
+                                    ),
+                                  ),
+                                  Text(
+                                    data.description,
+                                    style: TextStyle(color: Colors.white),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ],
                               ),
                             ),
-                            Text(
-                              data.description,
-                              style: TextStyle(color: Colors.white),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
+                            IconButton(
+                              onPressed: () {
+                                deleteData(index);
+                              },
+                              icon: Icon(Icons.delete, color: Colors.red),
                             ),
                           ],
                         ),
@@ -112,6 +161,8 @@ class _NoteHomeScreenState extends State<NoteHomeScreen> {
                   },
                 ),
               ),
+              SizedBox(height: 20),
+              ElevatedButton(onPressed: () {}, child: Text("Nothing")),
             ],
           ),
         ),
