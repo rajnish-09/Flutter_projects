@@ -1,5 +1,8 @@
+import 'package:chatting_app/screens/login_screen.dart';
+import 'package:chatting_app/services/firebase_services.dart';
 import 'package:chatting_app/widgets.dart/custom_app_bar.dart';
 import 'package:chatting_app/widgets.dart/input_field.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class RegistrationScreen extends StatefulWidget {
@@ -10,6 +13,8 @@ class RegistrationScreen extends StatefulWidget {
 }
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
+  FirebaseServices firebaseServices = FirebaseServices();
+  String? errorMessage;
   final nameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -36,13 +41,14 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               Text(
                 "You and your friends always connected",
                 style: TextStyle(fontSize: 12),
+                textAlign: TextAlign.center,
               ),
               SizedBox(height: 30),
-              InputField(
-                controller: nameController,
-                prefixIcon: Icons.person,
-                hintText: 'Name',
-              ),
+              // InputField(
+              //   controller: nameController,
+              //   prefixIcon: Icons.person,
+              //   hintText: 'Name',
+              // ),
               SizedBox(height: 20),
               InputField(
                 controller: emailController,
@@ -64,7 +70,55 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 hintText: 'Re-type password',
               ),
               SizedBox(height: 10),
-              ElevatedButton(onPressed: () {}, child: Text("Register")),
+              ElevatedButton(
+                onPressed: () async {
+                  if (emailController.text.isEmpty &&
+                      passwordController.text.isEmpty &&
+                      confirmPasswordController.text.isEmpty) {
+                    setState(() {
+                      errorMessage = 'All fields are required';
+                    });
+                  } else {
+                    if (passwordController.text ==
+                        confirmPasswordController.text) {
+                      try {
+                        await firebaseServices.registerNewUser(
+                          emailController.text,
+                          passwordController.text,
+                        );
+                        if (!context.mounted) return;
+                        ScaffoldMessenger.of(
+                          context,
+                        ).showSnackBar(SnackBar(content: Text("success")));
+                      } on FirebaseAuthException catch (e) {
+                        setState(() {
+                          errorMessage = e.message.toString();
+                        });
+                      }
+                    }
+                    if (passwordController.text !=
+                        confirmPasswordController.text) {
+                      setState(() {
+                        errorMessage = "Passwords doesn't match";
+                      });
+                    }
+                  }
+                },
+                child: Text("Register"),
+              ),
+              Text(errorMessage ?? ''),
+              TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => LoginScreen()),
+                  );
+                },
+                child: Text(
+                  "Login",
+                  style: TextStyle(decoration: TextDecoration.underline),
+                ),
+              ),
             ],
           ),
         ),
