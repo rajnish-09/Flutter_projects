@@ -25,4 +25,16 @@ class AuthService {
       rethrow;
     }
   }
+
+  Future<String> loginUserWithEmail(String email, String password) async {
+    try {
+      final response = await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      return response.user!.uid;
+    } on FirebaseAuthException {
+      rethrow;
+    }
+  }
 }
