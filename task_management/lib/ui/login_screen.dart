@@ -1,6 +1,10 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_management/auth/auth_service.dart';
+import 'package:task_management/auth/bloc/auth_bloc.dart';
+import 'package:task_management/auth/bloc/auth_event.dart';
+import 'package:task_management/auth/bloc/auth_state.dart';
 import 'package:task_management/ui/signup_screen.dart';
 import 'package:task_management/utils/input_text_form_field.dart';
 import 'package:task_management/utils/submit_button.dart';
@@ -85,9 +89,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 SubmitButton(
                   buttonText: 'Login',
                   onPressed: () {
-                    loginUserWithEmail(
-                      emailController.text.trim(),
-                      passwordController.text.trim(),
+                    context.read<AuthBloc>().add(
+                      LoginUserWithEmail(
+                        email: emailController.text.trim(),
+                        password: passwordController.text.trim(),
+                      ),
                     );
                   },
                 ),
@@ -117,6 +123,17 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ],
                   ),
+                ),
+                BlocBuilder<AuthBloc, AuthState>(
+                  builder: (context, state) {
+                    if (state is AuthLoading) {
+                      return Center(child: CircularProgressIndicator());
+                    }
+                    if (state is AuthLoginSuccess) {
+                      return Center(child: Text('Successfully logged in'));
+                    }
+                    return Center(child: Text(''));
+                  },
                 ),
               ],
             ),
