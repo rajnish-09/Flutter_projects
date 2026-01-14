@@ -6,6 +6,7 @@ import 'package:task_management/auth/bloc/auth_bloc.dart';
 import 'package:task_management/firebase_options.dart';
 import 'package:task_management/ui/login_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:task_management/ui/task_home_screen.dart';
 
 // import 'package:bloc/m';
 
@@ -25,6 +26,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(debugShowCheckedModeBanner: false, home: LoginScreen());
+    return MaterialApp(debugShowCheckedModeBanner: false, home: TaskHomeScreen());
   }
 }
