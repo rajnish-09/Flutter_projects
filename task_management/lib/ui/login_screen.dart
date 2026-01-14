@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,8 +7,9 @@ import 'package:task_management/auth/bloc/auth_bloc.dart';
 import 'package:task_management/auth/bloc/auth_event.dart';
 import 'package:task_management/auth/bloc/auth_state.dart';
 import 'package:task_management/ui/signup_screen.dart';
-import 'package:task_management/utils/input_text_form_field.dart';
-import 'package:task_management/utils/submit_button.dart';
+import 'package:task_management/utils/show_sackbar.dart';
+import 'package:task_management/widgets/input_text_form_field.dart';
+import 'package:task_management/widgets/submit_button.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -34,21 +36,21 @@ class _LoginScreenState extends State<LoginScreen> {
       };
   }
 
-  void loginUserWithEmail(String email, String password) async {
-    try {
-      await authService.loginUserWithEmail(email, password);
-      if (!mounted) return;
+  // void loginUserWithEmail(String email, String password) async {
+  //   try {
+  //     await authService.loginUserWithEmail(email, password);
+  //     if (!mounted) return;
 
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Successfully logged in')));
-    } catch (e) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(e.toString())));
-    }
-  }
+  //     ScaffoldMessenger.of(
+  //       context,
+  //     ).showSnackBar(SnackBar(content: Text('Successfully logged in')));
+  //   } catch (e) {
+  //     if (!mounted) return;
+  //     ScaffoldMessenger.of(
+  //       context,
+  //     ).showSnackBar(SnackBar(content: Text(e.toString())));
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -86,16 +88,25 @@ class _LoginScreenState extends State<LoginScreen> {
                   hintText: "Enter password",
                 ),
                 SizedBox(height: 20),
-                SubmitButton(
-                  buttonText: 'Login',
-                  onPressed: () {
-                    context.read<AuthBloc>().add(
-                      LoginUserWithEmail(
-                        email: emailController.text.trim(),
-                        password: passwordController.text.trim(),
-                      ),
-                    );
+                BlocListener<AuthBloc, AuthState>(
+                  listener: (context, state) {
+                    if (state is AuthFailure) {
+                      showSnackbar(context, state.errorMessage);
+                    }
+                    if (state is AuthLoginSuccess) {
+                      showSnackbar(context, 'Successfully loggeed in');
+                    }
                   },
+                  child: SubmitButton(
+                    buttonText: 'Login',
+                    onPressed: () {
+                      String email = emailController.text.trim();
+                      String password = passwordController.text.trim();
+                      context.read<AuthBloc>().add(
+                        LoginUserWithEmail(email: email, password: password),
+                      );
+                    },
+                  ),
                 ),
                 SizedBox(height: 10),
                 SizedBox(
@@ -130,7 +141,11 @@ class _LoginScreenState extends State<LoginScreen> {
                       return Center(child: CircularProgressIndicator());
                     }
                     if (state is AuthLoginSuccess) {
-                      return Center(child: Text('Successfully logged in'));
+                      return Center(
+                        child: Text(
+                          'Successfully logged in. UID: ${state.uid}',
+                        ),
+                      );
                     }
                     return Center(child: Text(''));
                   },

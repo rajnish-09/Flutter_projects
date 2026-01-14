@@ -3,8 +3,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:task_management/auth/auth_service.dart';
 import 'package:task_management/ui/login_screen.dart';
-import 'package:task_management/utils/input_text_form_field.dart';
-import 'package:task_management/utils/submit_button.dart';
+import 'package:task_management/widgets/input_text_form_field.dart';
+import 'package:task_management/widgets/submit_button.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});

@@ -14,7 +14,7 @@ class AuthService {
       UserCredential userCredential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
       String uid = userCredential.user!.uid;
-      await taskUsersCollection.doc().set({
+      await taskUsersCollection.doc(uid).set({
         'uid': uid,
         'name': name,
         'email': email,

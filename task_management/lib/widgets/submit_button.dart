@@ -3,7 +3,11 @@ import 'package:flutter/material.dart';
 class SubmitButton extends StatelessWidget {
   final String buttonText;
   final VoidCallback onPressed;
-  const SubmitButton({super.key, required this.buttonText, required this.onPressed});
+  const SubmitButton({
+    super.key,
+    required this.buttonText,
+    required this.onPressed,
+  });
 
   @override
   Widget build(BuildContext context) {
