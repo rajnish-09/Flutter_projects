@@ -1,8 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_management/auth/auth_service.dart';
+import 'package:task_management/auth/bloc/auth_bloc.dart';
+import 'package:task_management/auth/bloc/auth_event.dart';
+import 'package:task_management/auth/bloc/auth_state.dart';
 import 'package:task_management/ui/login_screen.dart';
+import 'package:task_management/utils/show_sackbar.dart';
 import 'package:task_management/widgets/input_text_form_field.dart';
 import 'package:task_management/widgets/submit_button.dart';
 
@@ -33,41 +38,18 @@ class _SignupScreenState extends State<SignupScreen> {
       };
   }
 
-  void signupUser() async {
+  void signupUser(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
       // All fields are valid
       final name = nameController.text.trim();
       final email = emailController.text.trim();
       final password = passwordController.text.trim();
 
-      // Call your Firebase signup logic here
-      // print("Signup successful for $name, $email");
-      try {
-        AuthService authService = AuthService();
-        final uid = await authService.signUpWithEmail(
-          name: name,
-          email: email,
-          password: password,
-        );
-        if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Registered successfully. UID: $uid')),
-        );
-      } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Signup failed ${e.toString()}')),
-        );
-      }
-      // Navigator.pop(context);
+      context.read<AuthBloc>().add(
+        SignupUserWithEmail(name: name, email: email, password: password),
+      );
     }
   }
-
-  // void signupUser(
-  //   String name,
-  //   String email,
-  //   String password,
-  //   String confirmPassword,
-  // ) {}
 
   @override
   Widget build(BuildContext context) {
@@ -154,16 +136,38 @@ class _SignupScreenState extends State<SignupScreen> {
                         },
                       ),
                       SizedBox(height: 20),
-                      SubmitButton(
-                        buttonText: 'Signup',
-                        onPressed: () {
-                          signupUser();
+                      BlocConsumer<AuthBloc, AuthState>(
+                        listener: (context, state) {
+                          if (state is AuthSignupSuccess) {
+                            showSnackbar(
+                              context,
+                              'Successfully registered. Proceed to login',
+                            );
+                          }
                         },
+                        builder: (context, state) {
+                          if (state is AuthLoading) {
+                            return Center(child: CircularProgressIndicator());
+                          }
+                          return Center(child: Text(''));
+                          // if(state is )
+                        },
+                        // child: SubmitButton(
+                        //   buttonText: 'Signup',
+                        //   onPressed: () {
+                        //     signupUser(context);
+                        //   },
+                        // ),
                       ),
                     ],
                   ),
                 ),
-
+                SubmitButton(
+                  buttonText: 'Signup',
+                  onPressed: () {
+                    signupUser(context);
+                  },
+                ),
                 SizedBox(height: 20),
                 Text.rich(
                   TextSpan(

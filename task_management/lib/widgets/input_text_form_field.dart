@@ -9,7 +9,7 @@ class InputTextFormFIeld extends StatelessWidget {
     required this.emailController,
     required this.icon,
     required this.hintText,
-    this.validator
+    this.validator,
   });
 
   final TextEditingController emailController;
@@ -31,6 +31,7 @@ class InputTextFormFIeld extends StatelessWidget {
       child: TextFormField(
         validator: validator,
         controller: emailController,
+        // onChanged: ,
         decoration: InputDecoration(
           prefixIcon: Icon(icon, color: Colors.grey),
           hintText: hintText,
@@ -39,12 +40,16 @@ class InputTextFormFIeld extends StatelessWidget {
             borderSide: BorderSide(color: Colors.transparent),
           ),
           filled: true,
-          fillColor: Colors.white,
+          fillColor: const Color.fromRGBO(255, 255, 255, 1),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(15),
             borderSide: BorderSide(color: Colors.transparent),
           ),
           errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15),
+            borderSide: BorderSide(color: Colors.transparent),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(15),
             borderSide: BorderSide(color: Colors.transparent),
           ),

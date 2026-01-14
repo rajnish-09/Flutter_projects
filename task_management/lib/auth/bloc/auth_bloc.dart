@@ -1,12 +1,13 @@
 import 'package:bloc/bloc.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:task_management/auth/auth_service.dart';
 import 'package:task_management/auth/bloc/auth_event.dart';
 import 'package:task_management/auth/bloc/auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  AuthBloc() : super(AuthInitial()) {
-    AuthService authService = AuthService();
+  AuthService authService;
+  AuthBloc(this.authService) : super(AuthInitial()) {
     on<LoginUserWithEmail>((event, emit) async {
       emit(AuthLoading());
       if (event.email.isEmpty && event.password.isEmpty) {
@@ -25,6 +26,28 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         // rethrow;
       } catch (e) {
         if (!isClosed) emit(AuthFailure(errorMessage: e.toString()));
+      }
+    });
+
+    on<SignupUserWithEmail>((event, emit) async {
+      emit(AuthLoading());
+      try {
+        if (event.email.isEmpty &&
+            event.password.isEmpty &&
+            event.name.isEmpty) {
+          emit(AuthFailure(errorMessage: 'All fields are required'));
+        } else {
+          final uid = await authService.signUpWithEmail(
+            name: event.name,
+            email: event.email,
+            password: event.password,
+          );
+          emit(AuthSignupSuccess(uid: uid));
+        }
+      } on FirebaseAuthException catch (e) {
+        emit(AuthFailure(errorMessage: e.message.toString()));
+      } catch (e) {
+        emit(AuthFailure(errorMessage: e.toString()));
       }
     });
   }
