@@ -1,3 +1,7 @@
+enum TaskStatus { completed, pending }
+
+TaskStatus? taskStatus;
+
 class TasksModel {
   // String? taskId;
   final String taskTitle;

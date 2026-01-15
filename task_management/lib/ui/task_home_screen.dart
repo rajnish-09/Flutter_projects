@@ -80,68 +80,67 @@ class _TaskHomeScreenState extends State<TaskHomeScreen> {
                   icon: Icons.search,
                   hintText: 'Search tasks',
                 ),
-                SizedBox(height: 15),
-                StreamBuilder<List<TasksModel>>(
-                  stream: taskService.getTasksByUser(uid),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(child: CircularProgressIndicator());
-                    }
-                    if (snapshot.hasError) {
-                      debugPrint(snapshot.error.toString());
-                      return Center(child: Text("Something went wrong."));
-                    }
+                SizedBox(height: 20),
+                Flexible(
+                  child: StreamBuilder<List<TasksModel>>(
+                    stream: taskService.getTasksByUser(uid),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Center(child: CircularProgressIndicator());
+                      }
+                      if (snapshot.hasError) {
+                        debugPrint(snapshot.error.toString());
+                        return Center(child: Text("Something went wrong."));
+                      }
 
-                    final tasks = snapshot.data ?? [];
-                    if (tasks.isEmpty) {
-                      return Center(child: Text("No data found."));
-                    }
-                    return ListView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: tasks.length,
-                      itemBuilder: (context, index) {
-                        final task = tasks[index];
-                        return Container(
-                          margin: EdgeInsets.symmetric(vertical: 5),
-                          padding: EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black45,
-                                offset: Offset(-4, 4),
-                                blurRadius: 8,
+                      final tasks = snapshot.data ?? [];
+                      if (tasks.isEmpty) {
+                        return Center(child: Text("No data found."));
+                      }
+                      return ListView.builder(
+                        // padding: EdgeInsets.zero,
+                        // shrinkWrap: true,
+                        // physics: NeverScrollableScrollPhysics(),
+                        itemCount: tasks.length,
+                        itemBuilder: (context, index) {
+                          final task = tasks[index];
+                          return Container(
+                            margin: EdgeInsets.symmetric(vertical: 5),
+                            padding: EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                              border: BoxBorder.all(
+                                color: const Color.fromARGB(255, 202, 202, 202),
                               ),
-                            ],
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                task.taskTitle,
-                                style: TextStyle(fontSize: 18),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              Text(
-                                task.taskStatus,
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  color: task.taskStatus == 'completed'
-                                      ? Colors.green
-                                      : Colors.red,
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  task.taskTitle,
+                                  style: TextStyle(fontSize: 18),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    );
-                  },
+                                Text(
+                                  task.taskStatus,
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    color: task.taskStatus == 'completed'
+                                        ? Colors.green
+                                        : Colors.red,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  ),
                 ),
               ],
             ),

@@ -1,4 +1,6 @@
 
+import 'package:task_management/tasks/model/tasks_model.dart';
+
 abstract class TaskState {}
 
 class TaskInitial extends TaskState {}
@@ -13,3 +15,8 @@ class TaskSaveFailed extends TaskState {}
 class TaskLoading extends TaskState {}
 
 class TaskLoaded extends TaskState {}
+
+class TaskStatusUpdated extends TaskState {
+  final TaskStatus status;
+  TaskStatusUpdated({required this.status});
+}

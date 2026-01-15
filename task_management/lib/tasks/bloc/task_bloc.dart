@@ -10,11 +10,15 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     on<SaveTask>((event, emit) async {
       try {
         final uid = FirebaseAuth.instance.currentUser!.uid;
-        taskService.saveTasks(event.tasksModel, uid);
+        await taskService.saveTasks(event.tasksModel, uid);
         emit(TaskSaveSuccess());
       } catch (e) {
         throw Exception(e.toString());
       }
+    });
+
+    on<TaskStatusChanged>((event, emit) {
+      emit(TaskStatusUpdated(status: event.status));
     });
   }
 }

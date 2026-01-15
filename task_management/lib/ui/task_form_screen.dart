@@ -8,8 +8,6 @@ import 'package:task_management/utils/show_sackbar.dart';
 import 'package:task_management/widgets/input_text_form_field.dart';
 import 'package:task_management/widgets/submit_button.dart';
 
-enum TaskStatus { completed, pending }
-
 class TaskFormScreen extends StatefulWidget {
   const TaskFormScreen({super.key});
 
@@ -20,7 +18,6 @@ class TaskFormScreen extends StatefulWidget {
 class _TaskFormScreenState extends State<TaskFormScreen> {
   final taskTitleController = TextEditingController();
   final taskContentController = TextEditingController();
-  TaskStatus? taskStatus;
 
   @override
   Widget build(BuildContext context) {
@@ -86,47 +83,68 @@ class _TaskFormScreenState extends State<TaskFormScreen> {
                     ),
                   ),
                 ),
-                RadioGroup<TaskStatus>(
-                  groupValue: taskStatus,
-                  onChanged: (value) {
-                    setState(() {
-                      taskStatus = value;
-                    });
-                  },
-                  child: Column(
-                    children: [
-                      RadioListTile(
-                        value: TaskStatus.completed,
-                        title: Text(
-                          "Completed",
-                          style: TextStyle(color: Colors.black),
+                BlocBuilder<TaskBloc, TaskState>(
+                  builder: (context, state) {
+                    TaskStatus currentStatus = TaskStatus.pending;
+                    if (state is TaskStatusUpdated) {
+                      currentStatus = state.status;
+                    }
+                    return Column(
+                      children: [
+                        RadioGroup<TaskStatus>(
+                          groupValue: currentStatus,
+                          onChanged: (value) {
+                            // setState(() {
+                            //   taskStatus = value;
+                            // });
+                            if (value != null) {
+                              context.read<TaskBloc>().add(
+                                TaskStatusChanged(status: value),
+                              );
+                            }
+                          },
+                          child: Column(
+                            children: [
+                              RadioListTile(
+                                value: TaskStatus.completed,
+                                title: Text(
+                                  "Completed",
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                              ),
+                              RadioListTile(
+                                value: TaskStatus.pending,
+                                title: Text("Pending"),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                      RadioListTile(
-                        value: TaskStatus.pending,
-                        title: Text("Pending"),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 10),
-                SubmitButton(
-                  buttonText: 'Save',
-                  onPressed: () async {
-                    String taskTitle = taskTitleController.text.trim();
-                    String taskDescription = taskContentController.text.trim();
-                    String taskString = taskStatus?.name ?? 'pending';
-                    // final uid = FirebaseAuth.instance.currentUser!.uid;
-                    final value = TasksModel(
-                      taskTitle: taskTitle,
-                      taskDescription: taskDescription,
-                      taskStatus: taskString,
-                      // creatorId: uid,
+                        SizedBox(height: 10),
+                        SubmitButton(
+                          buttonText: 'Save',
+                          onPressed: () async {
+                            String taskTitle = taskTitleController.text.trim();
+                            String taskDescription = taskContentController.text
+                                .trim();
+                            String taskString = currentStatus.name;
+                            // final uid = FirebaseAuth.instance.currentUser!.uid;
+                            final value = TasksModel(
+                              taskTitle: taskTitle,
+                              taskDescription: taskDescription,
+                              taskStatus: taskString,
+                              // creatorId: uid,
+                            );
+                            context.read<TaskBloc>().add(
+                              SaveTask(tasksModel: value),
+                            );
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ],
                     );
-                    context.read<TaskBloc>().add(SaveTask(tasksModel: value));
-                    Navigator.pop(context);
                   },
                 ),
+
                 // BlocListener<TaskBloc, TaskState>(
                 //   listener: (context, state) {
                 //     if (state is TaskSaveSuccess) {

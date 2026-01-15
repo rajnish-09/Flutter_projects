@@ -11,3 +11,8 @@ class LoadedTasks extends TaskEvent {
   final List<TasksModel> data;
   LoadedTasks({required this.data});
 }
+
+class TaskStatusChanged extends TaskEvent {
+  TaskStatus status;
+  TaskStatusChanged({required this.status});
+}
