@@ -29,6 +29,7 @@ class InputTextFormFIeld extends StatelessWidget {
         ],
       ),
       child: TextFormField(
+        textCapitalization: TextCapitalization.sentences,
         validator: validator,
         controller: emailController,
         // onChanged: ,

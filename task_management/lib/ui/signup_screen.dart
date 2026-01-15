@@ -39,9 +39,9 @@ class _SignupScreenState extends State<SignupScreen> {
   void signupUser(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
       // All fields are valid
-      final name = nameController.text.trim();
-      final email = emailController.text.trim();
-      final password = passwordController.text.trim();
+      final name = nameController.text.trim().toLowerCase();
+      final email = emailController.text.trim().toLowerCase();
+      final password = passwordController.text.trim().toLowerCase();
 
       context.read<AuthBloc>().add(
         SignupUserWithEmail(name: name, email: email, password: password),

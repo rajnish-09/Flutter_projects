@@ -57,6 +57,7 @@ class _TaskFormScreenState extends State<TaskFormScreen> {
                       ],
                     ),
                     child: TextFormField(
+                      textCapitalization: TextCapitalization.sentences,
                       expands: true,
                       maxLines: null,
                       textAlignVertical: TextAlignVertical.top,
