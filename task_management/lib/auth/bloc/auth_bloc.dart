@@ -1,5 +1,4 @@
 import 'package:bloc/bloc.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:task_management/auth/auth_service.dart';
 import 'package:task_management/auth/bloc/auth_event.dart';
@@ -27,6 +26,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       } catch (e) {
         if (!isClosed) emit(AuthFailure(errorMessage: e.toString()));
       }
+    });
+
+    on<LogoutUser>((event, emit) async {
+      emit(AuthLoading());
+      await authService.logoutUser();
+      emit(AuthMessage(message: 'Logged out successfully'));
     });
 
     on<SignupUserWithEmail>((event, emit) async {

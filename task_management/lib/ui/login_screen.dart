@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,9 +6,9 @@ import 'package:task_management/auth/bloc/auth_bloc.dart';
 import 'package:task_management/auth/bloc/auth_event.dart';
 import 'package:task_management/auth/bloc/auth_state.dart';
 import 'package:task_management/ui/signup_screen.dart';
+import 'package:task_management/ui/task_home_screen.dart';
 import 'package:task_management/widgets/input_text_form_field.dart';
 import 'package:task_management/utils/show_sackbar.dart';
-import 'package:task_management/widgets/input_text_form_field.dart';
 import 'package:task_management/widgets/submit_button.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -63,7 +62,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(30),
+            padding: EdgeInsets.all(30),
             child: Column(
               children: [
                 SizedBox(height: MediaQuery.of(context).size.height * 0.2),
@@ -136,19 +135,23 @@ class _LoginScreenState extends State<LoginScreen> {
                     ],
                   ),
                 ),
-                BlocBuilder<AuthBloc, AuthState>(
+                BlocConsumer<AuthBloc, AuthState>(
                   builder: (context, state) {
                     if (state is AuthLoading) {
                       return Center(child: CircularProgressIndicator());
                     }
+
+                    return Center(child: Text(''));
+                  },
+                  listener: (context, state) {
                     if (state is AuthLoginSuccess) {
-                      return Center(
-                        child: Text(
-                          'Successfully logged in. UID: ${state.uid}',
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => TaskHomeScreen(),
                         ),
                       );
                     }
-                    return Center(child: Text(''));
                   },
                 ),
               ],

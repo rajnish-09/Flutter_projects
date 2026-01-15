@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:task_management/auth/auth_service.dart';
 import 'package:task_management/auth/bloc/auth_bloc.dart';
 import 'package:task_management/firebase_options.dart';
-import 'package:task_management/ui/login_screen.dart';
+import 'package:task_management/tasks/bloc/task_bloc.dart';
+import 'package:task_management/ui/auth_gate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:task_management/ui/task_home_screen.dart';
 
 // import 'package:bloc/m';
 
@@ -15,7 +15,10 @@ void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(
     MultiBlocProvider(
-      providers: [BlocProvider(create: (_) => AuthBloc(AuthService()))],
+      providers: [
+        BlocProvider(create: (_) => AuthBloc(AuthService())),
+        BlocProvider(create: (_) => TaskBloc()),
+      ],
       child: const MyApp(),
     ),
   );
@@ -26,6 +29,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(debugShowCheckedModeBanner: false, home: TaskHomeScreen());
+    return MaterialApp(debugShowCheckedModeBanner: false, home: AuthGate());
   }
 }

@@ -15,3 +15,6 @@ class LoginUserWithEmail extends AuthEvent {
   final String email, password;
   LoginUserWithEmail({required this.email, required this.password});
 }
+
+
+class LogoutUser extends AuthEvent{}
