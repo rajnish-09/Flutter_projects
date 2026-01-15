@@ -11,7 +11,7 @@ class TaskService {
       await tasksCollection.doc().set({
         ...data.toJson(),
         'created_at': FieldValue.serverTimestamp(),
-        'creater_id': uid,
+        'creator_id': uid,
       });
     } catch (e) {
       throw Exception(e.toString());

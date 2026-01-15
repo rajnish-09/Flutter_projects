@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_management/tasks/bloc/task_bloc.dart';
@@ -140,5 +139,12 @@ class _TaskFormScreenState extends State<TaskFormScreen> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    taskTitleController.dispose();
+    taskContentController.dispose();
   }
 }

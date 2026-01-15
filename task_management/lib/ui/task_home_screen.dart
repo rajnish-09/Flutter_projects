@@ -89,6 +89,7 @@ class _TaskHomeScreenState extends State<TaskHomeScreen> {
                         return Center(child: CircularProgressIndicator());
                       }
                       if (snapshot.hasError) {
+                        debugPrint(snapshot.error.toString());
                         return Center(child: Text("Something went wrong."));
                       }
 
@@ -97,6 +98,8 @@ class _TaskHomeScreenState extends State<TaskHomeScreen> {
                         return Center(child: Text("No data found."));
                       }
                       return ListView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
                         itemCount: tasks.length,
                         itemBuilder: (context, index) {
                           final task = tasks[index];
