@@ -9,15 +9,32 @@ import 'package:task_management/widgets/input_text_form_field.dart';
 import 'package:task_management/widgets/submit_button.dart';
 
 class TaskFormScreen extends StatefulWidget {
-  const TaskFormScreen({super.key});
+  final TasksModel? task;
+  const TaskFormScreen({super.key, this.task});
 
   @override
   State<TaskFormScreen> createState() => _TaskFormScreenState();
 }
 
 class _TaskFormScreenState extends State<TaskFormScreen> {
-  final taskTitleController = TextEditingController();
-  final taskContentController = TextEditingController();
+  late TextEditingController taskTitleController;
+  late TextEditingController taskContentController;
+
+  @override
+  void initState() {
+    super.initState();
+    taskTitleController = TextEditingController(
+      text: widget.task?.taskTitle ?? '',
+    );
+    taskContentController = TextEditingController(
+      text: widget.task?.taskDescription ?? '',
+    );
+    taskStatus = widget.task == null
+        ? TaskStatus.pending
+        : widget.task!.taskStatus == 'completed'
+        ? TaskStatus.completed
+        : TaskStatus.pending;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -83,9 +100,9 @@ class _TaskFormScreenState extends State<TaskFormScreen> {
                     ),
                   ),
                 ),
-                BlocBuilder<TaskBloc, TaskState>(
+                BlocConsumer<TaskBloc, TaskState>(
                   builder: (context, state) {
-                    TaskStatus currentStatus = TaskStatus.pending;
+                    TaskStatus currentStatus = taskStatus!;
                     if (state is TaskStatusUpdated) {
                       currentStatus = state.status;
                     }
@@ -121,7 +138,7 @@ class _TaskFormScreenState extends State<TaskFormScreen> {
                         ),
                         SizedBox(height: 10),
                         SubmitButton(
-                          buttonText: 'Save',
+                          buttonText: widget.task == null ? 'Save' : 'Update',
                           onPressed: () async {
                             String taskTitle = taskTitleController.text.trim();
                             String taskDescription = taskContentController.text
@@ -143,6 +160,11 @@ class _TaskFormScreenState extends State<TaskFormScreen> {
                         ),
                       ],
                     );
+                  },
+                  listener: (context, state) {
+                    if (state is TaskUpdateSuccess) {
+                      showSnackbar(context, state.successMessage);
+                    }
                   },
                 ),
 

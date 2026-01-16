@@ -38,4 +38,12 @@ class TaskService {
       throw Exception(e.toString());
     }
   }
+
+  Future<void> updateTask(TasksModel task) async {
+    try {
+      await tasksCollection.doc(task.taskId).update(task.toJson());
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
 }

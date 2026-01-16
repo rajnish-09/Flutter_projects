@@ -6,6 +6,7 @@ import 'package:task_management/auth/bloc/auth_event.dart';
 import 'package:task_management/auth/bloc/auth_state.dart';
 import 'package:task_management/tasks/bloc/task_bloc.dart';
 import 'package:task_management/tasks/bloc/task_event.dart';
+import 'package:task_management/tasks/bloc/task_state.dart';
 import 'package:task_management/tasks/model/tasks_model.dart';
 import 'package:task_management/tasks/task_service.dart';
 import 'package:task_management/ui/task_form_screen.dart';
@@ -22,6 +23,7 @@ class TaskHomeScreen extends StatefulWidget {
 class _TaskHomeScreenState extends State<TaskHomeScreen> {
   final searchController = TextEditingController();
   TaskService taskService = TaskService();
+  String searchQuery = '';
 
   @override
   void initState() {
@@ -43,12 +45,23 @@ class _TaskHomeScreenState extends State<TaskHomeScreen> {
   Widget build(BuildContext context) {
     final uid = FirebaseAuth.instance.currentUser!.uid;
 
-    return BlocListener<AuthBloc, AuthState>(
-      listener: (context, state) {
-        if (state is AuthMessage) {
-          return showSnackbar(context, state.message);
-        }
-      },
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<AuthBloc, AuthState>(
+          listener: (context, state) {
+            if (state is AuthMessage) {
+              return showSnackbar(context, state.message);
+            }
+          },
+        ),
+        BlocListener<TaskBloc, TaskState>(
+          listener: (context, state) {
+            if (state is TaskDeleteSuccess) {
+              return showSnackbar(context, state.successMessage);
+            }
+          },
+        ),
+      ],
       child: Scaffold(
         floatingActionButton: Padding(
           padding: EdgeInsets.only(right: 20, bottom: 20),
@@ -81,11 +94,14 @@ class _TaskHomeScreenState extends State<TaskHomeScreen> {
             child: Column(
               children: [
                 // SizedBox(height: 20),
-                InputTextFormFIeld(
-                  emailController: searchController,
-                  icon: Icons.search,
-                  hintText: 'Search tasks',
-                ),
+                // InputTextFormFIeld(
+                //   emailController: searchController,
+                //   icon: Icons.search,
+                //   hintText: 'Search tasks',
+                //   onChanged: () {
+
+                //   },
+                // ),
                 SizedBox(height: 20),
                 Flexible(
                   child: StreamBuilder<List<TasksModel>>(
@@ -115,45 +131,62 @@ class _TaskHomeScreenState extends State<TaskHomeScreen> {
                             key: ValueKey(task.taskId),
                             onDismissed: (direction) async {
                               if (direction == DismissDirection.endToStart) {
-                                deleteTask(context, task.taskId!);
+                                deleteTask(context, task.taskId);
                               }
                             },
-                            child: Container(
-                              margin: EdgeInsets.symmetric(vertical: 5),
-                              padding: EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(10),
-                                border: BoxBorder.all(
-                                  color: const Color.fromARGB(
-                                    255,
-                                    202,
-                                    202,
-                                    202,
+                            child: GestureDetector(
+                              onTap: () {
+                                final editTask = TasksModel(
+                                  taskId: task.taskId,
+                                  taskTitle: task.taskTitle,
+                                  taskDescription: task.taskDescription,
+                                  taskStatus: task.taskStatus,
+                                );
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        TaskFormScreen(task: editTask),
+                                  ),
+                                );
+                              },
+                              child: Container(
+                                margin: EdgeInsets.symmetric(vertical: 5),
+                                padding: EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: BoxBorder.all(
+                                    color: const Color.fromARGB(
+                                      255,
+                                      202,
+                                      202,
+                                      202,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    task.taskTitle,
-                                    style: TextStyle(fontSize: 18),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  Text(
-                                    task.taskStatus,
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      color: task.taskStatus == 'completed'
-                                          ? Colors.green
-                                          : Colors.red,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      task.taskTitle,
+                                      style: TextStyle(fontSize: 18),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
                                     ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ],
+                                    Text(
+                                      task.taskStatus,
+                                      style: TextStyle(
+                                        fontSize: 13,
+                                        color: task.taskStatus == 'completed'
+                                            ? Colors.green
+                                            : Colors.red,
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           );

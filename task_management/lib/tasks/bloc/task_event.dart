@@ -21,3 +21,8 @@ class DeleteTask extends TaskEvent {
   final String taskUid;
   DeleteTask(this.taskUid);
 }
+
+class UpdateTask extends TaskEvent {
+  final TasksModel updatedTask;
+  UpdateTask(this.updatedTask);
+}

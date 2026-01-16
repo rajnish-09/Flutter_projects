@@ -4,12 +4,14 @@ class InputTextFormFIeld extends StatelessWidget {
   final IconData icon;
   final String hintText;
   final String? Function(String?)? validator;
+  final VoidCallback? onChanged;
   const InputTextFormFIeld({
     super.key,
     required this.emailController,
     required this.icon,
     required this.hintText,
     this.validator,
+    this.onChanged
   });
 
   final TextEditingController emailController;

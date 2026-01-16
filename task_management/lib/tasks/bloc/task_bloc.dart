@@ -24,9 +24,18 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     on<DeleteTask>((event, emit) async {
       try {
         await taskService.deleteTask(event.taskUid);
-        emit(TaskDeleted());
+        emit(TaskDeleteSuccess('Task deleted successfully'));
       } catch (e) {
         emit(TaskDeletionFailed(failedMessage: e.toString()));
+      }
+    });
+
+    on<UpdateTask>((event, emit) async {
+      try {
+        await taskService.updateTask(event.updatedTask);
+        emit(TaskUpdateSuccess('Task updated successfully'));
+      } catch (e) {
+        emit(TaskUpdateFailed(e.toString()));
       }
     });
   }

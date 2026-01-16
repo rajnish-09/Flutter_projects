@@ -20,9 +20,22 @@ class TaskStatusUpdated extends TaskState {
   TaskStatusUpdated({required this.status});
 }
 
-class TaskDeleted extends TaskState {}
+class TaskDeleteSuccess extends TaskState {
+  final String successMessage;
+  TaskDeleteSuccess(this.successMessage);
+}
 
 class TaskDeletionFailed extends TaskState {
   final String failedMessage;
   TaskDeletionFailed({required this.failedMessage});
+}
+
+class TaskUpdateSuccess extends TaskState {
+  final String successMessage;
+  TaskUpdateSuccess(this.successMessage);
+}
+
+class TaskUpdateFailed extends TaskState {
+  final String failedMessage;
+  TaskUpdateFailed(this.failedMessage);
 }
