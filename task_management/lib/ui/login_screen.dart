@@ -100,8 +100,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: SubmitButton(
                     buttonText: 'Login',
                     onPressed: () {
-                      String email = emailController.text.trim();
-                      String password = passwordController.text.trim();
+                      String email = emailController.text.trim().toLowerCase();
+                      String password = passwordController.text
+                          .trim()
+                          .toLowerCase();
                       context.read<AuthBloc>().add(
                         LoginUserWithEmail(email: email, password: password),
                       );

@@ -3,23 +3,23 @@ enum TaskStatus { completed, pending }
 TaskStatus? taskStatus;
 
 class TasksModel {
-  // String? taskId;
+  String taskId;
   final String taskTitle;
   final String taskDescription;
   final String taskStatus;
   // final String creatorId;
 
   TasksModel({
-    // this.taskId,
+    required this.taskId,
     required this.taskTitle,
     required this.taskDescription,
     required this.taskStatus,
     // required this.creatorId
   });
 
-  factory TasksModel.fromJson(Map<String, dynamic> json) {
+  factory TasksModel.fromJson(String id, Map<String, dynamic> json) {
     return TasksModel(
-      // taskId: json['taskId'],
+      taskId: id,
       taskTitle: json['taskTitle'],
       taskDescription: json['taskDescription'],
       taskStatus: json['taskStatus'],

@@ -25,8 +25,17 @@ class TaskService {
         .orderBy('created_at', descending: true)
         .snapshots()
         .map(
-          (snapshot) =>
-              snapshot.docs.map((e) => TasksModel.fromJson(e.data())).toList(),
+          (snapshot) => snapshot.docs
+              .map((e) => TasksModel.fromJson(e.id, e.data()))
+              .toList(),
         );
+  }
+
+  Future<void> deleteTask(String id) async {
+    try {
+      await tasksCollection.doc(id).delete();
+    } catch (e) {
+      throw Exception(e.toString());
+    }
   }
 }

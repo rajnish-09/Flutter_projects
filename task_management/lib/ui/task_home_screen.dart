@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_management/auth/bloc/auth_bloc.dart';
 import 'package:task_management/auth/bloc/auth_event.dart';
 import 'package:task_management/auth/bloc/auth_state.dart';
+import 'package:task_management/tasks/bloc/task_bloc.dart';
+import 'package:task_management/tasks/bloc/task_event.dart';
 import 'package:task_management/tasks/model/tasks_model.dart';
 import 'package:task_management/tasks/task_service.dart';
 import 'package:task_management/ui/task_form_screen.dart';
@@ -29,6 +31,10 @@ class _TaskHomeScreenState extends State<TaskHomeScreen> {
 
   void logout(BuildContext context) {
     context.read<AuthBloc>().add(LogoutUser());
+  }
+
+  void deleteTask(BuildContext context, String taskId) async {
+    context.read<TaskBloc>().add(DeleteTask(taskId));
   }
 
   // void getTasks() {}
@@ -94,6 +100,7 @@ class _TaskHomeScreenState extends State<TaskHomeScreen> {
                       }
 
                       final tasks = snapshot.data ?? [];
+                      // final taskUid = tasks
                       if (tasks.isEmpty) {
                         return Center(child: Text("No data found."));
                       }
@@ -104,37 +111,50 @@ class _TaskHomeScreenState extends State<TaskHomeScreen> {
                         itemCount: tasks.length,
                         itemBuilder: (context, index) {
                           final task = tasks[index];
-                          return Container(
-                            margin: EdgeInsets.symmetric(vertical: 5),
-                            padding: EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10),
-                              border: BoxBorder.all(
-                                color: const Color.fromARGB(255, 202, 202, 202),
-                              ),
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  task.taskTitle,
-                                  style: TextStyle(fontSize: 18),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                Text(
-                                  task.taskStatus,
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                    color: task.taskStatus == 'completed'
-                                        ? Colors.green
-                                        : Colors.red,
+                          return Dismissible(
+                            key: ValueKey(task.taskId),
+                            onDismissed: (direction) async {
+                              if (direction == DismissDirection.endToStart) {
+                                deleteTask(context, task.taskId!);
+                              }
+                            },
+                            child: Container(
+                              margin: EdgeInsets.symmetric(vertical: 5),
+                              padding: EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                                border: BoxBorder.all(
+                                  color: const Color.fromARGB(
+                                    255,
+                                    202,
+                                    202,
+                                    202,
                                   ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
                                 ),
-                              ],
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    task.taskTitle,
+                                    style: TextStyle(fontSize: 18),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  Text(
+                                    task.taskStatus,
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      color: task.taskStatus == 'completed'
+                                          ? Colors.green
+                                          : Colors.red,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ],
+                              ),
                             ),
                           );
                         },

@@ -129,6 +129,7 @@ class _TaskFormScreenState extends State<TaskFormScreen> {
                             String taskString = currentStatus.name;
                             // final uid = FirebaseAuth.instance.currentUser!.uid;
                             final value = TasksModel(
+                              taskId: '',
                               taskTitle: taskTitle,
                               taskDescription: taskDescription,
                               taskStatus: taskString,
