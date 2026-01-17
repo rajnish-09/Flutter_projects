@@ -30,7 +30,15 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
               Spacer(),
               Text("Terms and conditions", style: TextStyle(fontSize: 13)),
               SizedBox(height: 15),
-              SubmitButton(buttonText: 'Get Started'),
+              SubmitButton(
+                buttonText: 'Get Started',
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => LoginScreen()),
+                  );
+                },
+              ),
               Spacer(),
             ],
           ),

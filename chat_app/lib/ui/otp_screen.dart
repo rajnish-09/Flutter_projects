@@ -1,17 +1,17 @@
-// import 'package:chat_app/ui/otp_screen.dart';
 import 'package:chat_app/widgets/submit_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_intl_phone_field/flutter_intl_phone_field.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class OtpScreen extends StatefulWidget {
+  final String verificationId;
+  const OtpScreen({super.key, required this.verificationId});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<OtpScreen> createState() => _OtpScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
-  String phoneNumber = '';
+class _OtpScreenState extends State<OtpScreen> {
+  final phoneController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -44,12 +44,12 @@ class _LoginScreenState extends State<LoginScreen> {
               IntlPhoneField(
                 initialCountryCode: 'NP',
                 onChanged: (phone) {
-                  phoneNumber = phone.completeNumber;
+                  // print(phone.completeNumber); // +977XXXXXXXX
                 },
               ),
 
               SizedBox(height: 50),
-              SubmitButton(buttonText: 'Send otp', onPressed: () {}),
+              SubmitButton(buttonText: 'Continue', onPressed: () {}),
               Spacer(),
             ],
           ),
