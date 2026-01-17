@@ -31,7 +31,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<LogoutUser>((event, emit) async {
       emit(AuthLoading());
       await authService.logoutUser();
-      emit(AuthMessage(message: 'Logged out successfully'));
+      emit(AuthLoggedOut());
+      // emit(AuthMessage(message: 'Logged out successfully'));
     });
 
     on<SignupUserWithEmail>((event, emit) async {

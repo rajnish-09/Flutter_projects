@@ -11,7 +11,7 @@ class InputTextFormFIeld extends StatelessWidget {
     required this.icon,
     required this.hintText,
     this.validator,
-    this.onChanged
+    this.onChanged,
   });
 
   final TextEditingController emailController;
@@ -31,7 +31,7 @@ class InputTextFormFIeld extends StatelessWidget {
         ],
       ),
       child: TextFormField(
-        textCapitalization: TextCapitalization.sentences,
+        // textCapitalization: TextCapitalization.sentences,
         validator: validator,
         controller: emailController,
         // onChanged: ,

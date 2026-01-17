@@ -9,6 +9,7 @@ import 'package:task_management/tasks/bloc/task_event.dart';
 import 'package:task_management/tasks/bloc/task_state.dart';
 import 'package:task_management/tasks/model/tasks_model.dart';
 import 'package:task_management/tasks/task_service.dart';
+import 'package:task_management/ui/login_screen.dart';
 import 'package:task_management/ui/task_form_screen.dart';
 import 'package:task_management/utils/show_sackbar.dart';
 import 'package:task_management/widgets/input_text_form_field.dart';
@@ -51,6 +52,12 @@ class _TaskHomeScreenState extends State<TaskHomeScreen> {
           listener: (context, state) {
             if (state is AuthMessage) {
               return showSnackbar(context, state.message);
+            }
+            if (state is AuthLoggedOut) {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => LoginScreen()),
+              );
             }
           },
         ),

@@ -144,18 +144,24 @@ class _TaskFormScreenState extends State<TaskFormScreen> {
                             String taskDescription = taskContentController.text
                                 .trim();
                             String taskString = currentStatus.name;
-                            // final uid = FirebaseAuth.instance.currentUser!.uid;
                             final value = TasksModel(
-                              taskId: '',
+                              taskId: widget.task == null
+                                  ? ''
+                                  : widget.task!.taskId,
                               taskTitle: taskTitle,
                               taskDescription: taskDescription,
                               taskStatus: taskString,
-                              // creatorId: uid,
                             );
-                            context.read<TaskBloc>().add(
-                              SaveTask(tasksModel: value),
-                            );
-                            Navigator.pop(context);
+                            if (widget.task == null) {
+                              context.read<TaskBloc>().add(
+                                SaveTask(tasksModel: value),
+                              );
+                              Navigator.pop(context);
+                            }
+                            if (widget.task != null) {
+                              context.read<TaskBloc>().add(UpdateTask(value));
+                              Navigator.pop(context);
+                            }
                           },
                         ),
                       ],
@@ -164,6 +170,9 @@ class _TaskFormScreenState extends State<TaskFormScreen> {
                   listener: (context, state) {
                     if (state is TaskUpdateSuccess) {
                       showSnackbar(context, state.successMessage);
+                    }
+                    if (state is TaskUpdateFailed) {
+                      showSnackbar(context, state.failedMessage);
                     }
                   },
                 ),
