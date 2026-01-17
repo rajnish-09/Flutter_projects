@@ -1,4 +1,6 @@
 // import 'package:chat_app/ui/otp_screen.dart';
+import 'package:chat_app/bloc/auth/auth_service.dart';
+import 'package:chat_app/utils/showSnackBar.dart';
 import 'package:chat_app/widgets/submit_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_intl_phone_field/flutter_intl_phone_field.dart';
@@ -11,6 +13,9 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final phoneController = TextEditingController();
+
+  AuthService authService = AuthService();
   String phoneNumber = '';
 
   @override
@@ -42,6 +47,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               SizedBox(height: 20),
               IntlPhoneField(
+                controller: phoneController,
                 initialCountryCode: 'NP',
                 onChanged: (phone) {
                   phoneNumber = phone.completeNumber;
@@ -49,7 +55,16 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
 
               SizedBox(height: 50),
-              SubmitButton(buttonText: 'Send otp', onPressed: () {}),
+              SubmitButton(
+                buttonText: 'Send otp',
+                onPressed: () {
+                  if (phoneNumber.isEmpty) {
+                    showSnackBar(context, 'Enter a valid phone number');
+                  } else {
+                    authService.registerNewUser(context, phoneNumber);
+                  }
+                },
+              ),
               Spacer(),
             ],
           ),

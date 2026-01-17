@@ -20,13 +20,15 @@ class AuthService {
       verificationFailed: (e) {
         showSnackBar(context, e.toString());
       },
-      codeSent: ((String verificationId, int? resendToken) async {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => OtpScreen(verificationId: verificationId),
-          ),
-        );
+      codeSent: ((String verificationId, int? resendToken) {
+        if (context.mounted) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => OtpScreen(verificationId: verificationId),
+            ),
+          );
+        }
       }),
       codeAutoRetrievalTimeout: (String verificationId) {},
     );
