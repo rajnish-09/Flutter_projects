@@ -1,3 +1,4 @@
+import 'package:ecommerce_app/ui/carousel_slider.dart';
 import 'package:ecommerce_app/ui/search_textformfield_style.dart';
 import 'package:ecommerce_app/ui/widgets/input_textformfield.dart';
 import 'package:flutter/material.dart';
@@ -60,16 +61,10 @@ class _ShopScreenState extends State<ShopScreen> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 20,),
-                  Container(
-                    width: double.infinity,
-                    height: 100,
-                    decoration: BoxDecoration(
-                      color: Color(0xff)
-                    ),
-                  )
                 ],
               ),
+              SizedBox(height: 20),
+              CarouselSliderwidget(),
             ],
           ),
         ),
