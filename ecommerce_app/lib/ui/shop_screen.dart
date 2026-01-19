@@ -1,3 +1,4 @@
+import 'package:ecommerce_app/models/category_model.dart';
 import 'package:ecommerce_app/ui/carousel_slider.dart';
 import 'package:ecommerce_app/ui/category_container.dart';
 import 'package:ecommerce_app/ui/search_textformfield_style.dart';
@@ -15,25 +16,44 @@ class ShopScreen extends StatefulWidget {
 class _ShopScreenState extends State<ShopScreen> {
   final searchController = TextEditingController();
 
-  List<Map<String, dynamic>> categories = [
-    {
-      'title': 'Clothing',
-      'imagesPath': [
+  List<CategoryModel> categories = [
+    CategoryModel(
+      title: 'Clothing',
+      imagePath: [
         'assets/images/Placeholder_01.png',
         'assets/images/Placeholder_01-1.png',
         'assets/images/Placeholder_01-2.png',
         'assets/images/Placeholder_01-3.png',
       ],
-    },
-    {
-      'title': 'Shoes',
-      'imagesPath': [
+    ),
+    CategoryModel(
+      title: 'Shoes',
+      imagePath: [
         'assets/images/Placeholder_02.jpg',
         'assets/images/Placeholder_02-1.jpg',
         'assets/images/Placeholder_02-2.jpg',
         'assets/images/Placeholder_02-3.jpg',
       ],
-    },
+    ),
+    CategoryModel(
+      title: 'Bags',
+      imagePath: [
+        'assets/images/Placeholder_03.jpg',
+        'assets/images/Placeholder_03-1.jpg',
+        'assets/images/Placeholder_03-2.jpg',
+        'assets/images/Placeholder_03-3.jpg',
+      ],
+    ),
+    CategoryModel(
+      title: 'Watches',
+      imagePath: [
+        'assets/images/Placeholder_04.jpg',
+        'assets/images/Placeholder_04-1.jpg',
+        'assets/images/Placeholder_04-2.jpg',
+        'assets/images/Placeholder_04-3.jpg',
+      ],
+    ),
+
   ];
 
   @override
@@ -115,13 +135,25 @@ class _ShopScreenState extends State<ShopScreen> {
                   ),
                 ],
               ),
-              Row(
+              SizedBox(height: 15),
+              Wrap(
+                spacing: 15,
+                runSpacing: 15,
                 children: [
                   CategoryContainerCard(category: categories[0]),
-                  SizedBox(width: 10),
                   CategoryContainerCard(category: categories[1]),
+                  CategoryContainerCard(category: categories[2]),
+                  CategoryContainerCard(category: categories[3]),
                 ],
               ),
+
+              // Row(
+              //   children: [
+              //     CategoryContainerCard(category: categories[0]),
+              //     SizedBox(width: 10),
+              //     CategoryContainerCard(category: categories[1]),
+              //   ],
+              // ),
             ],
           ),
         ),
