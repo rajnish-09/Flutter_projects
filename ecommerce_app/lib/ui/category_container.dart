@@ -4,13 +4,10 @@ import 'package:google_fonts/google_fonts.dart';
 
 class CategoryContainerCard extends StatelessWidget {
   const CategoryContainerCard({super.key, required this.category});
-  // final String categoryTitle;
-  // final Map<String, dynamic> category;
   final CategoryModel category;
 
   @override
   Widget build(BuildContext context) {
-    // final images = category['imagesPath'] as List<String>;
     return Container(
       width: MediaQuery.of(context).size.width * 0.4,
       padding: EdgeInsets.all(10),
