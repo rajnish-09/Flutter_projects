@@ -1,10 +1,12 @@
 import 'package:ecommerce_app/models/category_model.dart';
 import 'package:ecommerce_app/models/product_model.dart';
 import 'package:ecommerce_app/models/top_products_model.dart';
+import 'package:ecommerce_app/ui/bottom_navigation_bar.dart';
 import 'package:ecommerce_app/ui/carousel_slider.dart';
 import 'package:ecommerce_app/ui/category_container.dart';
+import 'package:ecommerce_app/ui/product_display_container.dart';
 import 'package:ecommerce_app/ui/search_textformfield_style.dart';
-import 'package:ecommerce_app/ui/widgets/input_textformfield.dart';
+// import 'package:ecommerce_app/ui/widgets/input_textformfield.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -102,9 +104,11 @@ class _ShopScreenState extends State<ShopScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBody: true,
+      bottomNavigationBar: BottomNavigationBarWidget(),
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.all(20),
+          padding: EdgeInsets.only(left: 10, right: 10, top: 10),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -252,85 +256,28 @@ class _ShopScreenState extends State<ShopScreen> {
                   ),
                 ),
                 SizedBox(height: 15),
-                Wrap(children: [ProductDisplayContainer(product: product)]),
+                SizedBox(
+                  child: GridView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: product.products.length,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2, // number of items per row
+                      crossAxisSpacing: 10, // horizontal spacing between items
+                      mainAxisSpacing: 10, // vertical spacing between items
+                      childAspectRatio:
+                          0.6, // width / height ratio of each item
+                    ),
+                    itemBuilder: (context, index) {
+                      final prod = product.products[index];
+                      return ProductDisplayContainer(prod: prod);
+                    },
+                  ),
+                ),
               ],
             ),
           ),
         ),
-      ),
-    );
-  }
-}
-
-class ProductDisplayContainer extends StatelessWidget {
-  const ProductDisplayContainer({super.key, required this.product});
-
-  final Product product;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      // height: 500,
-      // width: 100,
-      child: GridView.builder(
-        shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
-        itemCount: product.products.length,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2, // number of items per row
-          crossAxisSpacing: 10, // horizontal spacing between items
-          mainAxisSpacing: 10, // vertical spacing between items
-          childAspectRatio: 0.6, // width / height ratio of each item
-        ),
-        itemBuilder: (context, index) {
-          final prod = product.products[index];
-          return Padding(
-            padding: const EdgeInsets.only(left: 10, bottom: 10),
-            child: GestureDetector(
-              onTap: () {
-                print('Clicked');
-              },
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Color(0xffDFE9FF),
-                      borderRadius: BorderRadius.circular(10),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey,
-                          offset: Offset(-4, 4),
-                          blurRadius: 5,
-                        ),
-                      ],
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: Image.asset(prod.imagePath),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  Text(
-                    prod.title,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: GoogleFonts.nunitoSans(fontSize: 15),
-                  ),
-                  // Text(prod.description),
-                  Text(
-                    'Rs. ${prod.price}',
-                    style: GoogleFonts.raleway(
-                      fontSize: 17,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text(prod.rating.toString()),
-                ],
-              ),
-            ),
-          );
-        },
       ),
     );
   }
