@@ -1,6 +1,7 @@
 import 'package:ecommerce_app/models/category_model.dart';
 import 'package:ecommerce_app/models/product_model.dart';
 import 'package:ecommerce_app/models/top_products_model.dart';
+import 'package:ecommerce_app/ui/cart_screen.dart';
 import 'package:ecommerce_app/widgets/bottom_navigation_bar.dart';
 import 'package:ecommerce_app/widgets/carousel_slider.dart';
 import 'package:ecommerce_app/widgets/category_container.dart';
@@ -95,6 +96,8 @@ class _ShopScreenState extends State<ShopScreen> {
     ),
   ];
 
+  // int currentIndex = 0;
+
   @override
   void dispose() {
     super.dispose();
@@ -103,10 +106,9 @@ class _ShopScreenState extends State<ShopScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      extendBody: true,
-      bottomNavigationBar: BottomNavigationBarWidget(),
-      body: SafeArea(
+    return Material(
+      color: Colors.transparent,
+      child: SafeArea(
         child: Padding(
           padding: EdgeInsets.only(left: 10, right: 10, top: 10),
           child: SingleChildScrollView(

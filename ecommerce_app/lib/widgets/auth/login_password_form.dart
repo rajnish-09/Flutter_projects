@@ -1,4 +1,5 @@
 import 'package:ecommerce_app/ui/login_screen.dart';
+import 'package:ecommerce_app/ui/main_navigation_screen.dart';
 import 'package:ecommerce_app/ui/shop_screen.dart';
 import 'package:ecommerce_app/widgets/input_textformfield.dart';
 import 'package:ecommerce_app/widgets/submit_button.dart';
@@ -72,7 +73,9 @@ class _LoginPasswordFormState extends State<LoginPasswordForm> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => LoginScreen()),
+                    MaterialPageRoute(
+                      builder: (context) => MainNavigationScreen(),
+                    ),
                   );
                 },
                 icon: Icon(Icons.arrow_right_alt, color: Colors.white),
