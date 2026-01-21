@@ -37,6 +37,8 @@ dependencies:
   google_fonts: ^7.0.2
   carousel_slider: ^5.1.1
   curved_navigation_bar: ^1.0.6
+  flutter_rating: ^2.0.2
+  custom_rating_bar: ^3.0.0
 
 dev_dependencies:
   flutter_test:

@@ -1,5 +1,5 @@
-import 'package:ecommerce_app/ui/widgets/auth/login_background.dart';
-import 'package:ecommerce_app/ui/widgets/auth/login_form.dart';
+import 'package:ecommerce_app/widgets/auth/login_background.dart';
+import 'package:ecommerce_app/widgets/auth/login_form.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {

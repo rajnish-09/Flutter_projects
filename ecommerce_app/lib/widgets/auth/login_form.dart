@@ -1,6 +1,6 @@
 import 'package:ecommerce_app/ui/login_password_screen.dart';
-import 'package:ecommerce_app/ui/widgets/input_textformfield.dart';
-import 'package:ecommerce_app/ui/widgets/submit_button.dart';
+import 'package:ecommerce_app/widgets/input_textformfield.dart';
+import 'package:ecommerce_app/widgets/submit_button.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
