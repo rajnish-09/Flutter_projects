@@ -14,12 +14,7 @@ class _SignupScreenState extends State<SignupScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Stack(
-          children: [
-            SignupBackground(),
-            SignupForm(),
-          ],
-        ),
+        child: Stack(children: [SignupBackground(), SignupForm()]),
       ),
     );
   }

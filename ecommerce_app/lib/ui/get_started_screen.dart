@@ -1,3 +1,4 @@
+import 'package:ecommerce_app/ui/login_screen.dart';
 import 'package:ecommerce_app/ui/signup_screen.dart';
 import 'package:ecommerce_app/widgets/submit_button.dart';
 import 'package:flutter/material.dart';
@@ -56,7 +57,15 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
                 textAlign: TextAlign.center,
               ),
               Spacer(),
-              SubmitButton(buttonText: "Let's get started", onPressed: () {}),
+              SubmitButton(
+                buttonText: "Let's get started",
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => SignupScreen()),
+                  );
+                },
+              ),
               SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -74,7 +83,7 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => SignupScreen()),
+                        MaterialPageRoute(builder: (context) => LoginScreen()),
                       );
                     },
                     icon: Icon(Icons.arrow_right_alt, color: Colors.white),

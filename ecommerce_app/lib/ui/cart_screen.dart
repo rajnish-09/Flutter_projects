@@ -40,7 +40,7 @@ class _CartScreenState extends State<CartScreen> {
               ),
               SizedBox(height: 10),
               SizedBox(
-                height: 130,
+                height: 120,
                 child: Row(
                   children: [
                     Expanded(
@@ -78,8 +78,12 @@ class _CartScreenState extends State<CartScreen> {
                                   "216 St Paul's Rd, London N1 2LL, UK",
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(fontSize: 12),
                                 ),
-                                Text("Contact :  +44-784232"),
+                                Text(
+                                  "Contact :  +977-9861491364",
+                                  style: TextStyle(fontSize: 12),
+                                ),
                               ],
                             ),
                           ),
@@ -198,7 +202,7 @@ class _CartScreenState extends State<CartScreen> {
                                     child: Text(
                                       "Rs 2000",
                                       style: GoogleFonts.raleway(
-                                        fontSize: 18,
+                                        fontSize: 15,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),

@@ -29,95 +29,95 @@ class _SignupFormState extends State<SignupForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Spacer(),
-          Text(
-            "Create \nAccount",
-            style: GoogleFonts.raleway(
-              fontSize: 50,
-              fontWeight: FontWeight.bold,
+    return SingleChildScrollView(
+      child: Padding(
+        padding: EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Create \nAccount",
+              style: GoogleFonts.raleway(
+                fontSize: 50,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ),
-          Spacer(),
-          InputTextFormFIeld(
-            controller: nameController,
-            icon: Icons.person,
-            hintText: 'Enter your name',
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Name is required';
-              }
-              return null;
-            },
-          ),
-          SizedBox(height: 20),
-          InputTextFormFIeld(
-            controller: emailController,
-            icon: Icons.email,
-            hintText: 'Enter your email',
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Email is required';
-              }
-              if (!RegExp(r'\S+@\S+\.\S+').hasMatch(value)) {
-                return 'Enter valid email';
-              }
-              return null;
-            },
-          ),
-          SizedBox(height: 20),
+            SizedBox(height: 50),
+            InputTextFormFIeld(
+              controller: nameController,
+              icon: Icons.person,
+              hintText: 'Enter your name',
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Name is required';
+                }
+                return null;
+              },
+            ),
+            SizedBox(height: 20),
+            InputTextFormFIeld(
+              controller: emailController,
+              icon: Icons.email,
+              hintText: 'Enter your email',
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Email is required';
+                }
+                if (!RegExp(r'\S+@\S+\.\S+').hasMatch(value)) {
+                  return 'Enter valid email';
+                }
+                return null;
+              },
+            ),
+            SizedBox(height: 20),
 
-          InputTextFormFIeld(
-            controller: phoneController,
-            icon: Icons.call,
-            hintText: 'Enter your phone number',
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Phone number is required';
-              }
-              return null;
-            },
-          ),
-          SizedBox(height: 20),
+            InputTextFormFIeld(
+              controller: phoneController,
+              icon: Icons.call,
+              hintText: 'Enter your phone number',
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Phone number is required';
+                }
+                return null;
+              },
+            ),
+            SizedBox(height: 20),
 
-          InputTextFormFIeld(
-            controller: passwordController,
-            icon: Icons.key,
-            hintText: 'Enter password',
-            obscureText: true,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Password is required';
-              }
-              return null;
-            },
-          ),
-          SizedBox(height: 20),
+            InputTextFormFIeld(
+              controller: passwordController,
+              icon: Icons.key,
+              hintText: 'Enter password',
+              obscureText: true,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Password is required';
+                }
+                return null;
+              },
+            ),
+            SizedBox(height: 20),
 
-          InputTextFormFIeld(
-            controller: confirmPasswordController,
-            icon: Icons.key,
-            hintText: 'Re-type password',
-            obscureText: true,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Confirm password is required';
-              }
-              if (value != passwordController.text.trim()) {
-                return "Passwords doesn't match";
-              }
+            InputTextFormFIeld(
+              controller: confirmPasswordController,
+              icon: Icons.key,
+              hintText: 'Re-type password',
+              obscureText: true,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Confirm password is required';
+                }
+                if (value != passwordController.text.trim()) {
+                  return "Passwords doesn't match";
+                }
 
-              return null;
-            },
-          ),
-          Spacer(),
-          SubmitButton(buttonText: 'Signup', onPressed: () {}),
-          Spacer(),
-        ],
+                return null;
+              },
+            ),
+            SizedBox(height: 20),
+            SubmitButton(buttonText: 'Signup', onPressed: () {}),
+          ],
+        ),
       ),
     );
   }
