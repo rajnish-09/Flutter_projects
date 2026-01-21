@@ -1,5 +1,6 @@
 import 'package:custom_rating_bar/custom_rating_bar.dart';
 import 'package:ecommerce_app/models/product_model.dart';
+import 'package:ecommerce_app/ui/cart_screen.dart';
 import 'package:ecommerce_app/widgets/delivery_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating/flutter_rating.dart';
@@ -169,7 +170,14 @@ class _ProductDisplayScreenState extends State<ProductDisplayScreen> {
                         ),
                         Spacer(),
                         ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => CartScreen(),
+                              ),
+                            );
+                          },
                           style: ElevatedButton.styleFrom(
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadiusGeometry.circular(10),
