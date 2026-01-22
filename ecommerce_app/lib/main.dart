@@ -1,13 +1,18 @@
-import 'package:ecommerce_app/ui/get_started_screen.dart';
-import 'package:ecommerce_app/ui/login_screen.dart';
-import 'package:ecommerce_app/ui/main_navigation_screen.dart';
-import 'package:ecommerce_app/ui/product_display_screen.dart';
-import 'package:ecommerce_app/ui/shop_screen.dart';
-import 'package:ecommerce_app/ui/signup_screen.dart';
+import 'package:ecommerce_app/firebase_options.dart';
+import 'package:ecommerce_app/screens/admin_module/admin_dashboard.dart';
+import 'package:ecommerce_app/screens/get_started_screen.dart';
+import 'package:ecommerce_app/screens/login_screen.dart';
+import 'package:ecommerce_app/screens/main_navigation_screen.dart';
+import 'package:ecommerce_app/screens/product_display_screen.dart';
+import 'package:ecommerce_app/screens/shop_screen.dart';
+import 'package:ecommerce_app/screens/signup_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());
 }
 
@@ -18,7 +23,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(textTheme: GoogleFonts.nunitoSansTextTheme()),
-      home: GetStartedScreen(),
+      home: AdminDashboard(),
     );
   }
 }

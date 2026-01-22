@@ -1,7 +1,7 @@
 import 'package:ecommerce_app/models/category_model.dart';
 import 'package:ecommerce_app/models/product_model.dart';
 import 'package:ecommerce_app/models/top_products_model.dart';
-import 'package:ecommerce_app/ui/cart_screen.dart';
+import 'package:ecommerce_app/screens/cart_screen.dart';
 import 'package:ecommerce_app/widgets/bottom_navigation_bar.dart';
 import 'package:ecommerce_app/widgets/carousel_slider.dart';
 import 'package:ecommerce_app/widgets/category_container.dart';
@@ -22,44 +22,44 @@ class _ShopScreenState extends State<ShopScreen> {
   final searchController = TextEditingController();
   Product product = Product();
 
-  List<CategoryModel> categories = [
-    CategoryModel(
-      title: 'Clothing',
-      imagePath: [
-        'assets/images/Placeholder_01.png',
-        'assets/images/Placeholder_01-1.png',
-        'assets/images/Placeholder_01-2.png',
-        'assets/images/Placeholder_01-3.png',
-      ],
-    ),
-    CategoryModel(
-      title: 'Shoes',
-      imagePath: [
-        'assets/images/Placeholder_02.jpg',
-        'assets/images/Placeholder_02-1.jpg',
-        'assets/images/Placeholder_02-2.jpg',
-        'assets/images/Placeholder_02-3.jpg',
-      ],
-    ),
-    CategoryModel(
-      title: 'Bags',
-      imagePath: [
-        'assets/images/Placeholder_03.jpg',
-        'assets/images/Placeholder_03-1.jpg',
-        'assets/images/Placeholder_03-2.jpg',
-        'assets/images/Placeholder_03-3.jpg',
-      ],
-    ),
-    CategoryModel(
-      title: 'Watches',
-      imagePath: [
-        'assets/images/Placeholder_04.jpg',
-        'assets/images/Placeholder_04-1.jpg',
-        'assets/images/Placeholder_04-2.jpg',
-        'assets/images/Placeholder_04-3.jpg',
-      ],
-    ),
-  ];
+  // List<CategoryModel> categories = [
+  //   CategoryModel(
+  //     title: 'Clothing',
+  //     imagePath: [
+  //       'assets/images/Placeholder_01.png',
+  //       'assets/images/Placeholder_01-1.png',
+  //       'assets/images/Placeholder_01-2.png',
+  //       'assets/images/Placeholder_01-3.png',
+  //     ],
+  //   ),
+  //   CategoryModel(
+  //     title: 'Shoes',
+  //     imagePath: [
+  //       'assets/images/Placeholder_02.jpg',
+  //       'assets/images/Placeholder_02-1.jpg',
+  //       'assets/images/Placeholder_02-2.jpg',
+  //       'assets/images/Placeholder_02-3.jpg',
+  //     ],
+  //   ),
+  //   CategoryModel(
+  //     title: 'Bags',
+  //     imagePath: [
+  //       'assets/images/Placeholder_03.jpg',
+  //       'assets/images/Placeholder_03-1.jpg',
+  //       'assets/images/Placeholder_03-2.jpg',
+  //       'assets/images/Placeholder_03-3.jpg',
+  //     ],
+  //   ),
+  //   CategoryModel(
+  //     title: 'Watches',
+  //     imagePath: [
+  //       'assets/images/Placeholder_04.jpg',
+  //       'assets/images/Placeholder_04-1.jpg',
+  //       'assets/images/Placeholder_04-2.jpg',
+  //       'assets/images/Placeholder_04-3.jpg',
+  //     ],
+  //   ),
+  // ];
 
   List<TopProductsModel> topProducts = [
     TopProductsModel(
@@ -139,7 +139,7 @@ class _ShopScreenState extends State<ShopScreen> {
                         hintText: 'Search',
                         enabledBorder: searchTextFormFieldStyle(),
                         filled: true,
-                        fillColor:  Color.fromRGBO(255, 255, 255, 1),
+                        fillColor: Color.fromRGBO(255, 255, 255, 1),
                         focusedBorder: searchTextFormFieldStyle(),
                         errorBorder: searchTextFormFieldStyle(),
                         focusedErrorBorder: searchTextFormFieldStyle(),
@@ -179,19 +179,19 @@ class _ShopScreenState extends State<ShopScreen> {
                 ],
               ),
               SizedBox(height: 15),
-              Padding(
-                padding: EdgeInsets.only(left: 12),
-                child: Wrap(
-                  spacing: 15,
-                  runSpacing: 15,
-                  children: [
-                    CategoryContainerCard(category: categories[0]),
-                    CategoryContainerCard(category: categories[1]),
-                    CategoryContainerCard(category: categories[2]),
-                    CategoryContainerCard(category: categories[3]),
-                  ],
-                ),
-              ),
+              // Padding(
+              //   padding: EdgeInsets.only(left: 12),
+              //   child: Wrap(
+              //     spacing: 15,
+              //     runSpacing: 15,
+              //     children: [
+              //       CategoryContainerCard(category: categories[0]),
+              //       CategoryContainerCard(category: categories[1]),
+              //       CategoryContainerCard(category: categories[2]),
+              //       CategoryContainerCard(category: categories[3]),
+              //     ],
+              //   ),
+              // ),
               SizedBox(height: 20),
               Text(
                 "Top products",
@@ -220,7 +220,7 @@ class _ShopScreenState extends State<ShopScreen> {
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               // borderRadius: BorderRadius.circular(15),
-                              color:  Color.fromARGB(255, 255, 255, 255),
+                              color: Color.fromARGB(255, 255, 255, 255),
                               boxShadow: [
                                 BoxShadow(
                                   color: Colors.grey,
@@ -265,8 +265,7 @@ class _ShopScreenState extends State<ShopScreen> {
                     crossAxisCount: 2, // number of items per row
                     crossAxisSpacing: 10, // horizontal spacing between items
                     mainAxisSpacing: 10, // vertical spacing between items
-                    childAspectRatio:
-                        0.6, // width / height ratio of each item
+                    childAspectRatio: 0.6, // width / height ratio of each item
                   ),
                   itemBuilder: (context, index) {
                     final prod = product.products[index];

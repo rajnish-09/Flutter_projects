@@ -20,16 +20,16 @@ class CategoryContainerCard extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Wrap(
-            spacing: 5,
-            runSpacing: 5,
-            children: category.imagePath.map((img) {
-              return ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: Image.asset(img, width: 50),
-              );
-            }).toList(),
-          ),
+          // Wrap(
+          //   spacing: 5,
+          //   runSpacing: 5,
+          //   children: category.imagePath.map((img) {
+          //     return ClipRRect(
+          //       borderRadius: BorderRadius.circular(10),
+          //       child: Image.asset(img, width: 50),
+          //     );
+          //   }).toList(),
+          // ),
           SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
