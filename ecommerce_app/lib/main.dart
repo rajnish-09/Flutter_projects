@@ -1,5 +1,6 @@
 import 'package:ecommerce_app/ui/get_started_screen.dart';
 import 'package:ecommerce_app/ui/login_screen.dart';
+import 'package:ecommerce_app/ui/main_navigation_screen.dart';
 import 'package:ecommerce_app/ui/product_display_screen.dart';
 import 'package:ecommerce_app/ui/shop_screen.dart';
 import 'package:ecommerce_app/ui/signup_screen.dart';

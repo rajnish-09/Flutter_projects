@@ -55,7 +55,7 @@ class _LoginPasswordFormState extends State<LoginPasswordForm> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ShopScreen()),
+                MaterialPageRoute(builder: (context) => MainNavigationScreen()),
               );
             },
           ),
