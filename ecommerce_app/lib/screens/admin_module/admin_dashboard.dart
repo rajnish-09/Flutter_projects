@@ -1,5 +1,12 @@
+import 'package:ecommerce_app/bloc/category/category_bloc.dart';
+import 'package:ecommerce_app/bloc/category/category_event.dart';
+import 'package:ecommerce_app/models/category_model.dart';
+import 'package:ecommerce_app/service/firebase_service.dart';
 import 'package:ecommerce_app/service/image_service.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -15,8 +22,41 @@ class _AdminDashboardState extends State<AdminDashboard> {
   final imageController = TextEditingController();
   ImageService imageService = ImageService();
 
+  void chooseImageUploadOption() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text("Choose Upload Option"),
+            Row(
+              children: [
+                ElevatedButton.icon(
+                  onPressed: () {
+                    imageService.pickImageFromCamera();
+                  },
+                  label: Text("Camera"),
+                  icon: Icon(Icons.camera),
+                ),
+                ElevatedButton.icon(
+                  onPressed: () {
+                    imageService.pickImageFromGallery();
+                  },
+                  label: Text("Gallery"),
+                  icon: Icon(Icons.browse_gallery_sharp),
+                ),
+              ],
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void showCategoryBottomSheet() {
     showModalBottomSheet(
+      isScrollControlled: true,
       context: context,
       builder: (context) {
         return Padding(
@@ -54,24 +94,29 @@ class _AdminDashboardState extends State<AdminDashboard> {
                 ),
               ),
               SizedBox(height: 10),
-              ElevatedButton(
+              ElevatedButton.icon(
+                label: Text("Upload image"),
+                icon: Icon(Icons.upload),
                 onPressed: () {
-                  imageService.pickImageFromGallery();
+                  chooseImageUploadOption();
                 },
-                child: Row(
-                  children: [
-                    Icon(Icons.upload),
-                    SizedBox(width: 10),
-                    Text("Upload image"),
-                  ],
-                ),
               ),
               SizedBox(height: 15),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   shape: RoundedRectangleBorder(),
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  final category = CategoryModel(
+                    code: 'hw13',
+                    name: nameController.text.trim(),
+                    imagePath: imageController.text.trim(),
+                  );
+                  context.read<CategoryBloc>().add(
+                    AddCategory(category: category),
+                  );
+                  Navigator.pop(context);
+                },
                 child: Text("Add category"),
               ),
             ],

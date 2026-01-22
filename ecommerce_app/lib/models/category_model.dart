@@ -1,10 +1,10 @@
 class CategoryModel {
   final String? id;
-  final String title;
+  final String name;
   final String imagePath;
   final String? code;
   CategoryModel({
-    required this.title,
+    required this.name,
     required this.imagePath,
     this.id,
     this.code,
@@ -13,7 +13,7 @@ class CategoryModel {
   factory CategoryModel.fromJson(Map<String, dynamic> json, String id) {
     return CategoryModel(
       id: id,
-      title: json['title'],
+      name: json['name'],
       imagePath: json['imagePath'],
       code: json['code'],
     );
@@ -21,7 +21,7 @@ class CategoryModel {
 
   Map<String, dynamic> toJson() => {
     'id': id,
-    'title': title,
+    'name': name,
     'imagePath': imagePath,
     'code': code,
   };

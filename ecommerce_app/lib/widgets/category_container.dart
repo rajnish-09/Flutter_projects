@@ -35,7 +35,7 @@ class CategoryContainerCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                category.title,
+                category.name,
                 style: GoogleFonts.raleway(
                   fontSize: 15,
                   fontWeight: FontWeight.bold,
