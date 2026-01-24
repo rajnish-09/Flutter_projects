@@ -10,6 +10,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -112,10 +113,6 @@ class _AdminDashboardState extends State<AdminDashboard> {
               }
               if (state is UploadedImage) {
                 imageController.text = state.imgUrl;
-                Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text("Image Uploaded Successfully!")),
-                );
               }
             },
             child: Padding(
@@ -149,28 +146,29 @@ class _AdminDashboardState extends State<AdminDashboard> {
                       },
                     ),
                     SizedBox(height: 10),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: TextFormField(
-                            controller: imageController,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(),
-                              hintText: 'Image',
-                            ),
-                            readOnly: true,
-                          ),
-                        ),
-                        ElevatedButton.icon(
-                          label: Text("Upload image"),
-                          icon: Icon(Icons.upload),
-                          onPressed: () {
-                            // chooseImageUploadOption();
-                            context.read<UploadBloc>().add(UploadImage());
-                          },
-                        ),
-                      ],
+                    ElevatedButton.icon(
+                      label: Text("Upload image"),
+                      icon: Icon(Icons.upload),
+                      onPressed: () {
+                        // chooseImageUploadOption();
+                        context.read<UploadBloc>().add(UploadImage());
+                      },
                     ),
+                    // Row(
+                    //   children: [
+                    //     Expanded(
+                    //       child: TextFormField(
+                    //         controller: imageController,
+                    //         decoration: InputDecoration(
+                    //           border: OutlineInputBorder(),
+                    //           hintText: 'Image',
+                    //         ),
+                    //         readOnly: true,
+                    //       ),
+                    //     ),
+
+                    //   ],
+                    // ),
                     SizedBox(height: 15),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
@@ -182,19 +180,14 @@ class _AdminDashboardState extends State<AdminDashboard> {
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
                           if (imageController.text.isEmpty) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text("Please upload an image first"),
-                                backgroundColor: Colors.red,
-                                behavior: SnackBarBehavior.floating,
-                                margin: EdgeInsets.only(
-                                  bottom:
-                                      MediaQuery.of(context).viewInsets.bottom +
-                                      20, // Adjust for keyboard
-                                  left: 20,
-                                  right: 20,
-                                ),
-                              ),
+                            Fluttertoast.showToast(
+                              msg: "Please upload an image first",
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity
+                                  .TOP, // You can put it at the TOP to ensure it's seen
+                              backgroundColor: Colors.red,
+                              textColor: Colors.white,
+                              fontSize: 16.0,
                             );
                             return; // Stop execution
                           }
@@ -206,9 +199,9 @@ class _AdminDashboardState extends State<AdminDashboard> {
                           context.read<CategoryBloc>().add(
                             AddCategory(category: category),
                           );
-                          Navigator.pop(context);
                           nameController.clear();
                           imageController.clear();
+                          Navigator.pop(context);
                         }
                       },
                       child: Text(
