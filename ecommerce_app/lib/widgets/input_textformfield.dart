@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
 
 class InputTextFormFIeld extends StatelessWidget {
-  final IconData icon;
+  final IconData? icon;
   final String hintText;
   final String? Function(String?)? validator;
   final VoidCallback? onChanged;
   final bool? obscureText;
+  final int maxLines;
   const InputTextFormFIeld({
     super.key,
     required this.controller,
-    required this.icon,
+    this.icon,
     required this.hintText,
     this.validator,
     this.onChanged,
     this.obscureText,
+    this.maxLines = 1
   });
 
   final TextEditingController controller;
@@ -34,12 +36,13 @@ class InputTextFormFIeld extends StatelessWidget {
       ),
       child: TextFormField(
         // textCapitalization: TextCapitalization.sentences,
+        maxLines: maxLines,
         validator: validator,
         controller: controller,
         obscureText: obscureText != null ? obscureText! : false,
         // onChanged: ,
         decoration: InputDecoration(
-          prefixIcon: Icon(icon, color: Colors.grey),
+          prefixIcon: icon != null ? Icon(icon, color: Colors.grey) : null,
           hintText: hintText,
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(15),
