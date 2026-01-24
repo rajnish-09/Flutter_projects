@@ -1,5 +1,6 @@
 import 'package:ecommerce_app/bloc/category/category_bloc.dart';
 import 'package:ecommerce_app/bloc/category/category_event.dart';
+import 'package:ecommerce_app/bloc/category/category_state.dart';
 import 'package:ecommerce_app/bloc/uploadImage/upload_bloc.dart';
 import 'package:ecommerce_app/bloc/uploadImage/upload_event.dart';
 import 'package:ecommerce_app/bloc/uploadImage/upload_state.dart';
@@ -32,6 +33,12 @@ class _AdminDashboardState extends State<AdminDashboard> {
     super.dispose();
     nameController.dispose();
     imageController.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<CategoryBloc>().add(FetchCategories());
   }
 
   void chooseImageUploadOption() {
@@ -111,8 +118,11 @@ class _AdminDashboardState extends State<AdminDashboard> {
               if (state is UploadingImage) {
                 showLoadingDialog(context);
               }
-              if (state is UploadedImage) {
-                imageController.text = state.imgUrl;
+              if (state is UploadedImage || state is UploadError) {
+                Navigator.pop(context);
+                if (state is UploadedImage) {
+                  imageController.text = state.imgUrl;
+                }
               }
             },
             child: Padding(
@@ -134,6 +144,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
 
                     TextFormField(
                       controller: nameController,
+                      textCapitalization: TextCapitalization.sentences,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
                         hintText: 'Category name',
@@ -154,21 +165,6 @@ class _AdminDashboardState extends State<AdminDashboard> {
                         context.read<UploadBloc>().add(UploadImage());
                       },
                     ),
-                    // Row(
-                    //   children: [
-                    //     Expanded(
-                    //       child: TextFormField(
-                    //         controller: imageController,
-                    //         decoration: InputDecoration(
-                    //           border: OutlineInputBorder(),
-                    //           hintText: 'Image',
-                    //         ),
-                    //         readOnly: true,
-                    //       ),
-                    //     ),
-
-                    //   ],
-                    // ),
                     SizedBox(height: 15),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
@@ -251,6 +247,56 @@ class _AdminDashboardState extends State<AdminDashboard> {
                     icon: Icon(Icons.add),
                   ),
                 ],
+              ),
+              SizedBox(height: 10),
+              BlocBuilder<CategoryBloc, CategoryState>(
+                builder: (context, state) {
+                  if (state is CategoryLoading) {
+                    SizedBox(height: 120, child: CircularProgressIndicator());
+                  }
+                  if (state is CategoryLoaded) {
+                    // ScaffoldMessenger.of(context).showSnackBar(
+                    //   SnackBar(
+                    //     content: Text(
+                    //       "Category added successfully.",
+                    //       style: TextStyle(color: Colors.white),
+                    //     ),
+                    //     backgroundColor: Colors.green,
+                    //   ),
+                    // );
+                    final categories = state.categories;
+                    if (categories.isEmpty) return Text("No categories found");
+                    return SizedBox(
+                      height: 120,
+                      child: ListView.separated(
+                        separatorBuilder: (context, index) {
+                          return SizedBox(width: 15);
+                        },
+                        scrollDirection: Axis.horizontal,
+                        itemCount: categories.length,
+                        itemBuilder: (context, index) {
+                          final category = categories[index];
+                          return Column(
+                            children: [
+                              CircleAvatar(
+                                backgroundImage: NetworkImage(
+                                  category.imagePath,
+                                ),
+                                radius: 40,
+                              ),
+                              SizedBox(height: 10),
+                              Text(
+                                category.name,
+                                style: TextStyle(fontSize: 15),
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                    );
+                  }
+                  return SizedBox();
+                },
               ),
               SizedBox(height: 20),
               Row(

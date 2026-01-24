@@ -6,3 +6,5 @@ class AddCategory extends CategoryEvent {
   final CategoryModel category;
   AddCategory({required this.category});
 }
+
+class FetchCategories extends CategoryEvent{}

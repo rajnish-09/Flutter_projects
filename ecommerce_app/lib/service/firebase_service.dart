@@ -9,4 +9,11 @@ class FirebaseService {
   Future<void> addCategory(CategoryModel category) async {
     await categoriesCollection.add(category.toJson());
   }
+
+  Future<List<CategoryModel>> getAllCategories() async {
+    final response = await categoriesCollection.get();
+    return response.docs
+        .map((e) => CategoryModel.fromJson(e.data(), e.id))
+        .toList();
+  }
 }
