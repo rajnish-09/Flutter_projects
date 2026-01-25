@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecommerce_app/models/category_model.dart';
 import 'package:ecommerce_app/models/product_model.dart';
+import 'package:http/http.dart';
 
 class FirebaseService {
   final categoriesCollection = FirebaseFirestore.instance.collection(
@@ -21,5 +22,10 @@ class FirebaseService {
 
   Future<void> addProduct(ProductModel product) async {
     await productCollection.add(product.toJson());
+  }
+
+  Future<List<ProductModel>> getProducts() async {
+    final response = await productCollection.get();
+    return response.docs.map((e) => ProductModel.fromJson(e.data())).toList();
   }
 }

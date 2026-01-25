@@ -21,6 +21,6 @@ class ProductLoadSuccess extends ProductState {
 }
 
 class ProductLoaded extends ProductState {
-  final ProductModel product;
+  final List<ProductModel> product;
   ProductLoaded({required this.product});
 }
