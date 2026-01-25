@@ -195,15 +195,6 @@ class _ShopScreenState extends State<ShopScreen> {
                     SizedBox(height: 120, child: CircularProgressIndicator());
                   }
                   if (state is CategoryLoaded) {
-                    // ScaffoldMessenger.of(context).showSnackBar(
-                    //   SnackBar(
-                    //     content: Text(
-                    //       "Category added successfully.",
-                    //       style: TextStyle(color: Colors.white),
-                    //     ),
-                    //     backgroundColor: Colors.green,
-                    //   ),
-                    // );
                     final categories = state.categories;
                     if (categories.isEmpty) return Text("No categories found");
                     return SizedBox(

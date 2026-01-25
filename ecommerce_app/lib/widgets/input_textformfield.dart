@@ -7,6 +7,9 @@ class InputTextFormFIeld extends StatelessWidget {
   final VoidCallback? onChanged;
   final bool? obscureText;
   final int maxLines;
+  final TextCapitalization textCapitalization;
+  final TextInputType textInputType;
+
   const InputTextFormFIeld({
     super.key,
     required this.controller,
@@ -15,7 +18,9 @@ class InputTextFormFIeld extends StatelessWidget {
     this.validator,
     this.onChanged,
     this.obscureText,
-    this.maxLines = 1
+    this.maxLines = 1,
+    this.textCapitalization = TextCapitalization.none,
+    this.textInputType = TextInputType.text,
   });
 
   final TextEditingController controller;
@@ -35,7 +40,8 @@ class InputTextFormFIeld extends StatelessWidget {
         ],
       ),
       child: TextFormField(
-        // textCapitalization: TextCapitalization.sentences,
+        textCapitalization: textCapitalization,
+        keyboardType: textInputType,
         maxLines: maxLines,
         validator: validator,
         controller: controller,

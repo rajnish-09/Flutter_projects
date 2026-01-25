@@ -1,10 +1,13 @@
 import 'package:ecommerce_app/bloc/category/category_bloc.dart';
 import 'package:ecommerce_app/bloc/category/category_event.dart';
 import 'package:ecommerce_app/bloc/category/category_state.dart';
+import 'package:ecommerce_app/bloc/product/product_bloc.dart';
+import 'package:ecommerce_app/bloc/product/product_state.dart';
 import 'package:ecommerce_app/bloc/uploadImage/upload_bloc.dart';
 import 'package:ecommerce_app/bloc/uploadImage/upload_event.dart';
 import 'package:ecommerce_app/bloc/uploadImage/upload_state.dart';
 import 'package:ecommerce_app/models/category_model.dart';
+import 'package:ecommerce_app/screens/admin_module/add_product_screen.dart';
 import 'package:ecommerce_app/service/firebase_service.dart';
 import 'package:ecommerce_app/service/image_service.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -306,7 +309,17 @@ class _AdminDashboardState extends State<AdminDashboard> {
                     "Products",
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
-                  IconButton(onPressed: () {}, icon: Icon(Icons.add)),
+                  IconButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AddProductScreen(),
+                        ),
+                      );
+                    },
+                    icon: Icon(Icons.add),
+                  ),
                 ],
               ),
             ],

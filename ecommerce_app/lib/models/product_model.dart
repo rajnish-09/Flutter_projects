@@ -1,14 +1,34 @@
 class ProductModel {
   final String imagePath, title, description;
-  final double price, rating;
+  final double price;
+  final double? discount, rating;
 
   ProductModel({
     required this.imagePath,
     required this.title,
     required this.description,
     required this.price,
-    required this.rating,
+    this.rating,
+    this.discount,
   });
+
+  factory ProductModel.fromJson(Map<String, dynamic> json) {
+    return ProductModel(
+      imagePath: json['imagePath'],
+      title: json['title'],
+      description: json['description'],
+      price: json['price'],
+      discount: json['discount'],
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    'imagePath': imagePath,
+    'title': title,
+    'description': description,
+    'price': price,
+    'discount': discount,
+  };
 }
 
 class Product {
