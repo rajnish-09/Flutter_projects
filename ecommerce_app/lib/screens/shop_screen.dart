@@ -1,3 +1,6 @@
+import 'package:ecommerce_app/bloc/category/category_bloc.dart';
+import 'package:ecommerce_app/bloc/category/category_event.dart';
+import 'package:ecommerce_app/bloc/category/category_state.dart';
 import 'package:ecommerce_app/models/category_model.dart';
 import 'package:ecommerce_app/models/product_model.dart';
 import 'package:ecommerce_app/models/top_products_model.dart';
@@ -9,6 +12,7 @@ import 'package:ecommerce_app/widgets/product_display_container.dart';
 import 'package:ecommerce_app/widgets/search_textformfield_style.dart';
 // import 'package:ecommerce_app/ui/widgets/input_textformfield.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ShopScreen extends StatefulWidget {
@@ -105,6 +109,12 @@ class _ShopScreenState extends State<ShopScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    context.read<CategoryBloc>().add(FetchCategories());
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Padding(
@@ -179,6 +189,55 @@ class _ShopScreenState extends State<ShopScreen> {
                 ],
               ),
               SizedBox(height: 15),
+              BlocBuilder<CategoryBloc, CategoryState>(
+                builder: (context, state) {
+                  if (state is CategoryLoading) {
+                    SizedBox(height: 120, child: CircularProgressIndicator());
+                  }
+                  if (state is CategoryLoaded) {
+                    // ScaffoldMessenger.of(context).showSnackBar(
+                    //   SnackBar(
+                    //     content: Text(
+                    //       "Category added successfully.",
+                    //       style: TextStyle(color: Colors.white),
+                    //     ),
+                    //     backgroundColor: Colors.green,
+                    //   ),
+                    // );
+                    final categories = state.categories;
+                    if (categories.isEmpty) return Text("No categories found");
+                    return SizedBox(
+                      height: 120,
+                      child: ListView.separated(
+                        separatorBuilder: (context, index) {
+                          return SizedBox(width: 15);
+                        },
+                        scrollDirection: Axis.horizontal,
+                        itemCount: categories.length,
+                        itemBuilder: (context, index) {
+                          final category = categories[index];
+                          return Column(
+                            children: [
+                              CircleAvatar(
+                                backgroundImage: NetworkImage(
+                                  category.imagePath,
+                                ),
+                                radius: 40,
+                              ),
+                              SizedBox(height: 10),
+                              Text(
+                                category.name,
+                                style: TextStyle(fontSize: 15),
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                    );
+                  }
+                  return SizedBox();
+                },
+              ),
               // Padding(
               //   padding: EdgeInsets.only(left: 12),
               //   child: Wrap(
