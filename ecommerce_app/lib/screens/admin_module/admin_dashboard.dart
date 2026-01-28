@@ -427,7 +427,10 @@ class _AdminDashboardState extends State<AdminDashboard> {
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) =>
-                                                AddUpdateProductScreen(),
+                                                AddUpdateProductScreen(
+                                                  product:
+                                                      state.products[index],
+                                                ),
                                           ),
                                         );
                                       },

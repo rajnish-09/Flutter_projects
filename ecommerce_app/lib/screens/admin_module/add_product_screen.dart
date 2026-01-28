@@ -25,12 +25,12 @@ class AddUpdateProductScreen extends StatefulWidget {
 }
 
 class _AddUpdateProductScreenState extends State<AddUpdateProductScreen> {
-  final productNameController = TextEditingController(text: widget.product!=null? widget.product.title: '');
-  final productDescriptionController = TextEditingController();
-  final productPriceController = TextEditingController();
-  final imageController = TextEditingController();
-  final productDiscountController = TextEditingController();
-  final categoryController = TextEditingController();
+  late TextEditingController productNameController;
+  late TextEditingController productDescriptionController;
+  late TextEditingController productPriceController;
+  late TextEditingController imageController;
+  late TextEditingController productDiscountController;
+  late TextEditingController categoryController;
   final _formKey = GlobalKey<FormState>();
   bool isToggled = false;
   FirebaseService firebaseService = FirebaseService();
@@ -39,6 +39,24 @@ class _AddUpdateProductScreenState extends State<AddUpdateProductScreen> {
   @override
   void initState() {
     super.initState();
+    productNameController = TextEditingController(
+      text: widget.product == null ? '' : widget.product!.title,
+    );
+    productDescriptionController = TextEditingController(
+      text: widget.product == null ? '' : widget.product!.description,
+    );
+    productPriceController = TextEditingController(
+      text: widget.product == null ? '' : widget.product!.price.toString(),
+    );
+    imageController = TextEditingController(
+      text: widget.product?.imagePath ?? '',
+    );
+    productDiscountController = TextEditingController(
+      text: widget.product?.discount.toString() ?? '',
+    );
+    categoryController = TextEditingController(
+      text: widget.product?.categoryId ?? '',
+    );
     context.read<CategoryBloc>().add(FetchCategories());
   }
 
@@ -114,6 +132,7 @@ class _AddUpdateProductScreenState extends State<AddUpdateProductScreen> {
                                   ? "Loading..."
                                   : "Select a category",
                             ),
+                            initialValue: widget.product?.categoryId,
                             decoration: InputDecoration(
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
