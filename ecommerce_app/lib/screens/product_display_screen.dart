@@ -17,6 +17,11 @@ class ProductDisplayScreen extends StatefulWidget {
 class _ProductDisplayScreenState extends State<ProductDisplayScreen> {
   @override
   Widget build(BuildContext context) {
+    // final discountPercent = widget.product.discount;
+    final double discountedPrice =
+        widget.product.price -
+        (widget.product.price * (widget.product.discount! / 100));
+
     return Scaffold(
       body: SingleChildScrollView(
         child: SafeArea(
@@ -24,8 +29,8 @@ class _ProductDisplayScreenState extends State<ProductDisplayScreen> {
             children: [
               Hero(
                 tag: widget.product.imagePath,
-                child: Image.asset(
-                  'assets/images/prod1.jpg',
+                child: Image.network(
+                  widget.product.imagePath,
                   width: double.infinity,
                   height: MediaQuery.of(context).size.height * 0.5,
                   fit: BoxFit.cover,
@@ -44,46 +49,51 @@ class _ProductDisplayScreenState extends State<ProductDisplayScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "Rs 3000",
+                              "Rs $discountedPrice",
                               style: GoogleFonts.raleway(
                                 fontSize: 26,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            Row(
-                              children: [
-                                Text(
-                                  "Rs 3500",
-                                  style: GoogleFonts.raleway(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                    color: Color(0xffF1AEAE),
-                                    decoration: TextDecoration.lineThrough,
-                                    decorationColor: Color(0xffF1AEAE),
-                                    decorationThickness: 2,
-                                  ),
-                                ),
-                                SizedBox(width: 10),
-                                Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 5),
-                                  decoration: BoxDecoration(
-                                    color: Color(0xffF81140),
-                                    border: BoxBorder.all(
-                                      color: Colors.transparent,
-                                    ),
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: Text(
-                                    "-20%",
+                            if (widget.product.discount != 0 ||
+                                widget.product.discount! > 0) ...[
+                              Row(
+                                children: [
+                                  Text(
+                                    widget.product.price.toStringAsFixed(0),
                                     style: GoogleFonts.raleway(
-                                      fontSize: 13,
+                                      fontSize: 14,
                                       fontWeight: FontWeight.bold,
-                                      color: Colors.white,
+                                      color: Color(0xffF1AEAE),
+                                      decoration: TextDecoration.lineThrough,
+                                      decorationColor: Color(0xffF1AEAE),
+                                      decorationThickness: 2,
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
+                                  SizedBox(width: 10),
+                                  Container(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 5,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: Color(0xffF81140),
+                                      border: BoxBorder.all(
+                                        color: Colors.transparent,
+                                      ),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Text(
+                                      '${widget.product.discount.toString()} %',
+                                      style: GoogleFonts.raleway(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
                           ],
                         ),
                         IconButton(onPressed: () {}, icon: Icon(Icons.share)),
@@ -91,21 +101,21 @@ class _ProductDisplayScreenState extends State<ProductDisplayScreen> {
                     ),
                     SizedBox(height: 10),
                     Text(
-                      "Title",
+                      widget.product.title,
                       style: GoogleFonts.raleway(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     Text(
-                      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam arcu mauris, scelerisque eu mauris id, pretium pulvinar sapien.',
+                      widget.product.description,
                       style: GoogleFonts.nunitoSans(fontSize: 15),
                     ),
                     RatingBar(
                       filledIcon: Icons.star,
                       emptyIcon: Icons.star_border,
                       onRatingChanged: (rating) {
-                        print(rating);
+                        // print(rating);
                       },
                     ),
                     SizedBox(height: 10),

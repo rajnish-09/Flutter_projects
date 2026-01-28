@@ -274,8 +274,9 @@ class _AdminDashboardState extends State<AdminDashboard> {
                       //   ),
                       // );
                       final categories = state.categories;
-                      if (categories.isEmpty)
+                      if (categories.isEmpty) {
                         return Text("No categories found");
+                      }
                       return SizedBox(
                         height: 120,
                         child: ListView.separated(
@@ -325,7 +326,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => AddProductScreen(),
+                            builder: (context) => AddUpdateProductScreen(),
                           ),
                         );
                       },
@@ -340,7 +341,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
                       return Center(child: CircularProgressIndicator());
                     }
                     if (state is ProductLoaded) {
-                      if (state.product.isEmpty) {
+                      if (state.products.isEmpty) {
                         return Center(child: Text("No products yet."));
                       }
                       return GridView.builder(
@@ -352,9 +353,9 @@ class _AdminDashboardState extends State<AdminDashboard> {
                           mainAxisSpacing: 10,
                           childAspectRatio: 0.5,
                         ),
-                        itemCount: state.product.length,
+                        itemCount: state.products.length,
                         itemBuilder: (context, index) {
-                          final product = state.product[index];
+                          final product = state.products[index];
 
                           return Container(
                             padding: EdgeInsets.all(10),
@@ -411,7 +412,8 @@ class _AdminDashboardState extends State<AdminDashboard> {
                                     style: TextStyle(fontSize: 14),
                                   ),
                                 ],
-                                SizedBox(height: 5),
+                                // SizedBox(height: 5),
+                                Spacer(),
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -420,7 +422,15 @@ class _AdminDashboardState extends State<AdminDashboard> {
                                       style: IconButton.styleFrom(
                                         backgroundColor: Colors.green,
                                       ),
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                AddUpdateProductScreen(),
+                                          ),
+                                        );
+                                      },
                                       icon: Icon(
                                         Icons.edit,
                                         color: Colors.white,

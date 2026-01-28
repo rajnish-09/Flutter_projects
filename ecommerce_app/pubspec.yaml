@@ -45,7 +45,8 @@ dependencies:
   flutter_bloc: ^9.1.1
   image_picker: ^1.2.1
   http: ^1.6.0
-  fluttertoast: ^9.0.0
+  fluttertoast: ^8.2.4
+
 
 dev_dependencies:
   flutter_test:

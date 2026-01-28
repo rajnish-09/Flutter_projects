@@ -11,7 +11,7 @@ class ProductDisplayContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 10, bottom: 10),
+      padding: const EdgeInsets.only(bottom: 15),
       child: GestureDetector(
         onTap: () {
           Navigator.push(
@@ -21,53 +21,63 @@ class ProductDisplayContainer extends StatelessWidget {
             ),
           );
         },
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Hero(
-              tag: prod.imagePath,
-              child: Container(
-                width: 150,
-                height: 150,
-                decoration: BoxDecoration(
-                  color: Color(0xffDFE9FF),
-                  borderRadius: BorderRadius.circular(10),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey,
-                      offset: Offset(-4, 4),
-                      blurRadius: 5,
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              BoxShadow(
+                color: const Color.fromARGB(255, 207, 207, 207),
+                offset: Offset(0, 2),
+                spreadRadius: 4,
+                blurRadius: 8,
+              ),
+            ],
+            color: Colors.white,
+          ),
+          padding: EdgeInsets.all(15),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Hero(
+                tag: prod.imagePath,
+                child: Container(
+                  width: 150,
+                  height: 150,
+                  decoration: BoxDecoration(
+                    color: Color(0xffDFE9FF),
+                    borderRadius: BorderRadius.circular(10),
+                    // boxShadow: [
+                    //   BoxShadow(
+                    //     color: Colors.grey,
+                    //     offset: Offset(-4, 4),
+                    //     blurRadius: 5,
+                    //   ),
+                    // ],
+                    image: DecorationImage(
+                      image: NetworkImage(prod.imagePath),
+                      fit: BoxFit.cover,
                     ),
-                  ],
-                  image: DecorationImage(
-                    image: AssetImage(prod.imagePath),
-                    fit: BoxFit.cover,
                   ),
                 ),
-
-                // child: ClipRRect(
-                //   borderRadius: BorderRadius.circular(10),
-                //   child: Image.asset(prod.imagePath),
-                // ),
               ),
-            ),
-            SizedBox(height: 10),
-            Text(
-              prod.title,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: GoogleFonts.nunitoSans(fontSize: 15),
-            ),
-            // Text(prod.description),
-            Text(
-              'Rs. ${prod.price}',
-              style: GoogleFonts.raleway(
-                fontSize: 17,
-                fontWeight: FontWeight.bold,
+              SizedBox(height: 10),
+              Text(
+                prod.title,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: GoogleFonts.nunitoSans(fontSize: 15),
               ),
-            ),
-            Text(prod.rating.toString()),
-          ],
+              // Text(prod.description),
+              Text(
+                'Rs. ${prod.price}',
+                style: GoogleFonts.raleway(
+                  fontSize: 17,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              // Text(prod.rating.toString()),
+            ],
+          ),
         ),
       ),
     );

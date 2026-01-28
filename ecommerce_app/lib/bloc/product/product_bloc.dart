@@ -11,13 +11,13 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       await firebaseService.addProduct(event.product);
       emit(AddProductSuccess(successMsg: 'Successfully added'));
       final products = await firebaseService.getProducts();
-      emit(ProductLoaded(product: products));
+      emit(ProductLoaded(products: products));
     });
 
     on<FetchProduct>((event, emit) async {
       emit(ProductLoading());
       final products = await firebaseService.getProducts();
-      emit(ProductLoaded(product: products));
+      emit(ProductLoaded(products: products));
     });
   }
 }

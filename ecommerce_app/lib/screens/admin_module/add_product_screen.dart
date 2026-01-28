@@ -1,3 +1,6 @@
+import 'package:ecommerce_app/bloc/category/category_bloc.dart';
+import 'package:ecommerce_app/bloc/category/category_event.dart';
+import 'package:ecommerce_app/bloc/category/category_state.dart';
 import 'package:ecommerce_app/bloc/product/product_bloc.dart';
 import 'package:ecommerce_app/bloc/product/product_event.dart';
 import 'package:ecommerce_app/bloc/product/product_state.dart';
@@ -13,22 +16,31 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-class AddProductScreen extends StatefulWidget {
-  const AddProductScreen({super.key});
+class AddUpdateProductScreen extends StatefulWidget {
+  final ProductModel? product;
+  const AddUpdateProductScreen({super.key, this.product});
 
   @override
-  State<AddProductScreen> createState() => _AddProductScreenState();
+  State<AddUpdateProductScreen> createState() => _AddUpdateProductScreenState();
 }
 
-class _AddProductScreenState extends State<AddProductScreen> {
-  final productNameController = TextEditingController();
+class _AddUpdateProductScreenState extends State<AddUpdateProductScreen> {
+  final productNameController = TextEditingController(text: widget.product!=null? widget.product.title: '');
   final productDescriptionController = TextEditingController();
   final productPriceController = TextEditingController();
   final imageController = TextEditingController();
   final productDiscountController = TextEditingController();
+  final categoryController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool isToggled = false;
   FirebaseService firebaseService = FirebaseService();
+  String? selectedCategoryId;
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<CategoryBloc>().add(FetchCategories());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -87,6 +99,48 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       },
                       label: Text('Upload image'),
                       icon: Icon(Icons.upload),
+                    ),
+                    SizedBox(height: 20),
+                    BlocBuilder<CategoryBloc, CategoryState>(
+                      builder: (context, state) {
+                        // if (state is CategoryLoading) {
+                        //   return Center(child: CircularProgressIndicator());
+                        // }
+                        if (state is CategoryLoaded) {
+                          final categories = state.categories;
+                          return DropdownButtonFormField(
+                            hint: Text(
+                              state is CategoryLoading
+                                  ? "Loading..."
+                                  : "Select a category",
+                            ),
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              prefixIcon: Icon(Icons.category_outlined),
+                            ),
+                            items: categories
+                                .map(
+                                  (e) => DropdownMenuItem(
+                                    value: e.id,
+                                    child: Text(e.name),
+                                  ),
+                                )
+                                .toList(),
+                            onChanged: (value) {
+                              setState(() {
+                                // selectedCategory = value;
+                                categoryController.text = value!;
+                              });
+                            },
+                            validator: (value) => value == null
+                                ? 'Please select a category'
+                                : null,
+                          );
+                        }
+                        return SizedBox();
+                      },
                     ),
                     SizedBox(height: 20),
                     Row(
@@ -180,6 +234,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                   .trim(),
                               price: double.parse(productPriceController.text),
                               discount: discountValue,
+                              categoryId: categoryController.text,
                               // rating: rating,
                             );
                             context.read<ProductBloc>().add(

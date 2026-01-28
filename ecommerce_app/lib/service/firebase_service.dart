@@ -16,7 +16,9 @@ class FirebaseService {
   Future<List<CategoryModel>> getAllCategories() async {
     final response = await categoriesCollection.get();
     return response.docs
-        .map((e) => CategoryModel.fromJson(e.data(), e.id))
+        .map(
+          (e) => CategoryModel.fromJson(e.data(), e.id),
+        )
         .toList();
   }
 
@@ -26,6 +28,6 @@ class FirebaseService {
 
   Future<List<ProductModel>> getProducts() async {
     final response = await productCollection.get();
-    return response.docs.map((e) => ProductModel.fromJson(e.data())).toList();
+    return response.docs.map((e) => ProductModel.fromJson(e.data(), e.id)).toList();
   }
 }

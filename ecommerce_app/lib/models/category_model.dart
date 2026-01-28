@@ -20,7 +20,7 @@ class CategoryModel {
   }
 
   Map<String, dynamic> toJson() => {
-    'id': id,
+    // 'id': id,
     'name': name,
     'imagePath': imagePath,
     'code': code,

@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (_) => CategoryBloc(FirebaseService())),
         BlocProvider(create: (_) => UploadBloc(ImageService())),
-        BlocProvider(create: (_)=> ProductBloc())
+        BlocProvider(create: (_) => ProductBloc()),
       ],
       child: MaterialApp(
         theme: ThemeData(textTheme: GoogleFonts.nunitoSansTextTheme()),
