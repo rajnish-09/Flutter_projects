@@ -34,4 +34,8 @@ class FirebaseService {
   Future<void> editProduct(ProductModel product) async {
     await productCollection.doc(product.id).update(product.toJson());
   }
+
+  Future<void> deleteProduct(ProductModel product) async {
+    await productCollection.doc(product.id).delete(); 
+  }
 }

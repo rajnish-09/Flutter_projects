@@ -20,6 +20,7 @@ class ProductLoadSuccess extends ProductState {
   final String successMsg;
   ProductLoadSuccess({required this.successMsg});
 }
+
 class ProductLoadFailed extends ProductState {
   final String errorMsg;
   ProductLoadFailed({required this.errorMsg});
@@ -36,6 +37,16 @@ class EditProductSuccess extends ProductState {
 }
 
 class EditProductFailed extends ProductState {
-   final String errorMsg;
+  final String errorMsg;
   EditProductFailed({required this.errorMsg});
+}
+
+class ProductDeletionSuccess extends ProductState {
+  final String successMsg;
+  ProductDeletionSuccess({required this.successMsg});
+}
+
+class ProductDeletionFailed extends ProductState {
+  final String errorMsg;
+  ProductDeletionFailed({required this.errorMsg});
 }

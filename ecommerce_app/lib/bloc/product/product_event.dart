@@ -16,3 +16,8 @@ class EditProduct extends ProductEvent {
   final ProductModel product;
   EditProduct({required this.product});
 }
+
+class DeleteProduct extends ProductEvent {
+  final ProductModel product;
+  DeleteProduct({required this.product});
+}

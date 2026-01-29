@@ -36,8 +36,22 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
         emit(EditProductSuccess(successMsg: 'Product updated successfully'));
         emit(ProductLoaded(products: products));
       } catch (e) {
-        print("DEBUG ERROR: $e");
+        // print("DEBUG ERROR: $e");
         emit(EditProductFailed(errorMsg: 'Product updating failed.'));
+      }
+    });
+
+    on<DeleteProduct>((event, emit) async {
+      try {
+        emit(ProductLoading());
+        await firebaseService.deleteProduct(event.product);
+        final products = await firebaseService.getProducts();
+        emit(
+          ProductDeletionSuccess(successMsg: 'Product deleted successfully'),
+        );
+        emit(ProductLoaded(products: products));
+      } catch (e) {
+        emit(ProductDeletionFailed(errorMsg: 'Error deleting product'));
       }
     });
   }

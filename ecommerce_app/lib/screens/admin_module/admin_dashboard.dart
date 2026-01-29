@@ -8,9 +8,11 @@ import 'package:ecommerce_app/bloc/uploadImage/upload_bloc.dart';
 import 'package:ecommerce_app/bloc/uploadImage/upload_event.dart';
 import 'package:ecommerce_app/bloc/uploadImage/upload_state.dart';
 import 'package:ecommerce_app/models/category_model.dart';
+import 'package:ecommerce_app/models/product_model.dart';
 import 'package:ecommerce_app/screens/admin_module/add_product_screen.dart';
 import 'package:ecommerce_app/service/firebase_service.dart';
 import 'package:ecommerce_app/service/image_service.dart';
+import 'package:ecommerce_app/widgets/show_toast.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -46,8 +48,35 @@ class _AdminDashboardState extends State<AdminDashboard> {
     context.read<ProductBloc>().add(FetchProduct());
   }
 
-  void deleteDialogBox(BuildContext context){
-    Show
+  void deleteDialogBox(BuildContext context, ProductModel product) {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Do you want to delete?"),
+          actions: [
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text("No", style: TextStyle(color: Colors.white)),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+              onPressed: () {
+                context.read<ProductBloc>().add(
+                  DeleteProduct(product: product),
+                );
+                Navigator.pop(context);
+              },
+              child: Text("Yes", style: TextStyle(color: Colors.white)),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void chooseImageUploadOption() {
@@ -341,6 +370,12 @@ class _AdminDashboardState extends State<AdminDashboard> {
                 SizedBox(height: 20),
                 BlocBuilder<ProductBloc, ProductState>(
                   builder: (context, state) {
+                    if (state is ProductDeletionSuccess) {
+                      showToastWidget(
+                        'Product deleted successfully',
+                        Colors.green,
+                      );
+                    }
                     if (state is ProductLoading) {
                       return Center(child: CircularProgressIndicator());
                     }
@@ -448,7 +483,10 @@ class _AdminDashboardState extends State<AdminDashboard> {
                                         backgroundColor: Colors.red,
                                       ),
                                       onPressed: () {
-
+                                        deleteDialogBox(
+                                          context,
+                                          state.products[index],
+                                        );
                                       },
                                       icon: Icon(
                                         Icons.delete,
