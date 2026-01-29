@@ -256,255 +256,266 @@ class _AdminDashboardState extends State<AdminDashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              children: [
-                SizedBox(height: 20),
-                // ElevatedButton(
-                //   style: ElevatedButton.styleFrom(
-                //     shape: RoundedRectangleBorder(),
-                //   ),
-                //   onPressed: () {
-                //     showCategoryBottomSheet();
-                //   },
-                //   child: Text("Add category"),
-                // ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Categories",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        showCategoryBottomSheet();
-                      },
-                      icon: Icon(Icons.add),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 10),
-                BlocBuilder<CategoryBloc, CategoryState>(
-                  builder: (context, state) {
-                    if (state is CategoryLoading) {
-                      SizedBox(height: 120, child: CircularProgressIndicator());
-                    }
-                    if (state is CategoryLoaded) {
-                      // ScaffoldMessenger.of(context).showSnackBar(
-                      //   SnackBar(
-                      //     content: Text(
-                      //       "Category added successfully.",
-                      //       style: TextStyle(color: Colors.white),
-                      //     ),
-                      //     backgroundColor: Colors.green,
-                      //   ),
-                      // );
-                      final categories = state.categories;
-                      if (categories.isEmpty) {
-                        return Text("No categories found");
-                      }
-                      return SizedBox(
-                        height: 120,
-                        child: ListView.separated(
-                          separatorBuilder: (context, index) {
-                            return SizedBox(width: 15);
-                          },
-                          scrollDirection: Axis.horizontal,
-                          itemCount: categories.length,
-                          itemBuilder: (context, index) {
-                            final category = categories[index];
-                            return Column(
-                              children: [
-                                CircleAvatar(
-                                  backgroundImage: NetworkImage(
-                                    category.imagePath,
-                                  ),
-                                  radius: 40,
-                                ),
-                                SizedBox(height: 10),
-                                Text(
-                                  category.name,
-                                  style: TextStyle(fontSize: 15),
-                                ),
-                              ],
-                            );
-                          },
+      body: RefreshIndicator(
+        onRefresh: () async {
+          context.read<ProductBloc>().add(FetchProduct());
+          context.read<CategoryBloc>().add(FetchCategories());
+          await Future.delayed(Duration(seconds: 1));
+        },
+        child: SingleChildScrollView(
+          child: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                children: [
+                  SizedBox(height: 20),
+                  // ElevatedButton(
+                  //   style: ElevatedButton.styleFrom(
+                  //     shape: RoundedRectangleBorder(),
+                  //   ),
+                  //   onPressed: () {
+                  //     showCategoryBottomSheet();
+                  //   },
+                  //   child: Text("Add category"),
+                  // ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Categories",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
                         ),
-                      );
-                    }
-                    return SizedBox();
-                  },
-                ),
-                SizedBox(height: 20),
-                Divider(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Products",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
                       ),
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => AddUpdateProductScreen(),
-                          ),
+                      IconButton(
+                        onPressed: () {
+                          showCategoryBottomSheet();
+                        },
+                        icon: Icon(Icons.add),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10),
+                  BlocBuilder<CategoryBloc, CategoryState>(
+                    builder: (context, state) {
+                      if (state is CategoryLoading) {
+                        SizedBox(
+                          height: 120,
+                          child: CircularProgressIndicator(),
                         );
-                      },
-                      icon: Icon(Icons.add),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 20),
-                BlocBuilder<ProductBloc, ProductState>(
-                  builder: (context, state) {
-                    if (state is ProductDeletionSuccess) {
-                      showToastWidget(
-                        'Product deleted successfully',
-                        Colors.green,
-                      );
-                    }
-                    if (state is ProductLoading) {
-                      return Center(child: CircularProgressIndicator());
-                    }
-                    if (state is ProductLoaded) {
-                      if (state.products.isEmpty) {
-                        return Center(child: Text("No products yet."));
                       }
-                      return GridView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 10,
-                          mainAxisSpacing: 10,
-                          childAspectRatio: 0.5,
-                        ),
-                        itemCount: state.products.length,
-                        itemBuilder: (context, index) {
-                          final product = state.products[index];
-
-                          return Container(
-                            padding: EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: const Color.fromARGB(
-                                    255,
-                                    207,
-                                    207,
-                                    207,
+                      if (state is CategoryLoaded) {
+                        // ScaffoldMessenger.of(context).showSnackBar(
+                        //   SnackBar(
+                        //     content: Text(
+                        //       "Category added successfully.",
+                        //       style: TextStyle(color: Colors.white),
+                        //     ),
+                        //     backgroundColor: Colors.green,
+                        //   ),
+                        // );
+                        final categories = state.categories;
+                        if (categories.isEmpty) {
+                          return Text("No categories found");
+                        }
+                        return SizedBox(
+                          height: 120,
+                          child: ListView.separated(
+                            separatorBuilder: (context, index) {
+                              return SizedBox(width: 15);
+                            },
+                            scrollDirection: Axis.horizontal,
+                            itemCount: categories.length,
+                            itemBuilder: (context, index) {
+                              final category = categories[index];
+                              return Column(
+                                children: [
+                                  CircleAvatar(
+                                    backgroundImage: NetworkImage(
+                                      category.imagePath,
+                                    ),
+                                    radius: 40,
                                   ),
-                                  offset: Offset(0, 2),
-                                  spreadRadius: 4,
-                                  blurRadius: 8,
-                                ),
-                              ],
-                              color: Colors.white,
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: Image.network(
-                                    product.imagePath,
-                                    width: double.infinity,
-                                    height: 150,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                                SizedBox(height: 10),
-                                Text(
-                                  product.title,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: GoogleFonts.raleway(fontSize: 16),
-                                ),
-                                SizedBox(height: 5),
-                                Text(
-                                  'Rs ${product.price}',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14,
-                                  ),
-                                ),
-                                if (product.discount != null &&
-                                    product.discount! > 0) ...[
-                                  SizedBox(height: 5),
-
+                                  SizedBox(height: 10),
                                   Text(
-                                    '${product.discount} % Off',
-                                    style: TextStyle(fontSize: 14),
+                                    category.name,
+                                    style: TextStyle(fontSize: 15),
                                   ),
                                 ],
-                                // SizedBox(height: 5),
-                                Spacer(),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    IconButton(
-                                      style: IconButton.styleFrom(
-                                        backgroundColor: Colors.green,
-                                      ),
-                                      onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                AddUpdateProductScreen(
-                                                  product:
-                                                      state.products[index],
-                                                ),
-                                          ),
-                                        );
-                                      },
-                                      icon: Icon(
-                                        Icons.edit,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                    IconButton(
-                                      style: IconButton.styleFrom(
-                                        backgroundColor: Colors.red,
-                                      ),
-                                      onPressed: () {
-                                        deleteDialogBox(
-                                          context,
-                                          state.products[index],
-                                        );
-                                      },
-                                      icon: Icon(
-                                        Icons.delete,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
+                              );
+                            },
+                          ),
+                        );
+                      }
+                      return SizedBox();
+                    },
+                  ),
+                  SizedBox(height: 20),
+                  Divider(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Products",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => AddUpdateProductScreen(),
                             ),
                           );
                         },
-                      );
-                    }
-                    return SizedBox();
-                  },
-                ),
-              ],
+                        icon: Icon(Icons.add),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 20),
+                  BlocBuilder<ProductBloc, ProductState>(
+                    builder: (context, state) {
+                      if (state is ProductDeletionSuccess) {
+                        showToastWidget(
+                          'Product deleted successfully',
+                          Colors.green,
+                        );
+                      }
+                      if (state is ProductLoading) {
+                        return Center(child: CircularProgressIndicator());
+                      }
+                      if (state is ProductLoaded) {
+                        if (state.products.isEmpty) {
+                          return Center(child: Text("No products yet."));
+                        }
+                        return GridView.builder(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                crossAxisSpacing: 10,
+                                mainAxisSpacing: 10,
+                                childAspectRatio: 0.5,
+                              ),
+                          itemCount: state.products.length,
+                          itemBuilder: (context, index) {
+                            final product = state.products[index];
+
+                            return Container(
+                              padding: EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: const Color.fromARGB(
+                                      255,
+                                      207,
+                                      207,
+                                      207,
+                                    ),
+                                    offset: Offset(0, 2),
+                                    spreadRadius: 4,
+                                    blurRadius: 8,
+                                  ),
+                                ],
+                                color: Colors.white,
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: Image.network(
+                                      product.imagePath,
+                                      width: double.infinity,
+                                      height: 150,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                  SizedBox(height: 10),
+                                  Text(
+                                    product.title,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: GoogleFonts.raleway(fontSize: 16),
+                                  ),
+                                  SizedBox(height: 5),
+                                  Text(
+                                    'Rs ${product.price}',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                  if (product.discount != null &&
+                                      product.discount! > 0) ...[
+                                    SizedBox(height: 5),
+
+                                    Text(
+                                      '${product.discount} % Off',
+                                      style: TextStyle(fontSize: 14),
+                                    ),
+                                  ],
+                                  // SizedBox(height: 5),
+                                  Spacer(),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      IconButton(
+                                        style: IconButton.styleFrom(
+                                          backgroundColor: Colors.green,
+                                        ),
+                                        onPressed: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  AddUpdateProductScreen(
+                                                    product:
+                                                        state.products[index],
+                                                  ),
+                                            ),
+                                          );
+                                        },
+                                        icon: Icon(
+                                          Icons.edit,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      IconButton(
+                                        style: IconButton.styleFrom(
+                                          backgroundColor: Colors.red,
+                                        ),
+                                        onPressed: () {
+                                          deleteDialogBox(
+                                            context,
+                                            state.products[index],
+                                          );
+                                        },
+                                        icon: Icon(
+                                          Icons.delete,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        );
+                      }
+                      return SizedBox();
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
         ),
