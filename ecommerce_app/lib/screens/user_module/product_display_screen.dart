@@ -1,6 +1,6 @@
 import 'package:custom_rating_bar/custom_rating_bar.dart';
 import 'package:ecommerce_app/models/product_model.dart';
-import 'package:ecommerce_app/screens/cart_screen.dart';
+import 'package:ecommerce_app/screens/user_module/cart_screen.dart';
 import 'package:ecommerce_app/widgets/delivery_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating/flutter_rating.dart';

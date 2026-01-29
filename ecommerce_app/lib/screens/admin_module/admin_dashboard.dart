@@ -46,6 +46,10 @@ class _AdminDashboardState extends State<AdminDashboard> {
     context.read<ProductBloc>().add(FetchProduct());
   }
 
+  void deleteDialogBox(BuildContext context){
+    Show
+  }
+
   void chooseImageUploadOption() {
     showModalBottomSheet(
       context: context,
@@ -443,7 +447,9 @@ class _AdminDashboardState extends State<AdminDashboard> {
                                       style: IconButton.styleFrom(
                                         backgroundColor: Colors.red,
                                       ),
-                                      onPressed: () {},
+                                      onPressed: () {
+
+                                      },
                                       icon: Icon(
                                         Icons.delete,
                                         color: Colors.white,

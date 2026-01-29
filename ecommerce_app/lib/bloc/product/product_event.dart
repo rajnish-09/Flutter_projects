@@ -11,3 +11,8 @@ class FetchProduct extends ProductEvent {
   // final ProductModel products;
   // FetchProduct({required this.products});
 }
+
+class EditProduct extends ProductEvent {
+  final ProductModel product;
+  EditProduct({required this.product});
+}

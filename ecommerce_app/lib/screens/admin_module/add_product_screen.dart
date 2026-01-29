@@ -32,7 +32,7 @@ class _AddUpdateProductScreenState extends State<AddUpdateProductScreen> {
   late TextEditingController productDiscountController;
   late TextEditingController categoryController;
   final _formKey = GlobalKey<FormState>();
-  bool isToggled = false;
+  late bool isToggled;
   FirebaseService firebaseService = FirebaseService();
   String? selectedCategoryId;
 
@@ -57,6 +57,7 @@ class _AddUpdateProductScreenState extends State<AddUpdateProductScreen> {
     categoryController = TextEditingController(
       text: widget.product?.categoryId ?? '',
     );
+    isToggled = (widget.product?.discount ?? 0) > 0;
     context.read<CategoryBloc>().add(FetchCategories());
   }
 
@@ -71,9 +72,23 @@ class _AddUpdateProductScreenState extends State<AddUpdateProductScreen> {
           ); // Toasts often work better across screen transitions
           Navigator.pop(context);
         }
+        if (state is EditProductSuccess) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(state.successMsg)));
+          Navigator.pop(context);
+        }
+        if (state is EditProductFailed) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(state.errorMsg)));
+        }
       },
       child: Scaffold(
-        appBar: AppBar(title: Text("Add product"), centerTitle: true),
+        appBar: AppBar(
+          title: Text(widget.product != null ? "Edit product" : "Add product"),
+          centerTitle: true,
+        ),
         body: SafeArea(
           child: SingleChildScrollView(
             padding: EdgeInsets.only(
@@ -222,7 +237,9 @@ class _AddUpdateProductScreenState extends State<AddUpdateProductScreen> {
                         }
                       },
                       child: SubmitButton(
-                        buttonText: 'Save product',
+                        buttonText: widget.product == null
+                            ? 'Save product'
+                            : 'Update product',
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
                             if (imageController.text.isEmpty) {
@@ -237,7 +254,8 @@ class _AddUpdateProductScreenState extends State<AddUpdateProductScreen> {
                               );
                               return; // Stop execution
                             }
-                            double discountValue = 0;
+                            double discountValue =
+                                widget.product?.discount ?? 0.0;
                             if (isToggled &&
                                 productDiscountController.text.isNotEmpty) {
                               discountValue =
@@ -245,6 +263,9 @@ class _AddUpdateProductScreenState extends State<AddUpdateProductScreen> {
                                     productDiscountController.text,
                                   ) ??
                                   0;
+                            }
+                            if (isToggled == false) {
+                              discountValue = 0;
                             }
                             final product = ProductModel(
                               imagePath: imageController.text,
@@ -254,15 +275,20 @@ class _AddUpdateProductScreenState extends State<AddUpdateProductScreen> {
                               price: double.parse(productPriceController.text),
                               discount: discountValue,
                               categoryId: categoryController.text,
+                              id: widget.product?.id,
                               // rating: rating,
                             );
-                            context.read<ProductBloc>().add(
-                              AddProduct(product: product),
-                            );
-                            productNameController.clear();
-                            productDescriptionController.clear();
-                            productDiscountController.clear();
-                            productPriceController.clear();
+                            widget.product == null
+                                ? context.read<ProductBloc>().add(
+                                    AddProduct(product: product),
+                                  )
+                                : context.read<ProductBloc>().add(
+                                    EditProduct(product: product),
+                                  );
+                            // productNameController.clear();
+                            // productDescriptionController.clear();
+                            // productDiscountController.clear();
+                            // productPriceController.clear();
                             // Navigator.pop(context);
                           }
                         },

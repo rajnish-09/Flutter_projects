@@ -7,7 +7,7 @@ import 'package:ecommerce_app/bloc/product/product_state.dart';
 import 'package:ecommerce_app/models/category_model.dart';
 import 'package:ecommerce_app/models/product_model.dart';
 import 'package:ecommerce_app/models/top_products_model.dart';
-import 'package:ecommerce_app/screens/cart_screen.dart';
+import 'package:ecommerce_app/screens/user_module/cart_screen.dart';
 import 'package:ecommerce_app/widgets/bottom_navigation_bar.dart';
 import 'package:ecommerce_app/widgets/carousel_slider.dart';
 import 'package:ecommerce_app/widgets/category_container.dart';
