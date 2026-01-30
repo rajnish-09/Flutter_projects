@@ -75,6 +75,15 @@ class ProductDisplayContainer extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
+              if (prod.discount != null && prod.discount! > 0)
+                Text(
+                  '${prod.discount}% Off',
+                  style: GoogleFonts.raleway(
+                    fontSize: 17,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.green,
+                  ),
+                ),
               // Text(prod.rating.toString()),
             ],
           ),

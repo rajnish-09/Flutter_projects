@@ -1,3 +1,4 @@
+import 'package:ecommerce_app/bloc/cart/cart_bloc.dart';
 import 'package:ecommerce_app/bloc/category/category_bloc.dart';
 import 'package:ecommerce_app/bloc/product/product_bloc.dart';
 import 'package:ecommerce_app/bloc/uploadImage/upload_bloc.dart';
@@ -33,10 +34,11 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => CategoryBloc(FirebaseService())),
         BlocProvider(create: (_) => UploadBloc(ImageService())),
         BlocProvider(create: (_) => ProductBloc()),
+        BlocProvider(create: (_) => CartBloc()),
       ],
       child: MaterialApp(
         theme: ThemeData(textTheme: GoogleFonts.nunitoSansTextTheme()),
-        home: AdminDashboard(),
+        home: MainNavigationScreen(),
       ),
     );
   }
