@@ -11,5 +11,11 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       await firebaseService.addProductToCart(event.cart);
       emit(AddToCartSuccess(msg: 'Product added to cart'));
     });
+
+    on<FetchCartItems>((event, emit) async {
+      emit(CartLoading());
+      final cart = await firebaseService.getCartItems();
+      emit(CartLoaded(cart: cart));
+    });
   }
 }

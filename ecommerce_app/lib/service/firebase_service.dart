@@ -44,4 +44,11 @@ class FirebaseService {
   Future<void> addProductToCart(CartModel cart) async {
     await cartCollection.add(cart.toJson());
   }
+
+  Future<List<CartModel>> getCartItems() async {
+    final response = await cartCollection.get();
+    return response.docs
+        .map((e) => CartModel.fromJson(e.data(), e.id))
+        .toList();
+  }
 }
