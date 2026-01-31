@@ -130,18 +130,14 @@ class _ProductDisplayScreenState extends State<ProductDisplayScreen> {
                     buttonText: "Add to cart",
                     onPressed: () {
                       final cart = CartModel(
-                        categoryId: product.categoryId,
-                        imagePath: product.imagePath,
-                        title: product.title,
-                        description: product.description,
-                        price: product.price,
+                        productId: product.id!,
                         deliveryType: selectedDeliveryType,
                         deliveryTime: deliveryTime,
                         deliveryCost: deliveryCost,
                         quantity: count,
-                        discount: product.discount,
                       );
                       context.read<CartBloc>().add(AddToCart(cart: cart));
+                      Navigator.pop(context);
                     },
                   ),
                 ],

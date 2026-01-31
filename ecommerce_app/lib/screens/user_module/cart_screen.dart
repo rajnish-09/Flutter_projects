@@ -3,6 +3,7 @@ import 'package:ecommerce_app/bloc/cart/cart_event.dart';
 import 'package:ecommerce_app/bloc/cart/cart_state.dart';
 import 'package:ecommerce_app/bloc/product/product_bloc.dart';
 import 'package:ecommerce_app/bloc/product/product_state.dart';
+import 'package:ecommerce_app/screens/user_module/checkout_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -15,7 +16,6 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreenState extends State<CartScreen> {
-  // double totalSum = 0;
   @override
   void initState() {
     super.initState();
@@ -169,16 +169,19 @@ class _CartScreenState extends State<CartScreen> {
                     return ListView.builder(
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
-                      itemCount: state.cart.length,
+                      itemCount: state.cartItems.length,
                       itemBuilder: (context, index) {
-                        final cart = state.cart[index];
-                        double discountedPrice = cart.price;
-                        double itemTotal = cart.price * cart.quantity;
-                        if (cart.discount != null && cart.discount! > 0) {
+                        final cart = state.cartItems[index];
+                        double discountedPrice = cart.product.price;
+                        double itemTotal =
+                            cart.product.price * cart.cart.quantity;
+                        if (cart.product.discount != null &&
+                            cart.product.discount! > 0) {
                           discountedPrice =
-                              cart.price -
-                              ((cart.price * cart.discount!) / 100);
-                          itemTotal = discountedPrice * cart.quantity;
+                              cart.product.price -
+                              ((cart.product.price * cart.product.discount!) /
+                                  100);
+                          itemTotal = discountedPrice * cart.cart.quantity;
                         }
                         return Container(
                           margin: EdgeInsets.only(bottom: 20),
@@ -208,7 +211,7 @@ class _CartScreenState extends State<CartScreen> {
                                   ClipRRect(
                                     borderRadius: BorderRadius.circular(10),
                                     child: Image.network(
-                                      cart.imagePath,
+                                      cart.product.imagePath,
                                       width: 150,
                                       height: 150,
                                       fit: BoxFit.cover,
@@ -221,14 +224,19 @@ class _CartScreenState extends State<CartScreen> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          cart.title,
+                                          cart.product.title,
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 16,
                                           ),
                                         ),
-                                        Text("Quantity: ${cart.quantity}"),
-                                        Text("Delivery: ${cart.deliveryType}"),
+                                        Text("Quantity: ${cart.cart.quantity}"),
+                                        Text(
+                                          "Delivery: ${cart.cart.deliveryType}",
+                                        ),
+                                        Text(
+                                          "Shipping fee: ${cart.cart.deliveryCost}",
+                                        ),
                                         SizedBox(height: 5),
                                         Row(
                                           children: [
@@ -253,19 +261,20 @@ class _CartScreenState extends State<CartScreen> {
                                               ),
                                             ),
                                             SizedBox(width: 5),
-                                            if (cart.discount != null &&
-                                                cart.discount! > 0)
+                                            if (cart.product.discount != null &&
+                                                cart.product.discount! > 0)
                                               Column(
                                                 children: [
                                                   Text(
-                                                    "Upto ${cart.discount!.toStringAsFixed(0)}% off",
+                                                    "Upto ${cart.product.discount!.toStringAsFixed(1)}% off",
                                                     style: TextStyle(
                                                       color: Color(0xffEB3030),
                                                       fontSize: 8,
                                                     ),
                                                   ),
                                                   Text(
-                                                    cart.price.toString(),
+                                                    cart.product.price
+                                                        .toString(),
                                                     style: TextStyle(
                                                       color: Colors.grey,
                                                       fontSize: 10,
@@ -289,7 +298,7 @@ class _CartScreenState extends State<CartScreen> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    "Total order(${cart.quantity}):",
+                                    "Total order(${cart.cart.quantity}):",
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -315,26 +324,68 @@ class _CartScreenState extends State<CartScreen> {
               BlocBuilder<CartBloc, CartState>(
                 builder: (context, state) {
                   double totalSum = 0;
+                  double shippingFee = 0;
+                  double grandTotal = 0;
                   if (state is CartLoaded) {
-                    totalSum = state.cart.fold(0, (sum, item) {
-                      double price = item.price;
-                      if (item.discount != null && item.discount! > 0) {
+                    totalSum = state.cartItems.fold(0, (sum, item) {
+                      double price = item.product.price;
+                      if (item.product.discount != null &&
+                          item.product.discount! > 0) {
                         price =
-                            item.price - ((item.price * item.discount!) / 100);
+                            item.product.price -
+                            ((item.product.price * item.product.discount!) /
+                                100);
                       }
-                      return sum + (price * item.quantity);
+                      return sum + (price * item.cart.quantity);
                     });
+                    shippingFee = state.cartItems.fold(0, (sum, item) {
+                      return sum + item.cart.deliveryCost;
+                    });
+                    grandTotal = totalSum + shippingFee;
                   }
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  return Column(
                     children: [
-                      Text("Grand Total:"),
-                      Text(
-                        totalSum.toString(),
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text("Total:"),
+                          Text(
+                            totalSum.toString(),
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 15),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text("Shipping fee:"),
+                          Text(
+                            shippingFee.toString(),
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 15),
+                      Divider(),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text("Grand Total:"),
+                          Text(
+                            grandTotal.toString(),
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   );
@@ -351,7 +402,12 @@ class _CartScreenState extends State<CartScreen> {
                     ),
                     padding: EdgeInsets.symmetric(vertical: 10),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => CheckoutScreen()),
+                    );
+                  },
                   child: Text(
                     "Proceed to checkout",
                     style: TextStyle(
