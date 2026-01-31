@@ -21,3 +21,13 @@ class AddToCartFailed extends CartState {
   final String msg;
   AddToCartFailed({required this.msg});
 }
+
+class CartItemDeleted extends CartState {
+  final String msg;
+  CartItemDeleted({required this.msg});
+}
+
+class CartItemDeleteFailed extends CartState {
+  final String msg;
+  CartItemDeleteFailed({required this.msg});
+}

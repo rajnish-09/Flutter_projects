@@ -46,12 +46,12 @@ class FirebaseService {
     await cartCollection.add(cart.toJson());
   }
 
-  Future<List<CartModel>> getCartItems() async {
-    final response = await cartCollection.get();
-    return response.docs
-        .map((e) => CartModel.fromJson(e.data(), e.id))
-        .toList();
-  }
+  // Future<List<CartModel>> getCartItems() async {
+  //   final response = await cartCollection.get();
+  //   return response.docs
+  //       .map((e) => CartModel.fromJson(e.data(), e.id))
+  //       .toList();
+  // }
 
   Future<List<CartItemViewModel>> getCartWithProducts() async {
     final response = await cartCollection.get();
@@ -68,22 +68,7 @@ class FirebaseService {
     );
   }
 
-  // Future<List<CartItemVM>> getCartWithProducts() async {
-  //   final cartSnapshot = await cartRef.get();
-
-  //   final cartItems = await Future.wait(
-  //     cartSnapshot.docs.map((doc) async {
-  //       final cart = CartModel.fromJson(doc.data());
-
-  //       final productDoc =
-  //           await productsRef.doc(cart.productId).get();
-
-  //       final product = ProductModel.fromJson(productDoc.data()!);
-
-  //       return CartItemVM(cart: cart, product: product);
-  //     }),
-  //   );
-
-  //   return cartItems;
-  // }
+  Future<void> deleteCartItem(CartModel cart) async {
+    await cartCollection.doc(cart.id).delete();
+  }
 }

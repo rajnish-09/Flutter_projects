@@ -1,4 +1,5 @@
 class CartModel {
+  final String? id;
   final String productId;
   final String deliveryType, deliveryTime;
   final double deliveryCost;
@@ -10,7 +11,7 @@ class CartModel {
     required this.deliveryTime,
     required this.deliveryCost,
     required this.quantity,
-    // required this.productId
+    this.id
   });
 
   factory CartModel.fromJson(Map<String, dynamic> json, String id) {
@@ -20,7 +21,7 @@ class CartModel {
       deliveryTime: json['deliveryTime'],
       deliveryCost: json['deliveryCost'],
       quantity: json['quantity'],
-      // productId:json['productId']
+      id:id
     );
   }
 
@@ -30,6 +31,5 @@ class CartModel {
     'deliveryTime': deliveryTime,
     'deliveryCost': deliveryCost,
     'quantity': quantity,
-    // 'productId':productId
   };
 }

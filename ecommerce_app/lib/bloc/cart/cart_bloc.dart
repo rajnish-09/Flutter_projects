@@ -17,5 +17,18 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       final cart = await firebaseService.getCartWithProducts();
       emit(CartLoaded(cartItems: cart));
     });
+
+    on<DeleteCartItem>((event, emit) async {
+      try {
+        emit(CartLoading());
+        await firebaseService.deleteCartItem(event.cart);
+        final cart = await firebaseService.getCartWithProducts();
+        emit(CartItemDeleted(msg: 'Item removed successfully'));
+        await Future.delayed(Duration(milliseconds: 500));
+        emit(CartLoaded(cartItems: cart));
+      } catch (e) {
+        emit(CartItemDeleteFailed(msg: 'Item removal failed'));
+      }
+    });
   }
 }

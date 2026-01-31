@@ -11,3 +11,8 @@ class FetchCartItems extends CartEvent {
   // final List<CartModel> carts;
   // FetchCartItems({required this.carts});
 }
+
+class DeleteCartItem extends CartEvent {
+  final CartModel cart;
+  DeleteCartItem({required this.cart});
+}
