@@ -4,6 +4,7 @@ import 'package:ecommerce_app/bloc/cart/cart_state.dart';
 import 'package:ecommerce_app/bloc/product/product_bloc.dart';
 import 'package:ecommerce_app/bloc/product/product_state.dart';
 import 'package:ecommerce_app/screens/user_module/checkout_screen.dart';
+import 'package:ecommerce_app/widgets/delivery_container.dart';
 import 'package:ecommerce_app/widgets/show_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,6 +18,21 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreenState extends State<CartScreen> {
+  String selectedDeliveryType = 'Standard';
+  String deliveryTime = '5-7';
+  double deliveryCost = 100;
+
+  void getDeliveryInformation() {
+    if (selectedDeliveryType == 'Standard') {
+      deliveryTime = '5-7';
+      deliveryCost = 100;
+    }
+    if (selectedDeliveryType == 'Express') {
+      deliveryTime = '2-3';
+      deliveryCost = 150;
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -252,12 +268,6 @@ class _CartScreenState extends State<CartScreen> {
                                               Text(
                                                 "Quantity: ${cart.cart.quantity}",
                                               ),
-                                              Text(
-                                                "Delivery: ${cart.cart.deliveryType}",
-                                              ),
-                                              Text(
-                                                "Shipping fee: ${cart.cart.deliveryCost}",
-                                              ),
                                               SizedBox(height: 5),
                                               Row(
                                                 children: [
@@ -377,6 +387,44 @@ class _CartScreenState extends State<CartScreen> {
                   },
                 ),
                 Divider(),
+                Text(
+                  "Delivery",
+                  style: GoogleFonts.raleway(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 15),
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      selectedDeliveryType = 'Standard';
+                    });
+                  },
+                  child: DeliveryContainer(
+                    title: 'Standard',
+                    time: '5-7',
+                    cost: 100,
+                    isSelected: selectedDeliveryType == 'Standard',
+                  ),
+                ),
+                SizedBox(height: 10),
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      selectedDeliveryType = 'Express';
+                    });
+                  },
+                  child: DeliveryContainer(
+                    title: 'Express',
+                    time: '2-3',
+                    cost: 150,
+                    isSelected: selectedDeliveryType == 'Express',
+                  ),
+                ),
+                SizedBox(height: 10),
+                Divider(),
+                SizedBox(height: 10),
                 BlocBuilder<CartBloc, CartState>(
                   builder: (context, state) {
                     double totalSum = 0;
@@ -394,9 +442,6 @@ class _CartScreenState extends State<CartScreen> {
                         }
                         return sum + (price * item.cart.quantity);
                       });
-                      shippingFee = state.cartItems.fold(0, (sum, item) {
-                        return sum + item.cart.deliveryCost;
-                      });
                       grandTotal = totalSum + shippingFee;
                     }
                     return Column(
@@ -407,20 +452,6 @@ class _CartScreenState extends State<CartScreen> {
                             Text("Total:"),
                             Text(
                               totalSum.toString(),
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 15),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text("Shipping fee:"),
-                            Text(
-                              shippingFee.toString(),
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -448,6 +479,7 @@ class _CartScreenState extends State<CartScreen> {
                   },
                 ),
                 SizedBox(height: 20),
+
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(

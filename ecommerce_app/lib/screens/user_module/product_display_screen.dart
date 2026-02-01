@@ -23,20 +23,6 @@ class ProductDisplayScreen extends StatefulWidget {
 
 class _ProductDisplayScreenState extends State<ProductDisplayScreen> {
   int count = 1;
-  String selectedDeliveryType = 'Standard';
-  String deliveryTime = '5-7';
-  double deliveryCost = 100;
-
-  void getDeliveryInformation() {
-    if (selectedDeliveryType == 'Standard') {
-      deliveryTime = '5-7';
-      deliveryCost = 100;
-    }
-    if (selectedDeliveryType == 'Express') {
-      deliveryTime = '2-3';
-      deliveryCost = 150;
-    }
-  }
 
   void showAddToCartBottomSheet(BuildContext context, ProductModel product) {
     showModalBottomSheet(
@@ -55,41 +41,8 @@ class _ProductDisplayScreenState extends State<ProductDisplayScreen> {
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   Divider(),
-                  Text(
-                    "Delivery",
-                    style: GoogleFonts.raleway(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
                   SizedBox(height: 10),
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        selectedDeliveryType = 'Standard';
-                      });
-                    },
-                    child: DeliveryContainer(
-                      title: 'Standard',
-                      time: '5-7',
-                      cost: 100,
-                      isSelected: selectedDeliveryType == 'Standard',
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        selectedDeliveryType = 'Express';
-                      });
-                    },
-                    child: DeliveryContainer(
-                      title: 'Express',
-                      time: '2-3',
-                      cost: 150,
-                      isSelected: selectedDeliveryType == 'Express',
-                    ),
-                  ),
+
                   SizedBox(height: 20),
                   Divider(),
                   Row(
@@ -131,9 +84,6 @@ class _ProductDisplayScreenState extends State<ProductDisplayScreen> {
                     onPressed: () {
                       final cart = CartModel(
                         productId: product.id!,
-                        deliveryType: selectedDeliveryType,
-                        deliveryTime: deliveryTime,
-                        deliveryCost: deliveryCost,
                         quantity: count,
                       );
                       context.read<CartBloc>().add(AddToCart(cart: cart));
