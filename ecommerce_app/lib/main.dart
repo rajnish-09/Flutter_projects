@@ -1,3 +1,4 @@
+import 'package:ecommerce_app/bloc/auth/auth_bloc.dart';
 import 'package:ecommerce_app/bloc/cart/cart_bloc.dart';
 import 'package:ecommerce_app/bloc/category/category_bloc.dart';
 import 'package:ecommerce_app/bloc/order/order_bloc.dart';
@@ -37,10 +38,11 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => ProductBloc()),
         BlocProvider(create: (_) => CartBloc()),
         BlocProvider(create: (_) => OrderBloc()),
+        BlocProvider(create: (_) => AuthBloc()),
       ],
       child: MaterialApp(
         theme: ThemeData(textTheme: GoogleFonts.nunitoSansTextTheme()),
-        home: MainNavigationScreen(),
+        home: SignupScreen(),
       ),
     );
   }

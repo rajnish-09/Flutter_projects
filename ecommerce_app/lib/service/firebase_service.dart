@@ -4,6 +4,8 @@ import 'package:ecommerce_app/models/cart_model.dart';
 import 'package:ecommerce_app/models/category_model.dart';
 import 'package:ecommerce_app/models/order_model.dart';
 import 'package:ecommerce_app/models/product_model.dart';
+import 'package:ecommerce_app/models/user_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart';
 
 class FirebaseService {
@@ -13,6 +15,21 @@ class FirebaseService {
   final productCollection = FirebaseFirestore.instance.collection('Products');
   final cartCollection = FirebaseFirestore.instance.collection('Cart');
   final orderCollection = FirebaseFirestore.instance.collection('Orders');
+  final userCollection = FirebaseFirestore.instance.collection(
+    'Ecommerce_users',
+  );
+
+  //Firebase auth
+  Future<String> createUsers({required UserModel userData}) async {
+    UserCredential userCredential = await FirebaseAuth.instance
+        .createUserWithEmailAndPassword(
+          email: userData.email,
+          password: userData.password,
+        );
+    String uid = userCredential.user!.uid;
+    userCollection.doc(uid).set(userData.toJson());
+    return uid;
+  }
 
   Future<void> addCategory(CategoryModel category) async {
     await categoriesCollection.add(category.toJson());

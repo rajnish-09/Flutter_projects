@@ -1,6 +1,10 @@
+import 'package:ecommerce_app/bloc/auth/auth_bloc.dart';
+import 'package:ecommerce_app/bloc/auth/auth_event.dart';
+import 'package:ecommerce_app/models/user_model.dart';
 import 'package:ecommerce_app/widgets/input_textformfield.dart';
 import 'package:ecommerce_app/widgets/submit_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class SignupForm extends StatefulWidget {
@@ -115,7 +119,18 @@ class _SignupFormState extends State<SignupForm> {
               },
             ),
             SizedBox(height: 20),
-            SubmitButton(buttonText: 'Signup', onPressed: () {}),
+            SubmitButton(
+              buttonText: 'Signup',
+              onPressed: () {
+                final user = UserModel(
+                  name: nameController.text.trim(),
+                  phone: phoneController.text.trim(),
+                  email: emailController.text.trim(),
+                  password: passwordController.text.trim(),
+                );
+                context.read<AuthBloc>().add(SignupEvent(user: user));
+              },
+            ),
           ],
         ),
       ),
