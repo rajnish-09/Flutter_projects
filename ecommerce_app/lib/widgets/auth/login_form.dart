@@ -45,7 +45,7 @@ class _LoginFormState extends State<LoginForm> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => LoginPasswordScreen()),
+                MaterialPageRoute(builder: (context) => LoginPasswordScreen(email: emailController.text.trim(),)),
               );
             },
           ),

@@ -16,5 +16,18 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         emit(SignupFailed(msg: 'Error during signup. Please try again.'));
       }
     });
+
+    on<LoginEvent>((event, emit) async {
+      try {
+        emit(AuthLoading());
+        await firebaseService.loginUser(
+          email: event.email,
+          password: event.password,
+        );
+        emit(LoginSuccess(msg: 'Successfully logged in'));
+      } catch (e) {
+        emit(LoginFailed(msg: 'Error during login'));
+      }
+    });
   }
 }

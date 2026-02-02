@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         theme: ThemeData(textTheme: GoogleFonts.nunitoSansTextTheme()),
-        home: SignupScreen(),
+        home: LoginScreen(),
       ),
     );
   }

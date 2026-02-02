@@ -13,3 +13,13 @@ class SignupFailed extends AuthState {
   final String msg;
   SignupFailed({required this.msg});
 }
+
+class LoginSuccess extends AuthState {
+  final String msg;
+  LoginSuccess({required this.msg});
+}
+
+class LoginFailed extends AuthState {
+  final String msg;
+  LoginFailed({required this.msg});
+}

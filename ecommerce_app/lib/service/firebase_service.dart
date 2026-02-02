@@ -31,6 +31,14 @@ class FirebaseService {
     return uid;
   }
 
+  Future<String> loginUser({required email, required password}) async {
+    final response = await FirebaseAuth.instance.signInWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+    return response.user!.uid;
+  }
+
   Future<void> addCategory(CategoryModel category) async {
     await categoriesCollection.add(category.toJson());
   }
