@@ -3,6 +3,8 @@ import 'package:ecommerce_app/bloc/cart/cart_event.dart';
 import 'package:ecommerce_app/bloc/cart/cart_state.dart';
 import 'package:ecommerce_app/bloc/product/product_bloc.dart';
 import 'package:ecommerce_app/bloc/product/product_state.dart';
+import 'package:ecommerce_app/models/order_item_model.dart';
+import 'package:ecommerce_app/models/order_model.dart';
 import 'package:ecommerce_app/screens/user_module/checkout_screen.dart';
 import 'package:ecommerce_app/widgets/delivery_container.dart';
 import 'package:ecommerce_app/widgets/show_toast.dart';
@@ -18,6 +20,8 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreenState extends State<CartScreen> {
+  double grandTotal = 0;
+
   String selectedDeliveryType = 'Standard';
   String deliveryTime = '5-7';
   double deliveryCost = 100;
@@ -399,6 +403,7 @@ class _CartScreenState extends State<CartScreen> {
                   onTap: () {
                     setState(() {
                       selectedDeliveryType = 'Standard';
+                      getDeliveryInformation();
                     });
                   },
                   child: DeliveryContainer(
@@ -413,6 +418,7 @@ class _CartScreenState extends State<CartScreen> {
                   onTap: () {
                     setState(() {
                       selectedDeliveryType = 'Express';
+                      getDeliveryInformation();
                     });
                   },
                   child: DeliveryContainer(
@@ -428,8 +434,6 @@ class _CartScreenState extends State<CartScreen> {
                 BlocBuilder<CartBloc, CartState>(
                   builder: (context, state) {
                     double totalSum = 0;
-                    double shippingFee = 0;
-                    double grandTotal = 0;
                     if (state is CartLoaded) {
                       totalSum = state.cartItems.fold(0, (sum, item) {
                         double price = item.product.price;
@@ -442,14 +446,14 @@ class _CartScreenState extends State<CartScreen> {
                         }
                         return sum + (price * item.cart.quantity);
                       });
-                      grandTotal = totalSum + shippingFee;
+                      grandTotal = totalSum + deliveryCost;
                     }
                     return Column(
                       children: [
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text("Total:"),
+                            Text("Sub total:"),
                             Text(
                               totalSum.toString(),
                               style: TextStyle(
@@ -459,6 +463,20 @@ class _CartScreenState extends State<CartScreen> {
                             ),
                           ],
                         ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text("Shipping fee:"),
+                            Text(
+                              deliveryCost.toString(),
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+
                         SizedBox(height: 15),
                         Divider(),
                         Row(
@@ -480,32 +498,94 @@ class _CartScreenState extends State<CartScreen> {
                 ),
                 SizedBox(height: 20),
 
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xffFF5F1F),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      padding: EdgeInsets.symmetric(vertical: 10),
-                    ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => CheckoutScreen(),
+                BlocBuilder<CartBloc, CartState>(
+                  builder: (context, state) {
+                    if (state is CartLoaded) {
+                      // final cart = state.cartItems[index];
+                      return SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Color(0xffFF5F1F),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            padding: EdgeInsets.symmetric(vertical: 10),
+                          ),
+                          // onPressed: () {
+                          //   Navigator.push(
+                          //     context,
+                          //     MaterialPageRoute(
+                          //       builder: (context) => CheckoutScreen(),
+                          //     ),
+                          //   );
+                          // },
+                          onPressed: () {
+                            final cartItems = state.cartItems;
+
+                            double subTotal = 0;
+
+                            final orderItems = cartItems.map((item) {
+                              double price = item.product.price;
+
+                              if (item.product.discount != null &&
+                                  item.product.discount! > 0) {
+                                price =
+                                    price -
+                                    ((price * item.product.discount!) / 100);
+                              }
+
+                              subTotal += price * item.cart.quantity;
+
+                              return OrderItemModel(
+                                productId: item.product.id!,
+                                title: item.product.title,
+                                imagePath: item.product.imagePath,
+                                price: price,
+                                quantity: item.cart.quantity,
+                                discount: item.product.discount,
+                              );
+                            }).toList();
+
+                            final order = OrderModel(
+                              totalItems: state.cartItems.length.toDouble(),
+                              cartItems: orderItems,
+                              deliveryType: selectedDeliveryType,
+                              deliveryTime: deliveryTime,
+                              deliveryCost: deliveryCost,
+                              paymentMethod: '',
+                              paymentStatus: '',
+                              total: grandTotal,
+                            );
+                            // final order = OrderModel(
+                            //   items: orderItems,
+                            //   deliveryType: selectedDeliveryType,
+                            //   deliveryTime: deliveryTime,
+                            //   deliveryCost: deliveryCost,
+                            //   subTotal: subTotal,
+                            //   grandTotal: subTotal + deliveryCost,
+                            // );
+
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => CheckoutScreen(order: order),
+                              ),
+                            );
+                          },
+
+                          child: Text(
+                            "Proceed to checkout",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
                       );
-                    },
-                    child: Text(
-                      "Proceed to checkout",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
+                    }
+                    return SizedBox();
+                  },
                 ),
                 SizedBox(height: 25),
               ],

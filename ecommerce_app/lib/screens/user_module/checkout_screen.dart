@@ -1,16 +1,19 @@
+import 'package:ecommerce_app/bloc/order/order_bloc.dart';
+import 'package:ecommerce_app/bloc/order/order_event.dart';
+import 'package:ecommerce_app/models/order_model.dart';
 import 'package:ecommerce_app/widgets/delivery_container.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CheckoutScreen extends StatefulWidget {
-  const CheckoutScreen({super.key});
+  final OrderModel order;
+  const CheckoutScreen({super.key, required this.order});
 
   @override
   State<CheckoutScreen> createState() => _CheckoutScreenState();
 }
 
 class _CheckoutScreenState extends State<CheckoutScreen> {
-  
-
   String selectedValue = '';
   @override
   Widget build(BuildContext context) {
@@ -106,7 +109,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 ),
               ),
               SizedBox(height: 15),
-             
+
               SizedBox(height: 25),
               SizedBox(
                 width: double.infinity,
@@ -118,7 +121,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     ),
                     padding: EdgeInsets.symmetric(vertical: 10),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    context.read<OrderBloc>().add(
+                      PlaceOrder(orders: widget.order),
+                    );
+                  },
                   child: Text(
                     "Place order",
                     style: TextStyle(

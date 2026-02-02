@@ -1,5 +1,6 @@
 import 'package:ecommerce_app/bloc/cart/cart_bloc.dart';
 import 'package:ecommerce_app/bloc/category/category_bloc.dart';
+import 'package:ecommerce_app/bloc/order/order_bloc.dart';
 import 'package:ecommerce_app/bloc/product/product_bloc.dart';
 import 'package:ecommerce_app/bloc/uploadImage/upload_bloc.dart';
 import 'package:ecommerce_app/firebase_options.dart';
@@ -35,6 +36,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => UploadBloc(ImageService())),
         BlocProvider(create: (_) => ProductBloc()),
         BlocProvider(create: (_) => CartBloc()),
+        BlocProvider(create: (_) => OrderBloc()),
       ],
       child: MaterialApp(
         theme: ThemeData(textTheme: GoogleFonts.nunitoSansTextTheme()),

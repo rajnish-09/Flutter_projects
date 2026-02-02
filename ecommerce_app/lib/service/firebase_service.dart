@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecommerce_app/models/cart_item_view_model.dart';
 import 'package:ecommerce_app/models/cart_model.dart';
 import 'package:ecommerce_app/models/category_model.dart';
+import 'package:ecommerce_app/models/order_model.dart';
 import 'package:ecommerce_app/models/product_model.dart';
 import 'package:http/http.dart';
 
@@ -11,6 +12,7 @@ class FirebaseService {
   );
   final productCollection = FirebaseFirestore.instance.collection('Products');
   final cartCollection = FirebaseFirestore.instance.collection('Cart');
+  final orderCollection = FirebaseFirestore.instance.collection('Orders');
 
   Future<void> addCategory(CategoryModel category) async {
     await categoriesCollection.add(category.toJson());
@@ -70,5 +72,9 @@ class FirebaseService {
 
   Future<void> deleteCartItem(CartModel cart) async {
     await cartCollection.doc(cart.id).delete();
+  }
+
+  Future<void> placeOrder(OrderModel order) async {
+    await orderCollection.add(order.toJson());
   }
 }
