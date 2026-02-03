@@ -31,12 +31,28 @@ class FirebaseService {
     return uid;
   }
 
-  Future<String> loginUser({required email, required password}) async {
+  Future<String> loginUser({
+    required String email,
+    required String password,
+  }) async {
     final response = await FirebaseAuth.instance.signInWithEmailAndPassword(
       email: email,
       password: password,
     );
     return response.user!.uid;
+  }
+
+  Future<User?> currentUser() async {
+    try {
+      final User? user = FirebaseAuth.instance.currentUser;
+      return user;
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  Future<void> signoutUser() async {
+    await FirebaseAuth.instance.signOut();
   }
 
   Future<void> addCategory(CategoryModel category) async {

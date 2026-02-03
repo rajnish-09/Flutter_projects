@@ -4,7 +4,7 @@ class InputTextFormFIeld extends StatelessWidget {
   final IconData? icon;
   final String hintText;
   final String? Function(String?)? validator;
-  final VoidCallback? onChanged;
+  final Function? onChanged;
   final bool? obscureText;
   final int maxLines;
   final TextCapitalization textCapitalization;
