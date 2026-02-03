@@ -1,5 +1,6 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:ecommerce_app/screens/user_module/cart_screen.dart';
+import 'package:ecommerce_app/screens/user_module/profile_screen.dart';
 import 'package:ecommerce_app/screens/user_module/shop_screen.dart';
 import 'package:ecommerce_app/widgets/bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +19,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     ShopScreen(),
     Center(child: Text("Favorites")),
     CartScreen(),
-    Center(child: Text("Favorites")),
+    ProfileScreen(),
   ];
 
   @override
@@ -31,7 +32,6 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     ];
     return Scaffold(
       extendBody: true,
-
       body: pages[currentIndex],
       bottomNavigationBar: Theme(
         data: Theme.of(
