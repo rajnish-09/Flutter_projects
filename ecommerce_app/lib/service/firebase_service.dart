@@ -86,7 +86,9 @@ class FirebaseService {
   }
 
   Future<void> addProductToCart(CartModel cart) async {
-    await cartCollection.add(cart.toJson());
+    final User? user = FirebaseAuth.instance.currentUser;
+    await userCollection.doc(user!.uid).collection('Cart').add(cart.toJson());
+    // await cartCollection.add(cart.toJson());
   }
 
   // Future<List<CartModel>> getCartItems() async {

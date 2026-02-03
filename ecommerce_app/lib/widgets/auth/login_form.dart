@@ -24,7 +24,9 @@ class _LoginFormState extends State<LoginForm> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.only(
+        bottom: MediaQuery.of(context).viewInsets.bottom,
+      ),
       child: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is LoginSuccess) {
@@ -47,71 +49,76 @@ class _LoginFormState extends State<LoginForm> {
                 );
               }
             },
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Spacer(),
-                Text(
-                  "Login",
-                  style: GoogleFonts.raleway(
-                    fontSize: 52,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(height: 15),
-                Text(
-                  'Good to see you back!',
-                  style: GoogleFonts.nunitoSans(fontSize: 19),
-                ),
-                SizedBox(height: 30),
-                InputTextFormFIeld(
-                  controller: emailController,
-                  icon: Icons.email,
-                  hintText: 'Enter email',
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Email is required';
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(height: 15),
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: MediaQuery.of(context).size.height * 0.28),
+                    Text(
+                      "Login",
+                      style: GoogleFonts.raleway(
+                        fontSize: 52,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 15),
+                    Text(
+                      'Good to see you back!',
+                      style: GoogleFonts.nunitoSans(fontSize: 19),
+                    ),
+                    SizedBox(height: 30),
+                    InputTextFormFIeld(
+                      controller: emailController,
+                      icon: Icons.email,
+                      hintText: 'Enter email',
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Email is required';
+                        }
+                        return null;
+                      },
+                    ),
+                    SizedBox(height: 15),
 
-                InputTextFormFIeld(
-                  controller: passwordController,
-                  icon: Icons.key,
-                  hintText: 'Enter password',
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Password is required';
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(height: 20),
-                SubmitButton(
-                  buttonText: 'Next',
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      context.read<AuthBloc>().add(
-                        LoginEvent(
-                          email: emailController.text.trim(),
-                          password: passwordController.text.trim(),
-                        ),
-                      );
-                    }
+                    InputTextFormFIeld(
+                      controller: passwordController,
+                      icon: Icons.key,
+                      hintText: 'Enter password',
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Password is required';
+                        }
+                        return null;
+                      },
+                    ),
+                    SizedBox(height: 20),
+                    SubmitButton(
+                      buttonText: 'Next',
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          context.read<AuthBloc>().add(
+                            LoginEvent(
+                              email: emailController.text.trim(),
+                              password: passwordController.text.trim(),
+                            ),
+                          );
+                        }
 
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (context) =>
-                    //         LoginPasswordScreen(email: emailController.text.trim()),
-                    //   ),
-                    // );
-                  },
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder: (context) =>
+                        //         LoginPasswordScreen(email: emailController.text.trim()),
+                        //   ),
+                        // );
+                      },
+                    ),
+                    SizedBox(height: 70),
+                  ],
                 ),
-                SizedBox(height: 70),
-              ],
+              ),
             ),
           ),
         ),

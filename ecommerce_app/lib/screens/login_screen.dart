@@ -35,6 +35,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: Stack(children: [LoginBackground(), LoginForm()]));
+    return Scaffold(
+      resizeToAvoidBottomInset: true,
+      body: Stack(children: [LoginBackground(), LoginForm()]),
+    );
   }
 }
