@@ -13,8 +13,8 @@ class FirebaseService {
     'categories',
   );
   final productCollection = FirebaseFirestore.instance.collection('Products');
-  final cartCollection = FirebaseFirestore.instance.collection('Cart');
-  final orderCollection = FirebaseFirestore.instance.collection('Orders');
+  // final cartCollection = FirebaseFirestore.instance.collection('Cart');
+  // final orderCollection = FirebaseFirestore.instance.collection('Orders');
   final userCollection = FirebaseFirestore.instance.collection(
     'Ecommerce_users',
   );
@@ -127,7 +127,32 @@ class FirebaseService {
     // await cartCollection.doc(cart.id).delete();
   }
 
+  Future<void> clearCart() async {
+    final User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    // 1. Get reference to the cart collection
+    final cartRef =
+        userCollection // or your userCollection
+            .doc(user.uid)
+            .collection("Cart"); // Make sure this matches your cart path
+
+    // 2. Get all documents in that collection
+    final snapshots = await cartRef.get();
+
+    // 3. Start a write batch
+    final batch = FirebaseFirestore.instance.batch();
+
+    for (var doc in snapshots.docs) {
+      batch.delete(doc.reference);
+    }
+
+    // 4. Commit the batch
+    await batch.commit();
+  }
+
   Future<void> placeOrder(OrderModel order) async {
-    await orderCollection.add(order.toJson());
+    final User? user = FirebaseAuth.instance.currentUser;
+    await userCollection.doc(user!.uid).collection('Order').add(order.toJson());
   }
 }

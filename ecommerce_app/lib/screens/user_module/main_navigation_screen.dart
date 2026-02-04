@@ -6,14 +6,21 @@ import 'package:ecommerce_app/widgets/bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 
 class MainNavigationScreen extends StatefulWidget {
-  const MainNavigationScreen({super.key});
+  final int? currentIndex;
+  const MainNavigationScreen({super.key, this.currentIndex});
 
   @override
   State<MainNavigationScreen> createState() => _MainNavigationScreenState();
 }
 
 class _MainNavigationScreenState extends State<MainNavigationScreen> {
-  int currentIndex = 0;
+  late int currentIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    currentIndex = widget.currentIndex ?? 0;
+  }
 
   final pages = [
     ShopScreen(),

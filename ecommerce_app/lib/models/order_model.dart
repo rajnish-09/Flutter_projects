@@ -24,6 +24,24 @@ class OrderModel {
     required this.total,
   });
 
+  OrderModel copyWith({
+    String? paymentMethod,
+    String? paymentStatus,
+    String? id,
+  }) {
+    return OrderModel(
+      id: id ?? this.id,
+      totalItems: totalItems,
+      cartItems: cartItems,
+      deliveryType: deliveryType,
+      deliveryTime: deliveryTime,
+      deliveryCost: deliveryCost,
+      total: total,
+      paymentMethod: paymentMethod ?? this.paymentMethod,
+      paymentStatus: paymentStatus ?? this.paymentStatus,
+    );
+  }
+
   factory OrderModel.fromJson(Map<String, dynamic> json, String id) {
     return OrderModel(
       id: id,
