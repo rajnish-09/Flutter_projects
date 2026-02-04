@@ -8,6 +8,7 @@ import 'package:ecommerce_app/models/cart_model.dart';
 import 'package:ecommerce_app/models/favorite_model.dart';
 import 'package:ecommerce_app/models/product_model.dart';
 import 'package:ecommerce_app/screens/user_module/cart_screen.dart';
+import 'package:ecommerce_app/service/firebase_service.dart';
 import 'package:ecommerce_app/widgets/delivery_container.dart';
 import 'package:ecommerce_app/widgets/show_toast.dart';
 import 'package:ecommerce_app/widgets/submit_button.dart';
@@ -27,6 +28,19 @@ class ProductDisplayScreen extends StatefulWidget {
 class _ProductDisplayScreenState extends State<ProductDisplayScreen> {
   int count = 1;
   bool isFav = false;
+
+  @override
+  void initState() {
+    super.initState();
+    checkFavStatus();
+  }
+
+  void checkFavStatus() async {
+    bool exists = await FirebaseService().isProductFavorite(widget.product.id!);
+    setState(() {
+      isFav = exists;
+    });
+  }
 
   void showAddToCartBottomSheet(BuildContext context, ProductModel product) {
     showModalBottomSheet(
@@ -192,14 +206,17 @@ class _ProductDisplayScreenState extends State<ProductDisplayScreen> {
                           ),
                           IconButton(
                             onPressed: () {
-                              setState(() {
-                                isFav = !isFav;
-                              });
                               final fav = FavoriteModel(
                                 productId: widget.product.id!,
                               );
+                              setState(() {
+                                isFav = !isFav;
+                              });
                               context.read<FavoriteBloc>().add(
-                                ToggleFavorite(favProductId: fav),
+                                ToggleFavorite(
+                                  favProductId: fav,
+                                  isAdding: isFav,
+                                ),
                               );
                             },
                             icon: Icon(

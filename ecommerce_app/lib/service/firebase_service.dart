@@ -88,7 +88,8 @@ class FirebaseService {
 
   Future<void> addProductToCart(CartModel cart) async {
     final User? user = FirebaseAuth.instance.currentUser;
-    await userCollection.doc(user!.uid).collection('Cart').add(cart.toJson());
+    if (user == null) return;
+    await userCollection.doc(user.uid).collection('Cart').add(cart.toJson());
     // await cartCollection.add(cart.toJson());
   }
 
@@ -163,6 +164,30 @@ class FirebaseService {
     await userCollection
         .doc(user!.uid)
         .collection('Favorite')
-        .add(favProduct.toJson());
+        .doc(favProduct.productId)
+        .set(favProduct.toJson());
+  }
+
+  Future<bool> isProductFavorite(String productId) async {
+    final User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) return false;
+
+    final snapshot = await userCollection
+        .doc(user.uid)
+        .collection('Favorite')
+        .where('productId', isEqualTo: productId)
+        .get();
+
+    return snapshot.docs.isNotEmpty;
+  }
+
+  Future<void> removeFavorite(FavoriteModel favProduct) async {
+    final User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+    await userCollection
+        .doc(user.uid)
+        .collection('Favorite')
+        .doc(favProduct.productId)
+        .delete();
   }
 }
