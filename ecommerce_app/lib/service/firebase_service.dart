@@ -99,7 +99,11 @@ class FirebaseService {
   // }
 
   Future<List<CartItemViewModel>> getCartWithProducts() async {
-    final response = await cartCollection.get();
+    final User? user = FirebaseAuth.instance.currentUser;
+    final response = await userCollection
+        .doc(user!.uid)
+        .collection('Cart')
+        .get();
     return Future.wait(
       response.docs.map((e) async {
         final cart = CartModel.fromJson(e.data(), e.id);
@@ -114,7 +118,13 @@ class FirebaseService {
   }
 
   Future<void> deleteCartItem(CartModel cart) async {
-    await cartCollection.doc(cart.id).delete();
+    final User? user = FirebaseAuth.instance.currentUser;
+    await userCollection
+        .doc(user!.uid)
+        .collection('Cart')
+        .doc(cart.id)
+        .delete();
+    // await cartCollection.doc(cart.id).delete();
   }
 
   Future<void> placeOrder(OrderModel order) async {

@@ -2,6 +2,7 @@ import 'package:ecommerce_app/bloc/auth/auth_bloc.dart';
 import 'package:ecommerce_app/bloc/auth/auth_event.dart';
 import 'package:ecommerce_app/bloc/auth/auth_state.dart';
 import 'package:ecommerce_app/screens/login_password_screen.dart';
+import 'package:ecommerce_app/screens/signup_screen.dart';
 import 'package:ecommerce_app/screens/user_module/main_navigation_screen.dart';
 import 'package:ecommerce_app/widgets/input_textformfield.dart';
 import 'package:ecommerce_app/widgets/show_snackbar.dart';
@@ -115,7 +116,36 @@ class _LoginFormState extends State<LoginForm> {
                         // );
                       },
                     ),
-                    SizedBox(height: 70),
+                    SizedBox(height: 15),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Already have an account?",
+                          style: GoogleFonts.nunitoSans(fontSize: 15),
+                        ),
+                        SizedBox(width: 10),
+                        IconButton(
+                          style: IconButton.styleFrom(
+                            backgroundColor: Color(0xff004CFF),
+                            padding: EdgeInsets.all(5),
+                          ),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SignupScreen(),
+                              ),
+                            );
+                          },
+                          icon: Icon(
+                            Icons.arrow_right_alt,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                    // SizedBox(height: 70),
                   ],
                 ),
               ),
