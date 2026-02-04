@@ -1,5 +1,6 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:ecommerce_app/screens/user_module/cart_screen.dart';
+import 'package:ecommerce_app/screens/user_module/favorite_screen.dart';
 import 'package:ecommerce_app/screens/user_module/profile_screen.dart';
 import 'package:ecommerce_app/screens/user_module/shop_screen.dart';
 import 'package:ecommerce_app/widgets/bottom_navigation_bar.dart';
@@ -22,12 +23,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     currentIndex = widget.currentIndex ?? 0;
   }
 
-  final pages = [
-    ShopScreen(),
-    Center(child: Text("Favorites")),
-    CartScreen(),
-    ProfileScreen(),
-  ];
+  final pages = [ShopScreen(), FavoriteScreen(), CartScreen(), ProfileScreen()];
 
   @override
   Widget build(BuildContext context) {

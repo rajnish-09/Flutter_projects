@@ -190,4 +190,29 @@ class FirebaseService {
         .doc(favProduct.productId)
         .delete();
   }
+
+  Future<List<ProductModel>> getFavoriteProducts() async {
+    final user = FirebaseAuth.instance.currentUser;
+
+    // 1. Get IDs from Favorites
+    final favSnapshot = await userCollection
+        .doc(user!.uid)
+        .collection('Favorite')
+        .get();
+
+    List<String> productIds = favSnapshot.docs
+        .map((doc) => doc.id) // Assuming document ID = Product ID
+        .toList();
+
+    if (productIds.isEmpty) return [];
+
+    // 2. Fetch all products whose ID is in our list (Max 30 IDs per query)
+    final productSnapshot = await productCollection
+        .where(FieldPath.documentId, whereIn: productIds)
+        .get();
+
+    return productSnapshot.docs
+        .map((doc) => ProductModel.fromJson(doc.data(), doc.id))
+        .toList();
+  }
 }

@@ -17,5 +17,11 @@ class FavoriteBloc extends Bloc<FavoriteEvent, FavoriteState> {
         throw Exception(e.toString());
       }
     });
+
+    on<LoadFavorites>((event, emit) async {
+      emit(FavoriteLoading());
+      final fav = await firebaseService.getFavoriteProducts();
+      emit(FavoriteLoaded(favorites: fav));
+    });
   }
 }
