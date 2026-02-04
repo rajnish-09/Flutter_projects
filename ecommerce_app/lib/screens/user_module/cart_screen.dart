@@ -502,6 +502,7 @@ class _CartScreenState extends State<CartScreen> {
                   builder: (context, state) {
                     if (state is CartLoaded) {
                       // final cart = state.cartItems[index];
+                      final isCartEmpty = state.cartItems.isEmpty;
                       return SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
@@ -511,6 +512,12 @@ class _CartScreenState extends State<CartScreen> {
                               borderRadius: BorderRadius.circular(10),
                             ),
                             padding: EdgeInsets.symmetric(vertical: 10),
+                            disabledBackgroundColor: Color.fromARGB(
+                              121,
+                              255,
+                              95,
+                              31,
+                            ),
                           ),
                           // onPressed: () {
                           //   Navigator.push(
@@ -520,62 +527,69 @@ class _CartScreenState extends State<CartScreen> {
                           //     ),
                           //   );
                           // },
-                          onPressed: () {
-                            final cartItems = state.cartItems;
+                          onPressed: isCartEmpty
+                              ? null
+                              : () {
+                                  final cartItems = state.cartItems;
 
-                            double subTotal = 0;
+                                  double subTotal = 0;
 
-                            final orderItems = cartItems.map((item) {
-                              double price = item.product.price;
+                                  final orderItems = cartItems.map((item) {
+                                    double price = item.product.price;
 
-                              if (item.product.discount != null &&
-                                  item.product.discount! > 0) {
-                                price =
-                                    price -
-                                    ((price * item.product.discount!) / 100);
-                              }
+                                    if (item.product.discount != null &&
+                                        item.product.discount! > 0) {
+                                      price =
+                                          price -
+                                          ((price * item.product.discount!) /
+                                              100);
+                                    }
 
-                              subTotal += price * item.cart.quantity;
+                                    subTotal += price * item.cart.quantity;
 
-                              return OrderItemModel(
-                                productId: item.product.id!,
-                                title: item.product.title,
-                                imagePath: item.product.imagePath,
-                                price: price,
-                                quantity: item.cart.quantity,
-                                discount: item.product.discount,
-                              );
-                            }).toList();
+                                    return OrderItemModel(
+                                      productId: item.product.id!,
+                                      title: item.product.title,
+                                      imagePath: item.product.imagePath,
+                                      price: price,
+                                      quantity: item.cart.quantity,
+                                      discount: item.product.discount,
+                                    );
+                                  }).toList();
 
-                            final order = OrderModel(
-                              totalItems: state.cartItems.length.toDouble(),
-                              cartItems: orderItems,
-                              deliveryType: selectedDeliveryType,
-                              deliveryTime: deliveryTime,
-                              deliveryCost: deliveryCost,
-                              paymentMethod: '',
-                              paymentStatus: '',
-                              total: grandTotal,
-                            );
-                            // final order = OrderModel(
-                            //   items: orderItems,
-                            //   deliveryType: selectedDeliveryType,
-                            //   deliveryTime: deliveryTime,
-                            //   deliveryCost: deliveryCost,
-                            //   subTotal: subTotal,
-                            //   grandTotal: subTotal + deliveryCost,
-                            // );
+                                  final order = OrderModel(
+                                    totalItems: state.cartItems.length
+                                        .toDouble(),
+                                    cartItems: orderItems,
+                                    deliveryType: selectedDeliveryType,
+                                    deliveryTime: deliveryTime,
+                                    deliveryCost: deliveryCost,
+                                    paymentMethod: '',
+                                    paymentStatus: '',
+                                    total: grandTotal,
+                                  );
+                                  // final order = OrderModel(
+                                  //   items: orderItems,
+                                  //   deliveryType: selectedDeliveryType,
+                                  //   deliveryTime: deliveryTime,
+                                  //   deliveryCost: deliveryCost,
+                                  //   subTotal: subTotal,
+                                  //   grandTotal: subTotal + deliveryCost,
+                                  // );
 
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => CheckoutScreen(order: order),
-                              ),
-                            );
-                          },
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) =>
+                                          CheckoutScreen(order: order),
+                                    ),
+                                  );
+                                },
 
                           child: Text(
-                            "Proceed to checkout",
+                            isCartEmpty
+                                ? 'Your cart is empty'
+                                : "Proceed to checkout",
                             style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecommerce_app/models/cart_item_view_model.dart';
 import 'package:ecommerce_app/models/cart_model.dart';
 import 'package:ecommerce_app/models/category_model.dart';
+import 'package:ecommerce_app/models/favorite_model.dart';
 import 'package:ecommerce_app/models/order_model.dart';
 import 'package:ecommerce_app/models/product_model.dart';
 import 'package:ecommerce_app/models/user_model.dart';
@@ -154,5 +155,14 @@ class FirebaseService {
   Future<void> placeOrder(OrderModel order) async {
     final User? user = FirebaseAuth.instance.currentUser;
     await userCollection.doc(user!.uid).collection('Order').add(order.toJson());
+  }
+
+  //-----------------------Favorite--------------------------------------------
+  Future<void> addFavoriteProduct(FavoriteModel favProduct) async {
+    final User? user = FirebaseAuth.instance.currentUser;
+    await userCollection
+        .doc(user!.uid)
+        .collection('Favorite')
+        .add(favProduct.toJson());
   }
 }

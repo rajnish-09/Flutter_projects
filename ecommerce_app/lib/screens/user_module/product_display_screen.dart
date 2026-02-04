@@ -2,7 +2,10 @@ import 'package:custom_rating_bar/custom_rating_bar.dart';
 import 'package:ecommerce_app/bloc/cart/cart_bloc.dart';
 import 'package:ecommerce_app/bloc/cart/cart_event.dart';
 import 'package:ecommerce_app/bloc/cart/cart_state.dart';
+import 'package:ecommerce_app/bloc/favorite/favorite_bloc.dart';
+import 'package:ecommerce_app/bloc/favorite/favorite_event.dart';
 import 'package:ecommerce_app/models/cart_model.dart';
+import 'package:ecommerce_app/models/favorite_model.dart';
 import 'package:ecommerce_app/models/product_model.dart';
 import 'package:ecommerce_app/screens/user_module/cart_screen.dart';
 import 'package:ecommerce_app/widgets/delivery_container.dart';
@@ -23,6 +26,7 @@ class ProductDisplayScreen extends StatefulWidget {
 
 class _ProductDisplayScreenState extends State<ProductDisplayScreen> {
   int count = 1;
+  bool isFav = false;
 
   void showAddToCartBottomSheet(BuildContext context, ProductModel product) {
     showModalBottomSheet(
@@ -186,7 +190,23 @@ class _ProductDisplayScreenState extends State<ProductDisplayScreen> {
                               ],
                             ],
                           ),
-                          IconButton(onPressed: () {}, icon: Icon(Icons.share)),
+                          IconButton(
+                            onPressed: () {
+                              setState(() {
+                                isFav = !isFav;
+                              });
+                              final fav = FavoriteModel(
+                                productId: widget.product.id!,
+                              );
+                              context.read<FavoriteBloc>().add(
+                                ToggleFavorite(favProductId: fav),
+                              );
+                            },
+                            icon: Icon(
+                              Icons.favorite,
+                              color: isFav ? Colors.red : Colors.grey,
+                            ),
+                          ),
                         ],
                       ),
                       SizedBox(height: 10),
@@ -201,6 +221,14 @@ class _ProductDisplayScreenState extends State<ProductDisplayScreen> {
                         widget.product.description,
                         style: GoogleFonts.nunitoSans(fontSize: 15),
                       ),
+                      SizedBox(height: 20),
+                      Text(
+                        "Ratings",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                       RatingBar(
                         filledIcon: Icons.star,
                         emptyIcon: Icons.star_border,
@@ -208,31 +236,15 @@ class _ProductDisplayScreenState extends State<ProductDisplayScreen> {
                           // print(rating);
                         },
                       ),
-                      SizedBox(height: 10),
-                      Text(
-                        'Size: XL',
-                        style: GoogleFonts.raleway(
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(height: 5),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          SizeContainer(size: 'S'),
-                          SizeContainer(size: 'M'),
-                          SizeContainer(size: 'L'),
-                          SizeContainer(size: 'XL'),
-                          SizeContainer(size: '2XL'),
-                        ],
-                      ),
-                      SizedBox(height: 20),
 
                       SizedBox(height: 20),
                       Row(
                         children: [
-                          ElevatedButton(
+                          ElevatedButton.icon(
+                            icon: Icon(
+                              Icons.shopping_cart,
+                              color: Colors.white,
+                            ),
                             onPressed: () {
                               showAddToCartBottomSheet(context, widget.product);
                             },
@@ -242,22 +254,20 @@ class _ProductDisplayScreenState extends State<ProductDisplayScreen> {
                               ),
                               backgroundColor: Color(0xff004CFF),
                             ),
-                            child: Row(
-                              children: [
-                                Icon(Icons.shopping_cart, color: Colors.white),
-                                SizedBox(width: 5),
-                                Text(
-                                  "Add to cart",
-                                  style: GoogleFonts.raleway(
-                                    fontSize: 15,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ],
+                            label: Text(
+                              "Add to cart",
+                              style: GoogleFonts.raleway(
+                                fontSize: 15,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
-                          Spacer(),
-                          ElevatedButton(
+                          SizedBox(width: 15),
+                          ElevatedButton.icon(
+                            icon: Icon(
+                              Icons.shopping_bag_outlined,
+                              color: Colors.white,
+                            ),
                             onPressed: () {
                               Navigator.push(
                                 context,
@@ -272,18 +282,12 @@ class _ProductDisplayScreenState extends State<ProductDisplayScreen> {
                               ),
                               backgroundColor: Colors.green,
                             ),
-                            child: Row(
-                              children: [
-                                Icon(Icons.shopping_bag, color: Colors.white),
-                                SizedBox(width: 5),
-                                Text(
-                                  "Buy now",
-                                  style: GoogleFonts.raleway(
-                                    fontSize: 15,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ],
+                            label: Text(
+                              "Buy now",
+                              style: GoogleFonts.raleway(
+                                fontSize: 15,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
                         ],
@@ -294,29 +298,6 @@ class _ProductDisplayScreenState extends State<ProductDisplayScreen> {
               ],
             ),
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class SizeContainer extends StatelessWidget {
-  const SizeContainer({super.key, required this.size});
-  final String size;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      child: Container(
-        width: 50,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5),
-          border: Border.all(color: Color(0xffFA7189), width: 2),
-        ),
-        child: Text(
-          size,
-          style: GoogleFonts.nunitoSans(fontSize: 14, color: Color(0xffFA7189)),
-          textAlign: TextAlign.center,
         ),
       ),
     );

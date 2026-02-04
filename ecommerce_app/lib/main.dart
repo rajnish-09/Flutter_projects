@@ -1,6 +1,7 @@
 import 'package:ecommerce_app/bloc/auth/auth_bloc.dart';
 import 'package:ecommerce_app/bloc/cart/cart_bloc.dart';
 import 'package:ecommerce_app/bloc/category/category_bloc.dart';
+import 'package:ecommerce_app/bloc/favorite/favorite_bloc.dart';
 import 'package:ecommerce_app/bloc/order/order_bloc.dart';
 import 'package:ecommerce_app/bloc/product/product_bloc.dart';
 import 'package:ecommerce_app/bloc/uploadImage/upload_bloc.dart';
@@ -39,6 +40,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => CartBloc()),
         BlocProvider(create: (_) => OrderBloc()),
         BlocProvider(create: (_) => AuthBloc()),
+        BlocProvider(create: (_)=>FavoriteBloc())
       ],
       child: MaterialApp(
         theme: ThemeData(textTheme: GoogleFonts.nunitoSansTextTheme()),
