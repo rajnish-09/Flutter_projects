@@ -8,6 +8,7 @@ import 'package:ecommerce_app/bloc/uploadImage/upload_bloc.dart';
 import 'package:ecommerce_app/firebase_options.dart';
 import 'package:ecommerce_app/screens/admin_module/add_product_screen.dart';
 import 'package:ecommerce_app/screens/admin_module/admin_dashboard.dart';
+import 'package:ecommerce_app/screens/auth_gate.dart';
 import 'package:ecommerce_app/screens/get_started_screen.dart';
 import 'package:ecommerce_app/screens/login_screen.dart';
 import 'package:ecommerce_app/screens/user_module/main_navigation_screen.dart';
@@ -44,7 +45,7 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         theme: ThemeData(textTheme: GoogleFonts.nunitoSansTextTheme()),
-        home: LoginScreen(),
+        home: AuthGate(),
       ),
     );
   }

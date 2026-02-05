@@ -96,7 +96,7 @@ class _LoginFormState extends State<LoginForm> {
                     ),
                     SizedBox(height: 20),
                     SubmitButton(
-                      buttonText: 'Next',
+                      buttonText: 'Login',
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
                           context.read<AuthBloc>().add(
@@ -121,7 +121,7 @@ class _LoginFormState extends State<LoginForm> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          "Already have an account?",
+                          "Don't have an account?",
                           style: GoogleFonts.nunitoSans(fontSize: 15),
                         ),
                         SizedBox(width: 10),

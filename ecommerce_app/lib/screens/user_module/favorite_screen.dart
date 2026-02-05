@@ -40,7 +40,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                   }
                   if (state is FavoriteLoaded) {
                     if (state.favorites.isEmpty) {
-                      return Center(child: Text("No items in cart yet."));
+                      return Center(child: Text("No favorites yet."));
                     }
                     return ListView.builder(
                       shrinkWrap: true,

@@ -435,6 +435,8 @@ class _CartScreenState extends State<CartScreen> {
                   builder: (context, state) {
                     double totalSum = 0;
                     if (state is CartLoaded) {
+                      final isCartEmpty = state.cartItems.isEmpty;
+                      deliveryCost = isCartEmpty ? 0 : deliveryCost;
                       totalSum = state.cartItems.fold(0, (sum, item) {
                         double price = item.product.price;
                         if (item.product.discount != null &&

@@ -33,12 +33,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // ElevatedButton(
-                //   onPressed: () {
-                //     context.read<AuthBloc>().add(LogoutEvent());
-                //   },
-                //   child: Text("Logout"),
-                // ),
                 SizedBox(height: 20),
                 Center(
                   child: CircleAvatar(
@@ -75,6 +69,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ProfileTextField(controller: emailController, label: 'Street'),
                 SizedBox(height: 30),
                 SubmitButton(buttonText: 'Save', onPressed: () {}),
+                SizedBox(height: 30),
+                SubmitButton(
+                  buttonText: 'Logout',
+                  onPressed: () {
+                    context.read<AuthBloc>().add(LogoutEvent());
+                  },
+                  backgroundColor: Color(0xffF83758),
+                ),
               ],
             ),
           ),

@@ -2,6 +2,7 @@ import 'package:ecommerce_app/bloc/auth/auth_bloc.dart';
 import 'package:ecommerce_app/bloc/auth/auth_event.dart';
 import 'package:ecommerce_app/bloc/auth/auth_state.dart';
 import 'package:ecommerce_app/models/user_model.dart';
+import 'package:ecommerce_app/screens/login_screen.dart';
 import 'package:ecommerce_app/widgets/input_textformfield.dart';
 import 'package:ecommerce_app/widgets/show_snackbar.dart';
 import 'package:ecommerce_app/widgets/submit_button.dart';
@@ -152,6 +153,32 @@ class _SignupFormState extends State<SignupForm> {
                     );
                     context.read<AuthBloc>().add(SignupEvent(user: user));
                   },
+                ),
+                SizedBox(height: 15),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Already have an account?",
+                      style: GoogleFonts.nunitoSans(fontSize: 15),
+                    ),
+                    SizedBox(width: 10),
+                    IconButton(
+                      style: IconButton.styleFrom(
+                        backgroundColor: Color(0xff004CFF),
+                        padding: EdgeInsets.all(5),
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => LoginScreen(),
+                          ),
+                        );
+                      },
+                      icon: Icon(Icons.arrow_right_alt, color: Colors.white),
+                    ),
+                  ],
                 ),
               ],
             ),

@@ -14,23 +14,23 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   FirebaseService firebaseService = FirebaseService();
 
-  void checkCurrentUser() async {
-    final user = await firebaseService.currentUser();
-    if (user != null) {
-      if (!mounted) {
-        return;
-      }
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => MainNavigationScreen()),
-      );
-    }
-  }
+  // void checkCurrentUser() async {
+  //   final user = await firebaseService.currentUser();
+  //   if (user != null) {
+  //     if (!mounted) {
+  //       return;
+  //     }
+  //     Navigator.push(
+  //       context,
+  //       MaterialPageRoute(builder: (context) => MainNavigationScreen()),
+  //     );
+  //   }
+  // }
 
   @override
   void initState() {
     super.initState();
-    checkCurrentUser();
+    // checkCurrentUser();
   }
 
   @override
