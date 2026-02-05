@@ -1,6 +1,9 @@
 import 'package:ecommerce_app/bloc/auth/auth_bloc.dart';
 import 'package:ecommerce_app/bloc/auth/auth_event.dart';
 import 'package:ecommerce_app/bloc/auth/auth_state.dart';
+import 'package:ecommerce_app/bloc/user/user_bloc.dart';
+import 'package:ecommerce_app/bloc/user/user_event.dart';
+import 'package:ecommerce_app/bloc/user/user_state.dart';
 import 'package:ecommerce_app/screens/login_screen.dart';
 import 'package:ecommerce_app/widgets/submit_button.dart';
 import 'package:flutter/material.dart';
@@ -14,12 +17,27 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  final emailController = TextEditingController();
+  @override
+  void initState() {
+    super.initState();
+    context.read<UserBloc>().add(GetUser());
+  }
+
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
+  final TextEditingController countryController = TextEditingController();
+  final TextEditingController provinceController = TextEditingController();
+  final TextEditingController cityController = TextEditingController();
+  final TextEditingController streetController = TextEditingController();
+
+    bool _initialized = false;
+
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: SafeArea(
-        child: BlocListener<AuthBloc, AuthState>(
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<AuthBloc, AuthState>(
           listener: (context, state) {
             if (state is LogoutSuccess) {
               Navigator.pushReplacement(
@@ -28,56 +46,107 @@ class _ProfileScreenState extends State<ProfileScreen> {
               );
             }
           },
+        ),
+        BlocListener<UserBloc, UserState>(
+          listener: (context, state) {
+            if (state is UserLoaded) {
+              _initialized = true;
+              nameController.text = state.userData.name;
+              emailController.text = state.userData.email;
+              phoneController.text = state.userData.phone;
+              countryController.text = state.userData.country ?? '';
+              provinceController.text = state.userData.province ?? '';
+              cityController.text = state.userData.city ?? '';
+              streetController.text = state.userData.street ?? '';
+            }
+          },
+        ),
+      ],
+      child: SingleChildScrollView(
+        child: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: 20),
-                Center(
-                  child: CircleAvatar(
-                    radius: 60,
-                    backgroundImage: AssetImage('assets/images/prod1.jpg'),
-                  ),
-                ),
-                SizedBox(height: 40),
-                Text(
-                  "Personal details",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 15),
-                ProfileTextField(controller: emailController, label: 'Name'),
-                SizedBox(height: 15),
-                ProfileTextField(controller: emailController, label: 'Email'),
-                SizedBox(height: 15),
-                ProfileTextField(controller: emailController, label: 'Phone'),
-                SizedBox(height: 30),
-                Text(
-                  "Address details",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 15),
-                ProfileTextField(controller: emailController, label: 'Country'),
-                SizedBox(height: 15),
-                ProfileTextField(
-                  controller: emailController,
-                  label: 'Province',
-                ),
-                SizedBox(height: 15),
-                ProfileTextField(controller: emailController, label: 'City'),
-                SizedBox(height: 15),
-                ProfileTextField(controller: emailController, label: 'Street'),
-                SizedBox(height: 30),
-                SubmitButton(buttonText: 'Save', onPressed: () {}),
-                SizedBox(height: 30),
-                SubmitButton(
-                  buttonText: 'Logout',
-                  onPressed: () {
-                    context.read<AuthBloc>().add(LogoutEvent());
-                  },
-                  backgroundColor: Color(0xffF83758),
-                ),
-              ],
+            child: BlocBuilder<UserBloc, UserState>(
+              builder: (context, state) {
+                if (state is UserLoaded) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 20),
+                      Center(
+                        child: CircleAvatar(
+                          radius: 60,
+                          backgroundImage: AssetImage(
+                            'assets/images/prod1.jpg',
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 40),
+                      Text(
+                        "Personal details",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 15),
+                      ProfileTextField(
+                        controller: nameController,
+                        label: 'Name',
+                      ),
+                      SizedBox(height: 15),
+                      ProfileTextField(
+                        controller: emailController,
+                        label: 'Email',
+                      ),
+                      SizedBox(height: 15),
+                      ProfileTextField(
+                        controller: phoneController,
+                        label: 'Phone',
+                      ),
+                      SizedBox(height: 30),
+                      Text(
+                        "Address details",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 15),
+                      ProfileTextField(
+                        controller: countryController,
+                        label: 'Country',
+                      ),
+                      SizedBox(height: 15),
+                      ProfileTextField(
+                        controller: provinceController,
+                        label: 'Province',
+                      ),
+                      SizedBox(height: 15),
+                      ProfileTextField(
+                        controller: cityController,
+                        label: 'City',
+                      ),
+                      SizedBox(height: 15),
+                      ProfileTextField(
+                        controller: streetController,
+                        label: 'Street',
+                      ),
+                      SizedBox(height: 30),
+                      SubmitButton(buttonText: 'Save', onPressed: () {}),
+                      SizedBox(height: 30),
+                      SubmitButton(
+                        buttonText: 'Logout',
+                        onPressed: () {
+                          context.read<AuthBloc>().add(LogoutEvent());
+                        },
+                        backgroundColor: Color(0xffF83758),
+                      ),
+                    ],
+                  );
+                }
+                return SizedBox();
+              },
             ),
           ),
         ),

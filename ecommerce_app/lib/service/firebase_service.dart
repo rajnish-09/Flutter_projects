@@ -56,6 +56,17 @@ class FirebaseService {
     await FirebaseAuth.instance.signOut();
   }
 
+  Future<UserModel> getUserData() async {
+    final User? user = FirebaseAuth.instance.currentUser;
+    final response = await userCollection.doc(user!.uid).get();
+    return UserModel.fromJson(
+      response.data() as Map<String, dynamic>,
+      response.id,
+    );
+  }
+
+  //----------------Category-----------------------------
+
   Future<void> addCategory(CategoryModel category) async {
     await categoriesCollection.add(category.toJson());
   }
@@ -66,6 +77,8 @@ class FirebaseService {
         .map((e) => CategoryModel.fromJson(e.data(), e.id))
         .toList();
   }
+
+  //----------------Product-----------------------------
 
   Future<void> addProduct(ProductModel product) async {
     await productCollection.add(product.toJson());
@@ -85,6 +98,8 @@ class FirebaseService {
   Future<void> deleteProduct(ProductModel product) async {
     await productCollection.doc(product.id).delete();
   }
+
+  //----------------Cart-----------------------------
 
   Future<void> addProductToCart(CartModel cart) async {
     final User? user = FirebaseAuth.instance.currentUser;
@@ -152,6 +167,8 @@ class FirebaseService {
     // 4. Commit the batch
     await batch.commit();
   }
+
+  //----------------Order-----------------------------
 
   Future<void> placeOrder(OrderModel order) async {
     final User? user = FirebaseAuth.instance.currentUser;

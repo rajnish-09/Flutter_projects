@@ -5,6 +5,7 @@ import 'package:ecommerce_app/bloc/favorite/favorite_bloc.dart';
 import 'package:ecommerce_app/bloc/order/order_bloc.dart';
 import 'package:ecommerce_app/bloc/product/product_bloc.dart';
 import 'package:ecommerce_app/bloc/uploadImage/upload_bloc.dart';
+import 'package:ecommerce_app/bloc/user/user_bloc.dart';
 import 'package:ecommerce_app/firebase_options.dart';
 import 'package:ecommerce_app/screens/admin_module/add_product_screen.dart';
 import 'package:ecommerce_app/screens/admin_module/admin_dashboard.dart';
@@ -41,7 +42,8 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => CartBloc()),
         BlocProvider(create: (_) => OrderBloc()),
         BlocProvider(create: (_) => AuthBloc()),
-        BlocProvider(create: (_)=>FavoriteBloc())
+        BlocProvider(create: (_) => FavoriteBloc()),
+        BlocProvider(create: (_) => UserBloc()),
       ],
       child: MaterialApp(
         theme: ThemeData(textTheme: GoogleFonts.nunitoSansTextTheme()),
