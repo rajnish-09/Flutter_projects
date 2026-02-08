@@ -17,5 +17,11 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         emit(UserError(msg: e.toString()));
       }
     });
+
+    on<UpdateUser>((event, emit) async {
+      await firebaseService.updateUserData(event.userData);
+      emit(UserLoaded(userData: event.userData));
+      emit(UserUpdated());
+    });
   }
 }

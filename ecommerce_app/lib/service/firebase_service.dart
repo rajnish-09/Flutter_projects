@@ -65,6 +65,11 @@ class FirebaseService {
     );
   }
 
+  Future<void> updateUserData(UserModel updatedUserData) async {
+    final User? user = FirebaseAuth.instance.currentUser;
+    await userCollection.doc(user!.uid).update(updatedUserData.toJson());
+  }
+
   //----------------Category-----------------------------
 
   Future<void> addCategory(CategoryModel category) async {

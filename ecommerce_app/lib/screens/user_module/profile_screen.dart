@@ -4,7 +4,9 @@ import 'package:ecommerce_app/bloc/auth/auth_state.dart';
 import 'package:ecommerce_app/bloc/user/user_bloc.dart';
 import 'package:ecommerce_app/bloc/user/user_event.dart';
 import 'package:ecommerce_app/bloc/user/user_state.dart';
+import 'package:ecommerce_app/models/user_model.dart';
 import 'package:ecommerce_app/screens/login_screen.dart';
+import 'package:ecommerce_app/widgets/show_snackbar.dart';
 import 'package:ecommerce_app/widgets/show_toast.dart';
 import 'package:ecommerce_app/widgets/submit_button.dart';
 import 'package:flutter/material.dart';
@@ -57,6 +59,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
         // final String? imagePath;
         BlocListener<UserBloc, UserState>(
           listener: (context, state) {
+            if (state is UserUpdated) {
+              showToastWidget('Profile updated successfully', Colors.green);
+            }
+            if (state is UserError) {
+              showToastWidget(state.msg, Colors.red);
+            }
             if (state is UserLoaded) {
               final user = state.userData;
               nameController.text = user.name;
@@ -78,9 +86,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               builder: (context, state) {
                 if (state is UserLoading) {
                   return Center(child: CircularProgressIndicator());
-                }
-                if (state is UserError) {
-                  showToastWidget(state.msg, Colors.red);
                 }
                 if (state is UserLoaded) {
                   return Form(
@@ -163,6 +168,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           controller: phoneController,
                           label: 'Phone',
                           isEnabled: isTextFieldEnabled,
+                          textInputType: TextInputType.number,
                           validator: (value) {
                             if (phoneController.text.isEmpty) {
                               return 'Phone is required';
@@ -232,6 +238,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             buttonText: 'Save',
                             onPressed: () {
                               if (_formKey.currentState!.validate()) {
+                                final updatedUserData = UserModel(
+                                  name: nameController.text.trim(),
+                                  phone: phoneController.text.trim(),
+                                  email: emailController.text.trim(),
+                                  country: countryController.text.trim(),
+                                  province: provinceController.text.trim(),
+                                  city: cityController.text.trim(),
+                                  street: streetController.text.trim(),
+                                );
+                                context.read<UserBloc>().add(
+                                  UpdateUser(userData: updatedUserData),
+                                );
                                 setState(() {
                                   isTextFieldEnabled = false;
                                 });
@@ -269,12 +287,14 @@ class ProfileTextField extends StatelessWidget {
     required this.label,
     required this.isEnabled,
     this.validator,
+    this.textInputType,
   });
 
   final TextEditingController controller;
   final String label;
   final bool isEnabled;
   final String? Function(String?)? validator;
+  final TextInputType? textInputType;
 
   @override
   Widget build(BuildContext context) {
@@ -286,6 +306,8 @@ class ProfileTextField extends StatelessWidget {
           SizedBox(height: 10),
           TextFormField(
             validator: validator,
+            textCapitalization: TextCapitalization.sentences,
+            keyboardType: textInputType ?? TextInputType.text,
             enabled: isEnabled,
             controller: controller,
             decoration: InputDecoration(
