@@ -1,6 +1,8 @@
 import 'package:ecommerce_app/bloc/cart/cart_bloc.dart';
 import 'package:ecommerce_app/bloc/cart/cart_event.dart';
 import 'package:ecommerce_app/bloc/cart/cart_state.dart';
+import 'package:ecommerce_app/bloc/favorite/favorite_bloc.dart';
+import 'package:ecommerce_app/bloc/favorite/favorite_state.dart';
 import 'package:ecommerce_app/bloc/product/product_bloc.dart';
 import 'package:ecommerce_app/bloc/product/product_state.dart';
 import 'package:ecommerce_app/models/order_item_model.dart';
@@ -49,15 +51,26 @@ class _CartScreenState extends State<CartScreen> {
       child: Padding(
         padding: const EdgeInsets.all(10),
         child: SafeArea(
-          child: BlocListener<CartBloc, CartState>(
-            listener: (context, state) {
-              if (state is CartItemDeleted) {
-                showToastWidget(state.msg, Colors.green);
-              }
-              if (state is CartItemDeleteFailed) {
-                showToastWidget(state.msg, Colors.red);
-              }
-            },
+          child: MultiBlocListener(
+            listeners: [
+              BlocListener<CartBloc, CartState>(
+                listener: (context, state) {
+                  if (state is CartItemDeleted) {
+                    showToastWidget(state.msg, Colors.green);
+                  }
+                  if (state is CartItemDeleteFailed) {
+                    showToastWidget(state.msg, Colors.red);
+                  }
+                },
+              ),
+              BlocListener<FavoriteBloc, FavoriteState>(
+                listener: (context, state) {
+                  if (state is FavoriteError) {
+                    showToastWidget(state.message, Colors.red);
+                  }
+                },
+              ),
+            ],
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

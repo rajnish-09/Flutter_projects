@@ -23,5 +23,16 @@ class FavoriteBloc extends Bloc<FavoriteEvent, FavoriteState> {
       final fav = await firebaseService.getFavoriteProducts();
       emit(FavoriteLoaded(favorites: fav));
     });
+
+    on<DeleteFavorite>((event, emit) async {
+      try {
+        await firebaseService.deleteFavoriteItem(event.cart);
+        final fav = await firebaseService.getFavoriteProducts();
+        emit(FavoriteLoaded(favorites: fav));
+      } catch (e) {
+        print(e.toString());
+        emit(FavoriteError('Error'));
+      }
+    });
   }
 }

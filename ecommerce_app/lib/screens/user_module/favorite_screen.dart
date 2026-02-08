@@ -268,9 +268,13 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                                   ),
                                 ),
                                 onPressed: () {
-                                  // context.read<CartBloc>().add(
-                                  //   DeleteCartItem(cart: cart.cart),
-                                  // );
+                                  final cart = CartModel(
+                                    productId: fav.id!,
+                                    quantity: count,
+                                  );
+                                  context.read<FavoriteBloc>().add(
+                                    DeleteFavorite(cart: cart),
+                                  );
                                 },
                                 icon: Icon(Icons.delete, color: Colors.red),
                               ),

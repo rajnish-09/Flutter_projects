@@ -13,6 +13,8 @@ class FavoriteLoaded extends FavoriteState {
   FavoriteLoaded({required this.favorites});
 }
 
+class FavoriteDeleted extends FavoriteState {}
+
 class FavoriteError extends FavoriteState {
   final String message;
   FavoriteError(this.message);

@@ -237,4 +237,14 @@ class FirebaseService {
         .map((doc) => ProductModel.fromJson(doc.data(), doc.id))
         .toList();
   }
+
+  Future<void> deleteFavoriteItem(CartModel cart) async {
+    final User? user = FirebaseAuth.instance.currentUser;
+    await userCollection
+        .doc(user!.uid)
+        .collection('Favorite')
+        .doc(cart.productId)
+        .delete();
+    // await cartCollection.doc(cart.id).delete();
+  }
 }
