@@ -201,6 +201,7 @@ class _CartScreenState extends State<CartScreen> {
                       if (state.cartItems.isEmpty) {
                         return Center(child: Text("No items in cart yet."));
                       }
+                      // print("Items in cart: ${state.cartItems.length}");
                       return ListView.builder(
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),

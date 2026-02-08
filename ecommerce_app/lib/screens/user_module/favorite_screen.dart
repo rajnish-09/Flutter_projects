@@ -1,6 +1,9 @@
+import 'package:ecommerce_app/bloc/cart/cart_bloc.dart';
+import 'package:ecommerce_app/bloc/cart/cart_event.dart';
 import 'package:ecommerce_app/bloc/favorite/favorite_bloc.dart';
 import 'package:ecommerce_app/bloc/favorite/favorite_event.dart';
 import 'package:ecommerce_app/bloc/favorite/favorite_state.dart';
+import 'package:ecommerce_app/models/cart_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -13,6 +16,8 @@ class FavoriteScreen extends StatefulWidget {
 }
 
 class _FavoriteScreenState extends State<FavoriteScreen> {
+  int count = 1;
+
   @override
   void initState() {
     super.initState();
@@ -42,6 +47,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                     if (state.favorites.isEmpty) {
                       return Center(child: Text("No favorites yet."));
                     }
+
                     return ListView.builder(
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
@@ -129,6 +135,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                                                     ),
                                                   ),
                                                 ),
+
                                                 SizedBox(width: 5),
                                                 if (fav.discount != null &&
                                                     fav.discount! > 0)
@@ -156,6 +163,88 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                                                     ],
                                                   ),
                                               ],
+                                            ),
+                                            SizedBox(height: 5),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text(
+                                                  "Quantity",
+                                                  style: TextStyle(
+                                                    fontSize: 12,
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  child: Row(
+                                                    children: [
+                                                      IconButton(
+                                                        onPressed: () {
+                                                          if (count > 1) {
+                                                            setState(() {
+                                                              count--;
+                                                            });
+                                                          }
+                                                        },
+                                                        icon: Icon(
+                                                          Icons.remove,
+                                                          size: 20,
+                                                        ),
+                                                      ),
+                                                      // SizedBox(width: 5),
+                                                      Text(count.toString()),
+                                                      // SizedBox(width: 5),
+                                                      IconButton(
+                                                        onPressed: () {
+                                                          if (count < 9) {
+                                                            setState(() {
+                                                              count++;
+                                                            });
+                                                          }
+                                                        },
+                                                        icon: Icon(
+                                                          Icons.add,
+                                                          size: 20,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            ElevatedButton.icon(
+                                              icon: Icon(
+                                                Icons.shopping_cart,
+                                                color: Colors.white,
+                                              ),
+                                              onPressed: () {
+                                                final cart = CartModel(
+                                                  productId: fav.id!,
+                                                  quantity: count,
+                                                );
+                                                context.read<CartBloc>().add(
+                                                  AddToCart(cart: cart),
+                                                );
+                                              },
+                                              style: ElevatedButton.styleFrom(
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadiusGeometry.circular(
+                                                        10,
+                                                      ),
+                                                ),
+                                                backgroundColor: Color(
+                                                  0xff004CFF,
+                                                ),
+                                              ),
+                                              label: Text(
+                                                "Add to cart",
+                                                style: GoogleFonts.raleway(
+                                                  fontSize: 15,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
                                             ),
                                           ],
                                         ),

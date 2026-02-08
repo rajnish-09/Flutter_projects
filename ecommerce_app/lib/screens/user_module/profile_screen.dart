@@ -257,7 +257,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               return;
                             },
                           ),
-                        SizedBox(height: 30),
+                        // SizedBox(height: 30),
                         if (!isTextFieldEnabled)
                           SubmitButton(
                             buttonText: 'Logout',

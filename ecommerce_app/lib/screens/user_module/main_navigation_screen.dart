@@ -76,7 +76,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
                     isLabelVisible: cartCount > 0,
                     child: Icon(Icons.shopping_cart_sharp),
                   ),
-                  Icon(Icons.shopping_cart_checkout_rounded),
+                  Icon(Icons.shopping_bag),
                   Icon(Icons.person),
                 ];
                 return CurvedNavigationBar(
