@@ -32,6 +32,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   TextEditingController cityController = TextEditingController();
   TextEditingController streetController = TextEditingController();
 
+  bool isTextFieldEnabled = false;
+
+  final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocListener(
@@ -46,11 +50,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
             }
           },
         ),
-  //        final String name, phone, email, password;
-  // final String? uid;
-  // final String? country, province, city, street;
-  // final String role = 'user';
-  // final String? imagePath;
+        //        final String name, phone, email, password;
+        // final String? uid;
+        // final String? country, province, city, street;
+        // final String role = 'user';
+        // final String? imagePath;
         BlocListener<UserBloc, UserState>(
           listener: (context, state) {
             if (state is UserLoaded) {
@@ -79,80 +83,173 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   showToastWidget(state.msg, Colors.red);
                 }
                 if (state is UserLoaded) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(height: 20),
-                      Center(
-                        child: CircleAvatar(
-                          radius: 60,
-                          backgroundImage: AssetImage(
-                            'assets/images/prod1.jpg',
+                  return Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // SizedBox(height: 20),
+                        Align(
+                          alignment: Alignment.topRight,
+                          child: PopupMenuButton(
+                            onSelected: (value) {
+                              if (value == 'edit') {
+                                setState(() {
+                                  isTextFieldEnabled = true;
+                                });
+                              }
+                              if (value == 'delete') {}
+                            },
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            icon: Icon(Icons.more_vert),
+                            itemBuilder: (context) => [
+                              PopupMenuItem(
+                                value: 'edit',
+                                child: ListTile(
+                                  leading: Icon(Icons.edit),
+                                  title: Text("Edit"),
+                                  contentPadding: EdgeInsets.zero,
+                                ),
+                              ),
+                              PopupMenuItem(
+                                value: 'delete',
+                                child: ListTile(
+                                  leading: Icon(Icons.delete),
+                                  contentPadding: EdgeInsets.zero,
+                                  title: Text("Delete"),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                      ),
-                      SizedBox(height: 40),
-                      Text(
-                        "Personal details",
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
+                        Center(
+                          child: CircleAvatar(
+                            radius: 60,
+                            backgroundImage: AssetImage(
+                              'assets/images/default_profile.jpg',
+                            ),
+                          ),
                         ),
-                      ),
-                      SizedBox(height: 15),
-                      ProfileTextField(
-                        controller: nameController,
-                        label: 'Name',
-                      ),
-                      SizedBox(height: 15),
-                      ProfileTextField(
-                        controller: emailController,
-                        label: 'Email',
-                      ),
-                      SizedBox(height: 15),
-                      ProfileTextField(
-                        controller: phoneController,
-                        label: 'Phone',
-                      ),
-                      SizedBox(height: 30),
-                      Text(
-                        "Address details",
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
+                        SizedBox(height: 40),
+                        Text(
+                          "Personal details",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                      SizedBox(height: 15),
-                      ProfileTextField(
-                        controller: countryController,
-                        label: 'Country',
-                      ),
-                      SizedBox(height: 15),
-                      ProfileTextField(
-                        controller: provinceController,
-                        label: 'Province',
-                      ),
-                      SizedBox(height: 15),
-                      ProfileTextField(
-                        controller: cityController,
-                        label: 'City',
-                      ),
-                      SizedBox(height: 15),
-                      ProfileTextField(
-                        controller: streetController,
-                        label: 'Street',
-                      ),
-                      SizedBox(height: 30),
-                      SubmitButton(buttonText: 'Save', onPressed: () {}),
-                      SizedBox(height: 30),
-                      SubmitButton(
-                        buttonText: 'Logout',
-                        onPressed: () {
-                          context.read<AuthBloc>().add(LogoutEvent());
-                        },
-                        backgroundColor: Color(0xffF83758),
-                      ),
-                    ],
+                        SizedBox(height: 15),
+                        ProfileTextField(
+                          controller: nameController,
+                          label: 'Name',
+                          isEnabled: isTextFieldEnabled,
+                          validator: (value) {
+                            if (nameController.text.isEmpty) {
+                              return 'Name is required';
+                            }
+                            return null;
+                          },
+                        ),
+                        SizedBox(height: 15),
+                        ProfileTextField(
+                          controller: emailController,
+                          label: 'Email',
+                          isEnabled: false,
+                        ),
+                        SizedBox(height: 15),
+                        ProfileTextField(
+                          controller: phoneController,
+                          label: 'Phone',
+                          isEnabled: isTextFieldEnabled,
+                          validator: (value) {
+                            if (phoneController.text.isEmpty) {
+                              return 'Phone is required';
+                            }
+                            return null;
+                          },
+                        ),
+                        SizedBox(height: 30),
+                        Text(
+                          "Address details",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 15),
+                        ProfileTextField(
+                          controller: countryController,
+                          label: 'Country',
+                          isEnabled: isTextFieldEnabled,
+                          validator: (value) {
+                            if (countryController.text.isEmpty) {
+                              return 'Country is required';
+                            }
+                            return null;
+                          },
+                        ),
+                        SizedBox(height: 15),
+                        ProfileTextField(
+                          controller: provinceController,
+                          isEnabled: isTextFieldEnabled,
+                          label: 'Province',
+                          validator: (value) {
+                            if (provinceController.text.isEmpty) {
+                              return 'Province is required';
+                            }
+                            return null;
+                          },
+                        ),
+                        SizedBox(height: 15),
+                        ProfileTextField(
+                          controller: cityController,
+                          isEnabled: isTextFieldEnabled,
+                          label: 'City',
+                          validator: (value) {
+                            if (cityController.text.isEmpty) {
+                              return 'City is required';
+                            }
+                            return null;
+                          },
+                        ),
+                        SizedBox(height: 15),
+                        ProfileTextField(
+                          controller: streetController,
+                          isEnabled: isTextFieldEnabled,
+                          label: 'Street',
+                          validator: (value) {
+                            if (streetController.text.isEmpty) {
+                              return 'Street is required';
+                            }
+                            return null;
+                          },
+                        ),
+                        SizedBox(height: 30),
+                        if (isTextFieldEnabled)
+                          SubmitButton(
+                            buttonText: 'Save',
+                            onPressed: () {
+                              if (_formKey.currentState!.validate()) {
+                                setState(() {
+                                  isTextFieldEnabled = false;
+                                });
+                              }
+                              return;
+                            },
+                          ),
+                        SizedBox(height: 30),
+                        if (!isTextFieldEnabled)
+                          SubmitButton(
+                            buttonText: 'Logout',
+                            onPressed: () {
+                              context.read<AuthBloc>().add(LogoutEvent());
+                            },
+                            backgroundColor: Color(0xffF83758),
+                          ),
+                      ],
+                    ),
                   );
                 }
                 return Text("Test");
@@ -170,10 +267,14 @@ class ProfileTextField extends StatelessWidget {
     super.key,
     required this.controller,
     required this.label,
+    required this.isEnabled,
+    this.validator,
   });
 
   final TextEditingController controller;
   final String label;
+  final bool isEnabled;
+  final String? Function(String?)? validator;
 
   @override
   Widget build(BuildContext context) {
@@ -184,6 +285,8 @@ class ProfileTextField extends StatelessWidget {
           Text(label),
           SizedBox(height: 10),
           TextFormField(
+            validator: validator,
+            enabled: isEnabled,
             controller: controller,
             decoration: InputDecoration(
               enabledBorder: OutlineInputBorder(
@@ -194,15 +297,19 @@ class ProfileTextField extends StatelessWidget {
               fillColor: Colors.transparent,
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(15),
-                borderSide: BorderSide(color: Colors.transparent),
+                borderSide: BorderSide(color: Colors.grey.shade400),
               ),
               errorBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(15),
-                borderSide: BorderSide(color: Colors.transparent),
+                borderSide: BorderSide(color: Colors.grey.shade400),
               ),
               focusedErrorBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(15),
-                borderSide: BorderSide(color: Colors.transparent),
+                borderSide: BorderSide(color: Colors.grey.shade400),
+              ),
+              disabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15),
+                borderSide: BorderSide(color: Colors.grey.shade400),
               ),
             ),
           ),

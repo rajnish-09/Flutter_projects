@@ -46,6 +46,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => UserBloc()),
       ],
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         theme: ThemeData(textTheme: GoogleFonts.nunitoSansTextTheme()),
         home: AuthGate(),
       ),
