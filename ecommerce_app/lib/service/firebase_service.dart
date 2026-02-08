@@ -25,7 +25,7 @@ class FirebaseService {
     UserCredential userCredential = await FirebaseAuth.instance
         .createUserWithEmailAndPassword(
           email: userData.email,
-          password: userData.password,
+          password: userData.password!,
         );
     String uid = userCredential.user!.uid;
     userCollection.doc(uid).set(userData.toJson());

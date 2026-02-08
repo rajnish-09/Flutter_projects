@@ -7,6 +7,7 @@ import 'package:ecommerce_app/bloc/favorite/favorite_event.dart';
 import 'package:ecommerce_app/bloc/favorite/favorite_state.dart';
 import 'package:ecommerce_app/screens/user_module/cart_screen.dart';
 import 'package:ecommerce_app/screens/user_module/favorite_screen.dart';
+import 'package:ecommerce_app/screens/user_module/order_history_screen.dart';
 import 'package:ecommerce_app/screens/user_module/profile_screen.dart';
 import 'package:ecommerce_app/screens/user_module/shop_screen.dart';
 import 'package:ecommerce_app/widgets/bottom_navigation_bar.dart';
@@ -32,13 +33,19 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     context.read<CartBloc>().add(FetchCartItems());
   }
 
-  final pages = [ShopScreen(), FavoriteScreen(), CartScreen(), ProfileScreen()];
+  final List<Widget> pages = [
+    ShopScreen(),
+    FavoriteScreen(),
+    CartScreen(),
+    OrderHistoryScreen(),
+    ProfileScreen(),
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBody: true,
-      body: pages[currentIndex],
+      body: IndexedStack(index: currentIndex, children: pages),
       bottomNavigationBar: Theme(
         data: Theme.of(
           context,
@@ -69,6 +76,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
                     isLabelVisible: cartCount > 0,
                     child: Icon(Icons.shopping_cart_sharp),
                   ),
+                  Icon(Icons.shopping_cart_checkout_rounded),
                   Icon(Icons.person),
                 ];
                 return CurvedNavigationBar(
@@ -92,18 +100,3 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     );
   }
 }
-
-// Theme(
-//       data: Theme.of(
-//         context,
-//       ).copyWith(iconTheme: IconThemeData(color: Colors.white)),
-//       child: CurvedNavigationBar(
-//         index: currentIndex,
-//         items: items,
-//         color: Colors.blue,
-//         backgroundColor: Colors.transparent,
-//         onTap: onTap,
-//         animationCurve: Curves.easeInOut,
-//         animationDuration: Duration(milliseconds: 300),
-//       ),
-//     )

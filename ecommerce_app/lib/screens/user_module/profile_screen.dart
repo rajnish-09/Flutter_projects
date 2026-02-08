@@ -5,6 +5,7 @@ import 'package:ecommerce_app/bloc/user/user_bloc.dart';
 import 'package:ecommerce_app/bloc/user/user_event.dart';
 import 'package:ecommerce_app/bloc/user/user_state.dart';
 import 'package:ecommerce_app/screens/login_screen.dart';
+import 'package:ecommerce_app/widgets/show_toast.dart';
 import 'package:ecommerce_app/widgets/submit_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,15 +24,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
     context.read<UserBloc>().add(GetUser());
   }
 
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController phoneController = TextEditingController();
-  final TextEditingController countryController = TextEditingController();
-  final TextEditingController provinceController = TextEditingController();
-  final TextEditingController cityController = TextEditingController();
-  final TextEditingController streetController = TextEditingController();
-
-    bool _initialized = false;
+  TextEditingController nameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
+  TextEditingController countryController = TextEditingController();
+  TextEditingController provinceController = TextEditingController();
+  TextEditingController cityController = TextEditingController();
+  TextEditingController streetController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -47,17 +46,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
             }
           },
         ),
+  //        final String name, phone, email, password;
+  // final String? uid;
+  // final String? country, province, city, street;
+  // final String role = 'user';
+  // final String? imagePath;
         BlocListener<UserBloc, UserState>(
           listener: (context, state) {
             if (state is UserLoaded) {
-              _initialized = true;
-              nameController.text = state.userData.name;
-              emailController.text = state.userData.email;
-              phoneController.text = state.userData.phone;
-              countryController.text = state.userData.country ?? '';
-              provinceController.text = state.userData.province ?? '';
-              cityController.text = state.userData.city ?? '';
-              streetController.text = state.userData.street ?? '';
+              final user = state.userData;
+              nameController.text = user.name;
+              emailController.text = user.email;
+              phoneController.text = user.phone;
+              countryController.text = user.country ?? '';
+              provinceController.text = user.province ?? '';
+              cityController.text = user.city ?? '';
+              streetController.text = user.street ?? '';
             }
           },
         ),
@@ -68,6 +72,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
             padding: const EdgeInsets.all(20),
             child: BlocBuilder<UserBloc, UserState>(
               builder: (context, state) {
+                if (state is UserLoading) {
+                  return Center(child: CircularProgressIndicator());
+                }
+                if (state is UserError) {
+                  showToastWidget(state.msg, Colors.red);
+                }
                 if (state is UserLoaded) {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -145,7 +155,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ],
                   );
                 }
-                return SizedBox();
+                return Text("Test");
               },
             ),
           ),

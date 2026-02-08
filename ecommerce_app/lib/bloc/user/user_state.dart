@@ -10,3 +10,8 @@ class UserLoaded extends UserState {
   final UserModel userData;
   UserLoaded({required this.userData});
 }
+
+class UserError extends UserState {
+  final String msg;
+  UserError({required this.msg});
+}
