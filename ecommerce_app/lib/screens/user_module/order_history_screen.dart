@@ -123,7 +123,16 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
                                             ],
                                           ),
                                         ),
-                                        Text(item.quantity.toStringAsFixed(0)),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.end,
+                                          children: [
+                                            Text(
+                                              item.quantity.toStringAsFixed(0),
+                                            ),
+                                            Text(order.orderStatus),
+                                          ],
+                                        ),
                                       ],
                                     ),
                                   );

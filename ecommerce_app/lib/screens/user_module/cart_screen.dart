@@ -5,6 +5,9 @@ import 'package:ecommerce_app/bloc/favorite/favorite_bloc.dart';
 import 'package:ecommerce_app/bloc/favorite/favorite_state.dart';
 import 'package:ecommerce_app/bloc/product/product_bloc.dart';
 import 'package:ecommerce_app/bloc/product/product_state.dart';
+import 'package:ecommerce_app/bloc/user/user_bloc.dart';
+import 'package:ecommerce_app/bloc/user/user_event.dart';
+import 'package:ecommerce_app/bloc/user/user_state.dart';
 import 'package:ecommerce_app/models/order_item_model.dart';
 import 'package:ecommerce_app/models/order_model.dart';
 import 'package:ecommerce_app/screens/user_module/checkout_screen.dart';
@@ -42,7 +45,8 @@ class _CartScreenState extends State<CartScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<CartBloc>().add(FetchCartItems());
+    getDeliveryInformation();
+    context.read<UserBloc>().add(GetUser());
   }
 
   @override
@@ -104,15 +108,71 @@ class _CartScreenState extends State<CartScreen> {
                   ],
                 ),
                 SizedBox(height: 10),
-                SizedBox(
-                  height: 120,
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Stack(
+                BlocBuilder<UserBloc, UserState>(
+                  builder: (context, state) {
+                    if (state is UserLoaded) {
+                      if (state.userData.country == null) {
+                        return Text(
+                          "Update your shipping address from profile",
+                          style: TextStyle(
+                            color: Colors.red,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        );
+                      }
+                      return SizedBox(
+                        height: 120,
+                        child: Row(
                           children: [
+                            Expanded(
+                              child: Container(
+                                padding: EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+
+                                  color: Colors.white,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      offset: Offset(0, -2),
+                                      blurRadius: 2,
+                                      spreadRadius: -2,
+                                      color: Colors.grey,
+                                    ),
+                                    BoxShadow(
+                                      offset: Offset(0, 2),
+                                      blurRadius: 10.0,
+                                      spreadRadius: -2,
+                                      color: Colors.grey,
+                                    ),
+                                  ],
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Address:",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Text(
+                                      '${state.userData.country!}, ${state.userData.province!}, ${state.userData.city!}, ${state.userData.street!}',
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(fontSize: 12),
+                                    ),
+                                    Text(
+                                      "Contact :  +977-${state.userData.phone}",
+                                      style: TextStyle(fontSize: 12),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 15),
                             Container(
-                              padding: EdgeInsets.all(10),
+                              width: 80,
+                              height: double.infinity,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
 
@@ -132,69 +192,17 @@ class _CartScreenState extends State<CartScreen> {
                                   ),
                                 ],
                               ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Address:",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  Text(
-                                    "216 St Paul's Rd, London N1 2LL, UK",
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(fontSize: 12),
-                                  ),
-                                  Text(
-                                    "Contact :  +977-9861491364",
-                                    style: TextStyle(fontSize: 12),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Positioned(
-                              right: 0,
-                              top: 0,
                               child: IconButton(
                                 onPressed: () {},
-                                icon: Icon(Icons.edit),
+                                icon: Icon(Icons.add_rounded),
                               ),
                             ),
                           ],
                         ),
-                      ),
-                      SizedBox(width: 15),
-                      Container(
-                        width: 80,
-                        height: double.infinity,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-
-                          color: Colors.white,
-                          boxShadow: [
-                            BoxShadow(
-                              offset: Offset(0, -2),
-                              blurRadius: 2,
-                              spreadRadius: -2,
-                              color: Colors.grey,
-                            ),
-                            BoxShadow(
-                              offset: Offset(0, 2),
-                              blurRadius: 10.0,
-                              spreadRadius: -2,
-                              color: Colors.grey,
-                            ),
-                          ],
-                        ),
-                        child: IconButton(
-                          onPressed: () {},
-                          icon: Icon(Icons.add_rounded),
-                        ),
-                      ),
-                    ],
-                  ),
+                      );
+                    }
+                    return SizedBox();
+                  },
                 ),
                 SizedBox(height: 25),
                 Text(
@@ -214,6 +222,7 @@ class _CartScreenState extends State<CartScreen> {
                       if (state.cartItems.isEmpty) {
                         return Center(child: Text("No items in cart yet."));
                       }
+                      bool isCartEmpty = false;
                       // print("Items in cart: ${state.cartItems.length}");
                       return ListView.builder(
                         shrinkWrap: true,
@@ -221,6 +230,10 @@ class _CartScreenState extends State<CartScreen> {
                         itemCount: state.cartItems.length,
                         itemBuilder: (context, index) {
                           final cart = state.cartItems[index];
+                          isCartEmpty = state.cartItems.isEmpty;
+                          if (isCartEmpty) {
+                            deliveryCost = 0;
+                          }
                           double discountedPrice = cart.product.price;
                           double itemTotal =
                               cart.product.price * cart.cart.quantity;
@@ -449,11 +462,7 @@ class _CartScreenState extends State<CartScreen> {
                   builder: (context, state) {
                     double totalSum = 0;
                     if (state is CartLoaded) {
-                      final isCartEmpty = state.cartItems.isEmpty;
-                      double currentDeliveryCost = 0;
-                      deliveryCost = isCartEmpty
-                          ? currentDeliveryCost
-                          : deliveryCost;
+                      // final isCartEmpty = state.cartItems.isEmpty;
                       totalSum = state.cartItems.fold(0, (sum, item) {
                         double price = item.product.price;
                         if (item.product.discount != null &&
@@ -517,107 +526,118 @@ class _CartScreenState extends State<CartScreen> {
                 ),
                 SizedBox(height: 20),
 
-                BlocBuilder<CartBloc, CartState>(
-                  builder: (context, state) {
-                    if (state is CartLoaded) {
-                      // final cart = state.cartItems[index];
-                      final isCartEmpty = state.cartItems.isEmpty;
-                      return SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(0xffFF5F1F),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
+                BlocBuilder<UserBloc, UserState>(
+                  builder: (context, userState) {
+                    return BlocBuilder<CartBloc, CartState>(
+                      builder: (context, state) {
+                        if (state is CartLoaded) {
+                          // final cart = state.cartItems[index];
+                          final isCartEmpty = state.cartItems.isEmpty;
+                          final hasValidAddress =
+                              userState is UserLoaded &&
+                              userState.userData.country != null &&
+                              userState.userData.province != null &&
+                              userState.userData.city != null &&
+                              userState.userData.street != null;
+                          return SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Color(0xffFF5F1F),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                padding: EdgeInsets.symmetric(vertical: 10),
+                                disabledBackgroundColor: Color.fromARGB(
+                                  121,
+                                  255,
+                                  95,
+                                  31,
+                                ),
+                              ),
+                              // onPressed: () {
+                              //   Navigator.push(
+                              //     context,
+                              //     MaterialPageRoute(
+                              //       builder: (context) => CheckoutScreen(),
+                              //     ),
+                              //   );
+                              // },
+                              onPressed: (isCartEmpty || !hasValidAddress)
+                                  ? null
+                                  : () {
+                                      final cartItems = state.cartItems;
+
+                                      double subTotal = 0;
+
+                                      final orderItems = cartItems.map((item) {
+                                        double price = item.product.price;
+
+                                        if (item.product.discount != null &&
+                                            item.product.discount! > 0) {
+                                          price =
+                                              price -
+                                              ((price *
+                                                      item.product.discount!) /
+                                                  100);
+                                        }
+
+                                        subTotal += price * item.cart.quantity;
+
+                                        return OrderItemModel(
+                                          productId: item.product.id!,
+                                          title: item.product.title,
+                                          imagePath: item.product.imagePath,
+                                          price: price,
+                                          quantity: item.cart.quantity,
+                                          discount: item.product.discount,
+                                        );
+                                      }).toList();
+
+                                      final order = OrderModel(
+                                        totalItems: state.cartItems.length
+                                            .toDouble(),
+                                        cartItems: orderItems,
+                                        deliveryType: selectedDeliveryType,
+                                        deliveryTime: deliveryTime,
+                                        deliveryCost: deliveryCost,
+                                        paymentMethod: '',
+                                        paymentStatus: '',
+                                        total: grandTotal,
+                                      );
+                                      // final order = OrderModel(
+                                      //   items: orderItems,
+                                      //   deliveryType: selectedDeliveryType,
+                                      //   deliveryTime: deliveryTime,
+                                      //   deliveryCost: deliveryCost,
+                                      //   subTotal: subTotal,
+                                      //   grandTotal: subTotal + deliveryCost,
+                                      // );
+
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (_) =>
+                                              CheckoutScreen(order: order),
+                                        ),
+                                      );
+                                    },
+
+                              child: Text(
+                                isCartEmpty
+                                    ? 'Your cart is empty'
+                                    : "Proceed to checkout",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                             ),
-                            padding: EdgeInsets.symmetric(vertical: 10),
-                            disabledBackgroundColor: Color.fromARGB(
-                              121,
-                              255,
-                              95,
-                              31,
-                            ),
-                          ),
-                          // onPressed: () {
-                          //   Navigator.push(
-                          //     context,
-                          //     MaterialPageRoute(
-                          //       builder: (context) => CheckoutScreen(),
-                          //     ),
-                          //   );
-                          // },
-                          onPressed: isCartEmpty
-                              ? null
-                              : () {
-                                  final cartItems = state.cartItems;
-
-                                  double subTotal = 0;
-
-                                  final orderItems = cartItems.map((item) {
-                                    double price = item.product.price;
-
-                                    if (item.product.discount != null &&
-                                        item.product.discount! > 0) {
-                                      price =
-                                          price -
-                                          ((price * item.product.discount!) /
-                                              100);
-                                    }
-
-                                    subTotal += price * item.cart.quantity;
-
-                                    return OrderItemModel(
-                                      productId: item.product.id!,
-                                      title: item.product.title,
-                                      imagePath: item.product.imagePath,
-                                      price: price,
-                                      quantity: item.cart.quantity,
-                                      discount: item.product.discount,
-                                    );
-                                  }).toList();
-
-                                  final order = OrderModel(
-                                    totalItems: state.cartItems.length
-                                        .toDouble(),
-                                    cartItems: orderItems,
-                                    deliveryType: selectedDeliveryType,
-                                    deliveryTime: deliveryTime,
-                                    deliveryCost: deliveryCost,
-                                    paymentMethod: '',
-                                    paymentStatus: '',
-                                    total: grandTotal,
-                                  );
-                                  // final order = OrderModel(
-                                  //   items: orderItems,
-                                  //   deliveryType: selectedDeliveryType,
-                                  //   deliveryTime: deliveryTime,
-                                  //   deliveryCost: deliveryCost,
-                                  //   subTotal: subTotal,
-                                  //   grandTotal: subTotal + deliveryCost,
-                                  // );
-
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_) =>
-                                          CheckoutScreen(order: order),
-                                    ),
-                                  );
-                                },
-
-                          child: Text(
-                            isCartEmpty
-                                ? 'Your cart is empty'
-                                : "Proceed to checkout",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      );
-                    }
-                    return SizedBox();
+                          );
+                        }
+                        return SizedBox();
+                      },
+                    );
                   },
                 ),
                 SizedBox(height: 25),
