@@ -42,7 +42,7 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
                 }
                 if (state is OrderLoaded) {
                   if (state.orders.isEmpty) {
-                    return Center(child: Text("No favorites yet."));
+                    return Center(child: Text("No orders yet."));
                   }
                   return Expanded(
                     child: ListView.separated(
@@ -73,10 +73,10 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "Order Date: ${'N/A'}",
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                order.createdAt != null
+                                    ? "${order.createdAt!.day}/${order.createdAt!.month}/${order.createdAt!.year}"
+                                    : "Date Unknown",
+                                style: TextStyle(color: Colors.grey),
                               ),
                               const Divider(),
 

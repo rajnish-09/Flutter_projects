@@ -185,6 +185,7 @@ class FirebaseService {
     final response = await userCollection
         .doc(user!.uid)
         .collection('Order')
+        .orderBy('created_at', descending: true)
         .get();
     return response.docs
         .map((e) => OrderModel.fromJson(e.data(), e.id))

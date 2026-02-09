@@ -450,7 +450,10 @@ class _CartScreenState extends State<CartScreen> {
                     double totalSum = 0;
                     if (state is CartLoaded) {
                       final isCartEmpty = state.cartItems.isEmpty;
-                      deliveryCost = isCartEmpty ? 0 : deliveryCost;
+                      double currentDeliveryCost = 0;
+                      deliveryCost = isCartEmpty
+                          ? currentDeliveryCost
+                          : deliveryCost;
                       totalSum = state.cartItems.fold(0, (sum, item) {
                         double price = item.product.price;
                         if (item.product.discount != null &&
