@@ -6,7 +6,6 @@ class OrderItemModel {
   final double? discount;
   final int quantity;
   // final String categoryId;
- 
 
   OrderItemModel({
     required this.productId,
@@ -16,8 +15,17 @@ class OrderItemModel {
     this.discount,
     required this.quantity,
     // required this.categoryId,
-     
   });
+
+  factory OrderItemModel.fromJson(Map<String, dynamic> json) {
+    return OrderItemModel(
+      productId: json['productId'],
+      title: json['title'],
+      imagePath: json['imagePath'],
+      price: json['price'],
+      quantity: json['quantity'],
+    );
+  }
 
   Map<String, dynamic> toJson() => {
     'productId': productId,
@@ -26,7 +34,7 @@ class OrderItemModel {
     'price': price,
     'discount': discount,
     'quantity': quantity,
+
     // 'categoryId': categoryId,
-     
   };
 }

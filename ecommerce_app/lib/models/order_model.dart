@@ -11,6 +11,7 @@ class OrderModel {
   // final String deliveryAddress;
   final String paymentMethod, paymentStatus;
   final double total;
+  final String orderStatus;
 
   OrderModel({
     this.id,
@@ -22,6 +23,7 @@ class OrderModel {
     required this.paymentMethod,
     required this.paymentStatus,
     required this.total,
+    this.orderStatus = 'Pending',
   });
 
   OrderModel copyWith({
@@ -39,6 +41,7 @@ class OrderModel {
       total: total,
       paymentMethod: paymentMethod ?? this.paymentMethod,
       paymentStatus: paymentStatus ?? this.paymentStatus,
+      orderStatus: orderStatus,
     );
   }
 
@@ -46,15 +49,22 @@ class OrderModel {
     return OrderModel(
       id: id,
       totalItems: json['totalItems'],
-      cartItems: json['cartItems'],
+      cartItems: (json['cartItems'] as List)
+          .map((e) => OrderItemModel.fromJson(e))
+          .toList(),
       deliveryType: json['deliveryType'],
       deliveryTime: json['deliveryTime'],
       deliveryCost: json['deliveryCost'],
       paymentMethod: json['paymentMethod'],
       paymentStatus: json['paymentStatus'],
       total: json['total'],
+      orderStatus: json['orderStatus'],
     );
   }
+
+  // (json['cartItems'] as List<dynamic>)
+  //       .map((item) => OrderItemModel.fromJson(item as Map<String, dynamic>))
+  //       .toList(),
 
   Map<String, dynamic> toJson() => {
     'totalItems': totalItems,
@@ -66,5 +76,6 @@ class OrderModel {
     'paymentStatus': paymentStatus,
     'total': total,
     'createdAt': DateTime.now().toIso8601String(),
+    'orderStatus': orderStatus,
   };
 }

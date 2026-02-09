@@ -180,6 +180,17 @@ class FirebaseService {
     await userCollection.doc(user!.uid).collection('Order').add(order.toJson());
   }
 
+  Future<List<OrderModel>> getOrderItems() async {
+    final User? user = FirebaseAuth.instance.currentUser;
+    final response = await userCollection
+        .doc(user!.uid)
+        .collection('Order')
+        .get();
+    return response.docs
+        .map((e) => OrderModel.fromJson(e.data(), e.id))
+        .toList();
+  }
+
   //-----------------------Favorite--------------------------------------------
   Future<void> addFavoriteProduct(FavoriteModel favProduct) async {
     final User? user = FirebaseAuth.instance.currentUser;

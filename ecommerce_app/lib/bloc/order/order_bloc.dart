@@ -12,5 +12,15 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       await firebaseService.clearCart();
       emit(OrderSuccess(msg: 'Products ordered successfully'));
     });
+
+    on<FetchOrders>((event, emit) async {
+      try {
+        emit(OrderLoading());
+        final orders = await firebaseService.getOrderItems();
+        emit(OrderLoaded(orders: orders));
+      } catch (e) {
+        print(e.toString());
+      }
+    });
   }
 }

@@ -6,3 +6,5 @@ class PlaceOrder extends OrderEvent {
   final OrderModel orders;
   PlaceOrder({required this.orders});
 }
+
+class FetchOrders extends OrderEvent {}
