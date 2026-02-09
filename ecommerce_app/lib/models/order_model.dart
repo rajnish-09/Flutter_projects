@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecommerce_app/models/cart_item_view_model.dart';
 import 'package:ecommerce_app/models/order_item_model.dart';
 import 'package:ecommerce_app/models/product_model.dart';
@@ -25,7 +26,7 @@ class OrderModel {
     required this.paymentStatus,
     required this.total,
     this.orderStatus = 'Pending',
-    this.createdAt
+    this.createdAt,
   });
 
   OrderModel copyWith({
@@ -44,7 +45,7 @@ class OrderModel {
       paymentMethod: paymentMethod ?? this.paymentMethod,
       paymentStatus: paymentStatus ?? this.paymentStatus,
       orderStatus: orderStatus,
-      createdAt: createdAt
+      createdAt: createdAt,
     );
   }
 
@@ -62,8 +63,8 @@ class OrderModel {
       paymentStatus: json['paymentStatus'],
       total: json['total'],
       orderStatus: json['orderStatus'],
-      createdAt: json['createdAt'] != null 
-          ? DateTime.parse(json['createdAt']) 
+      createdAt: json['createdAt'] != null
+          ? (json['createdAt'] as Timestamp).toDate()
           : null,
     );
   }
@@ -77,7 +78,7 @@ class OrderModel {
     'paymentMethod': paymentMethod,
     'paymentStatus': paymentStatus,
     'total': total,
-    'createdAt': DateTime.now().toIso8601String(),
+    'createdAt': FieldValue.serverTimestamp(),
     'orderStatus': orderStatus,
   };
 }

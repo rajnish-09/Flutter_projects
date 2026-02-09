@@ -7,6 +7,7 @@ import 'package:ecommerce_app/bloc/order/order_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 class OrderHistoryScreen extends StatefulWidget {
   const OrderHistoryScreen({super.key});
@@ -73,12 +74,13 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                order.createdAt != null
-                                    ? "${order.createdAt!.day}/${order.createdAt!.month}/${order.createdAt!.year}"
-                                    : "Date Unknown",
-                                style: TextStyle(color: Colors.grey),
+                                "Ordered on ${DateFormat('dd MMM yyyy • hh:mm a').format(order.createdAt!)}",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.grey,
+                                ),
                               ),
-                              const Divider(),
+                              Divider(),
 
                               // INSTEAD OF LISTVIEW: Use Column + Map
                               Column(
