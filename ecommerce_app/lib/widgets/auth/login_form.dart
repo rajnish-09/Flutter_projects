@@ -1,9 +1,11 @@
 import 'package:ecommerce_app/bloc/auth/auth_bloc.dart';
 import 'package:ecommerce_app/bloc/auth/auth_event.dart';
 import 'package:ecommerce_app/bloc/auth/auth_state.dart';
+import 'package:ecommerce_app/screens/admin_module/admin_dashboard.dart';
 import 'package:ecommerce_app/screens/login_password_screen.dart';
 import 'package:ecommerce_app/screens/signup_screen.dart';
 import 'package:ecommerce_app/screens/user_module/main_navigation_screen.dart';
+import 'package:ecommerce_app/service/firebase_service.dart';
 import 'package:ecommerce_app/widgets/input_textformfield.dart';
 import 'package:ecommerce_app/widgets/show_snackbar.dart';
 import 'package:ecommerce_app/widgets/submit_button.dart';
@@ -22,6 +24,26 @@ class _LoginFormState extends State<LoginForm> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  FirebaseService firebaseService = FirebaseService();
+
+  void checkUserRole() async {
+    final user = await firebaseService.getUser();
+    
+    if (user.role == 'user') {
+      if (!mounted) return;
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => MainNavigationScreen()),
+      );
+    } else if (user.role == 'admin') {
+      if (!mounted) return;
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => AdminDashboard()),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -31,10 +53,11 @@ class _LoginFormState extends State<LoginForm> {
       child: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is LoginSuccess) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => MainNavigationScreen()),
-            );
+            // Navigator.pushReplacement(
+            //   context,
+            //   MaterialPageRoute(builder: (context) => MainNavigationScreen()),
+            // );
+            checkUserRole();
           }
         },
         child: Form(
