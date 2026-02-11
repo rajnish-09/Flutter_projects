@@ -8,6 +8,7 @@ import 'package:ecommerce_app/models/category_model.dart';
 import 'package:ecommerce_app/models/product_model.dart';
 import 'package:ecommerce_app/models/top_products_model.dart';
 import 'package:ecommerce_app/screens/user_module/cart_screen.dart';
+import 'package:ecommerce_app/screens/user_module/product_list_screen.dart';
 import 'package:ecommerce_app/widgets/bottom_navigation_bar.dart';
 import 'package:ecommerce_app/widgets/carousel_slider.dart';
 import 'package:ecommerce_app/widgets/category_container.dart';
@@ -26,15 +27,6 @@ class ShopScreen extends StatefulWidget {
 }
 
 class _ShopScreenState extends State<ShopScreen> {
-  final searchController = TextEditingController();
-  // Product product = Product();
-
-  @override
-  void dispose() {
-    super.dispose();
-    searchController.dispose();
-  }
-
   @override
   void initState() {
     super.initState();
@@ -51,41 +43,14 @@ class _ShopScreenState extends State<ShopScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                children: [
-                  Text(
-                    "Shop",
-                    style: GoogleFonts.raleway(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(width: 10),
-                  Expanded(
-                    child: TextFormField(
-                      style: GoogleFonts.raleway(),
-                      controller: searchController,
-                      decoration: InputDecoration(
-                        suffixIcon: Padding(
-                          padding: EdgeInsets.only(right: 15),
-                          child: IconButton(
-                            onPressed: () {},
-                            icon: Icon(Icons.camera_alt, size: 30),
-                          ),
-                        ),
-                        isDense: true,
-                        hintText: 'Search',
-                        enabledBorder: searchTextFormFieldStyle(),
-                        filled: true,
-                        fillColor: Color.fromRGBO(255, 255, 255, 1),
-                        focusedBorder: searchTextFormFieldStyle(),
-                        errorBorder: searchTextFormFieldStyle(),
-                        focusedErrorBorder: searchTextFormFieldStyle(),
-                      ),
-                    ),
-                  ),
-                ],
+              Text(
+                "ShopEase",
+                style: GoogleFonts.raleway(
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
+              SizedBox(width: 10),
               SizedBox(height: 20),
               CarouselSliderwidget(),
               SizedBox(height: 15),
@@ -160,12 +125,40 @@ class _ShopScreenState extends State<ShopScreen> {
 
               SizedBox(height: 20),
 
-              Text(
-                "Just for you",
-                style: GoogleFonts.raleway(
-                  fontSize: 21,
-                  fontWeight: FontWeight.bold,
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Just for you",
+                    style: GoogleFonts.raleway(
+                      fontSize: 21,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ProductListScreen(),
+                        ),
+                      );
+                    },
+                    child: Row(
+                      children: [
+                        Text(
+                          "View more",
+                          style: TextStyle(color: Colors.blue.shade300),
+                        ),
+                        Icon(
+                          Icons.arrow_forward_ios_sharp,
+                          color: Colors.blue.shade300,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
               SizedBox(height: 15),
               BlocBuilder<ProductBloc, ProductState>(
@@ -175,6 +168,9 @@ class _ShopScreenState extends State<ShopScreen> {
                   }
                   if (state is ProductLoaded) {
                     final products = state.products;
+                    final displayCount = products.length > 10
+                        ? 10
+                        : products.length;
                     if (products.isEmpty) {
                       return Center(child: Text("No products yet."));
                     }
@@ -182,7 +178,7 @@ class _ShopScreenState extends State<ShopScreen> {
                       child: GridView.builder(
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
-                        itemCount: products.length,
+                        itemCount: displayCount,
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2, // number of items per row
                           crossAxisSpacing:
