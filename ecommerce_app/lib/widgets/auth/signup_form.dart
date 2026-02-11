@@ -150,6 +150,7 @@ class _SignupFormState extends State<SignupForm> {
                       phone: phoneController.text.trim(),
                       email: emailController.text.trim(),
                       password: passwordController.text.trim(),
+                      role: 'user'
                     );
                     context.read<AuthBloc>().add(SignupEvent(user: user));
                   },

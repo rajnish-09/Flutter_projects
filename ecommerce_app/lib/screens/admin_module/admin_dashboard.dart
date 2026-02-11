@@ -1,3 +1,5 @@
+import 'package:ecommerce_app/bloc/auth/auth_bloc.dart';
+import 'package:ecommerce_app/bloc/auth/auth_event.dart';
 import 'package:ecommerce_app/bloc/category/category_bloc.dart';
 import 'package:ecommerce_app/bloc/category/category_event.dart';
 import 'package:ecommerce_app/bloc/category/category_state.dart';
@@ -256,6 +258,23 @@ class _AdminDashboardState extends State<AdminDashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(),
+      endDrawer: Drawer(
+        child: SafeArea(
+          child: Column(
+            children: [
+              DrawerHeader(child: SizedBox()),
+              ListTile(
+                leading: Icon(Icons.logout),
+                title: Text("Logout"),
+                onTap: () {
+                  context.read<AuthBloc>().add(LogoutEvent());
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
       body: RefreshIndicator(
         onRefresh: () async {
           context.read<ProductBloc>().add(FetchProduct());
@@ -268,7 +287,6 @@ class _AdminDashboardState extends State<AdminDashboard> {
               padding: const EdgeInsets.all(20),
               child: Column(
                 children: [
-                  SizedBox(height: 20),
                   // ElevatedButton(
                   //   style: ElevatedButton.styleFrom(
                   //     shape: RoundedRectangleBorder(),

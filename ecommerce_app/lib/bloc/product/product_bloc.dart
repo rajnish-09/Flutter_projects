@@ -14,6 +14,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
         final products = await firebaseService.getProducts();
         emit(ProductLoaded(products: products));
       } catch (e) {
+        print(e.toString());
         emit(AddProductFailed(errorMsg: "Failed to add product"));
       }
     });

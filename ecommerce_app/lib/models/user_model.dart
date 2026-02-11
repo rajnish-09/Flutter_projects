@@ -4,7 +4,7 @@ class UserModel {
   final String name, phone, email;
   final String? uid, password;
   final String? country, province, city, street;
-  final String role = 'admin';
+  final String? role;
   final String? imagePath;
 
   UserModel({
@@ -12,6 +12,7 @@ class UserModel {
     required this.phone,
     this.uid,
     required this.email,
+    this.role,
     this.country,
     this.province,
     this.city,
@@ -31,6 +32,7 @@ class UserModel {
       city: json['city'],
       street: json['street'],
       imagePath: json['imagePath'],
+      role: json['role'],
     );
   }
 

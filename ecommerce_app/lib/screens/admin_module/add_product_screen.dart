@@ -11,6 +11,7 @@ import 'package:ecommerce_app/models/product_model.dart';
 import 'package:ecommerce_app/service/firebase_service.dart';
 import 'package:ecommerce_app/widgets/input_textformfield.dart';
 import 'package:ecommerce_app/widgets/loading_dialog.dart';
+import 'package:ecommerce_app/widgets/show_snackbar.dart';
 import 'package:ecommerce_app/widgets/submit_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -71,6 +72,13 @@ class _AddUpdateProductScreenState extends State<AddUpdateProductScreen> {
             msg: "Product Saved!",
           ); // Toasts often work better across screen transitions
           Navigator.pop(context);
+        }
+        if (state is AddProductFailed) {
+          showSnackBar(
+            context: context,
+            msg: state.errorMsg,
+            backgroundColor: Colors.red,
+          );
         }
         if (state is EditProductSuccess) {
           ScaffoldMessenger.of(

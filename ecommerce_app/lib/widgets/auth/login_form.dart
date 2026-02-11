@@ -28,7 +28,7 @@ class _LoginFormState extends State<LoginForm> {
 
   void checkUserRole() async {
     final user = await firebaseService.getUser();
-    
+
     if (user.role == 'user') {
       if (!mounted) return;
       Navigator.pushReplacement(

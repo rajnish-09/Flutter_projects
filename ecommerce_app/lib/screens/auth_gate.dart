@@ -1,7 +1,10 @@
 import 'package:ecommerce_app/screens/login_screen.dart';
 import 'package:ecommerce_app/screens/user_module/main_navigation_screen.dart';
+import 'package:ecommerce_app/service/firebase_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+import 'admin_module/admin_dashboard.dart' show AdminDashboard;
 
 class AuthGate extends StatefulWidget {
   const AuthGate({super.key});
@@ -11,15 +14,33 @@ class AuthGate extends StatefulWidget {
 }
 
 class _AuthGateState extends State<AuthGate> {
+  FirebaseService firebaseService = FirebaseService();
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<User?>(
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return const MainNavigationScreen();
+        if (!snapshot.hasData) {
+          return LoginScreen();
         }
-        return const LoginScreen();
+        return FutureBuilder(
+          future: firebaseService.getUser(),
+          builder: (context, roleSnapshot) {
+            if (roleSnapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            }
+            if (roleSnapshot.hasData) {
+              final userRole = roleSnapshot.data!.role;
+              if (userRole == 'user') {
+                return MainNavigationScreen();
+              } else if (userRole == 'admin') {
+                return AdminDashboard();
+              }
+            }
+            return LoginScreen();
+          },
+        );
       },
     );
   }
