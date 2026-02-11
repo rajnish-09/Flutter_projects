@@ -15,6 +15,7 @@ class ProductListScreen extends StatefulWidget {
 
 class _ProductListScreenState extends State<ProductListScreen> {
   final searchController = TextEditingController();
+  String searchItem = '';
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +27,11 @@ class _ProductListScreenState extends State<ProductListScreen> {
             child: Column(
               children: [
                 TextFormField(
+                  onChanged: (value) {
+                    setState(() {
+                      searchItem = value;
+                    });
+                  },
                   style: GoogleFonts.raleway(),
                   controller: searchController,
                   decoration: InputDecoration(
@@ -47,15 +53,23 @@ class _ProductListScreenState extends State<ProductListScreen> {
                       return Center(child: CircularProgressIndicator());
                     }
                     if (state is ProductLoaded) {
+                      final filterProduct =
+                          (searchItem == '' && searchItem.isEmpty)
+                          ? state.products
+                          : state.products.where((product) {
+                              return product.title.toLowerCase().contains(
+                                searchItem.toLowerCase(),
+                              );
+                            }).toList();
                       final products = state.products;
-                      if (products.isEmpty) {
-                        return Center(child: Text("No products yet."));
+                      if (filterProduct.isEmpty) {
+                        return Center(child: Text("No products."));
                       }
                       return SizedBox(
                         child: GridView.builder(
                           shrinkWrap: true,
                           physics: NeverScrollableScrollPhysics(),
-                          itemCount: products.length,
+                          itemCount: filterProduct.length,
                           gridDelegate:
                               SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 2, // number of items per row
@@ -67,7 +81,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
                                     0.55, // width / height ratio of each item
                               ),
                           itemBuilder: (context, index) {
-                            final product = products[index];
+                            final product = filterProduct[index];
                             return ProductDisplayContainer(prod: product);
                           },
                         ),
