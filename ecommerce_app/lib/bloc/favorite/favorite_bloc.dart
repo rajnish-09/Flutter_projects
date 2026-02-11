@@ -10,8 +10,12 @@ class FavoriteBloc extends Bloc<FavoriteEvent, FavoriteState> {
       try {
         if (event.isAdding) {
           await firebaseService.addFavoriteProduct(event.favProductId);
+          final fav = await firebaseService.getFavoriteProducts();
+          emit(FavoriteLoaded(favorites: fav));
         } else {
           await firebaseService.removeFavorite(event.favProductId);
+          final fav = await firebaseService.getFavoriteProducts();
+          emit(FavoriteLoaded(favorites: fav));
         }
       } catch (e) {
         throw Exception(e.toString());

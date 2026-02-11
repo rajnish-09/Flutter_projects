@@ -1,6 +1,8 @@
 import 'package:ecommerce_app/bloc/category/category_bloc.dart';
 import 'package:ecommerce_app/bloc/category/category_event.dart';
 import 'package:ecommerce_app/bloc/category/category_state.dart';
+import 'package:ecommerce_app/bloc/favorite/favorite_bloc.dart';
+import 'package:ecommerce_app/bloc/favorite/favorite_event.dart';
 import 'package:ecommerce_app/bloc/product/product_bloc.dart';
 import 'package:ecommerce_app/bloc/product/product_event.dart';
 import 'package:ecommerce_app/bloc/product/product_state.dart';
@@ -32,6 +34,7 @@ class _ShopScreenState extends State<ShopScreen> {
     super.initState();
     context.read<CategoryBloc>().add(FetchCategories());
     context.read<ProductBloc>().add(FetchProduct());
+    context.read<FavoriteBloc>().add((LoadFavorites()));
   }
 
   @override
