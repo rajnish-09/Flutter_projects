@@ -21,3 +21,4 @@ class DeleteProduct extends ProductEvent {
   final ProductModel product;
   DeleteProduct({required this.product});
 }
+

@@ -61,7 +61,6 @@ class _ProductListScreenState extends State<ProductListScreen> {
                                 searchItem.toLowerCase(),
                               );
                             }).toList();
-                      // final products = state.products;
                       if (filterProduct.isEmpty) {
                         return Center(child: Text("No products."));
                       }
