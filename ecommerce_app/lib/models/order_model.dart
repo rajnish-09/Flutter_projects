@@ -5,6 +5,7 @@ import 'package:ecommerce_app/models/product_model.dart';
 
 class OrderModel {
   final String? id;
+  final String userId;
   final double totalItems;
   List<OrderItemModel> cartItems;
   final String deliveryType, deliveryTime;
@@ -17,6 +18,7 @@ class OrderModel {
 
   OrderModel({
     this.id,
+    required this.userId,
     required this.totalItems,
     required this.cartItems,
     required this.deliveryType,
@@ -36,6 +38,7 @@ class OrderModel {
   }) {
     return OrderModel(
       id: id ?? this.id,
+      userId: userId,
       totalItems: totalItems,
       cartItems: cartItems,
       deliveryType: deliveryType,
@@ -52,15 +55,16 @@ class OrderModel {
   factory OrderModel.fromJson(Map<String, dynamic> json, String id) {
     return OrderModel(
       id: id,
+      userId: json['userId'] ?? '',
       totalItems: json['totalItems'],
       cartItems: (json['cartItems'] as List)
           .map((e) => OrderItemModel.fromJson(e))
           .toList(),
-      deliveryType: json['deliveryType'],
-      deliveryTime: json['deliveryTime'],
-      deliveryCost: json['deliveryCost'],
-      paymentMethod: json['paymentMethod'],
-      paymentStatus: json['paymentStatus'],
+      deliveryType: json['deliveryType'] ?? '',
+      deliveryTime: json['deliveryTime'] ?? '',
+      deliveryCost: json['deliveryCost'] ?? '',
+      paymentMethod: json['paymentMethod'] ?? '',
+      paymentStatus: json['paymentStatus'] ?? '',
       total: json['total'],
       orderStatus: json['orderStatus'],
       createdAt: json['createdAt'] != null
@@ -70,6 +74,7 @@ class OrderModel {
   }
 
   Map<String, dynamic> toJson() => {
+    'userId': userId,
     'totalItems': totalItems,
     'cartItems': cartItems.map((e) => e.toJson()).toList(),
     'deliveryType': deliveryType,
@@ -82,5 +87,3 @@ class OrderModel {
     'orderStatus': orderStatus,
   };
 }
-
-

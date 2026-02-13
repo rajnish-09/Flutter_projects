@@ -37,7 +37,7 @@ class _LoginFormState extends State<LoginForm> {
       );
     } else if (user.role == 'admin') {
       if (!mounted) return;
-      Navigator.push(
+      Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => AdminDashboard()),
       );

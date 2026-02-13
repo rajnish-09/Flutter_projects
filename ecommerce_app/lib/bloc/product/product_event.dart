@@ -7,10 +7,7 @@ class AddProduct extends ProductEvent {
   AddProduct({required this.product});
 }
 
-class FetchProduct extends ProductEvent {
-  // final ProductModel products;
-  // FetchProduct({required this.products});
-}
+class FetchProduct extends ProductEvent {}
 
 class EditProduct extends ProductEvent {
   final ProductModel product;
@@ -21,4 +18,3 @@ class DeleteProduct extends ProductEvent {
   final ProductModel product;
   DeleteProduct({required this.product});
 }
-

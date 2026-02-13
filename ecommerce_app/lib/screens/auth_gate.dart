@@ -28,7 +28,7 @@ class _AuthGateState extends State<AuthGate> {
           future: firebaseService.getUser(),
           builder: (context, roleSnapshot) {
             if (roleSnapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
+              return Scaffold(body: Center(child: CircularProgressIndicator()));
             }
             if (roleSnapshot.hasData) {
               final userRole = roleSnapshot.data!.role;

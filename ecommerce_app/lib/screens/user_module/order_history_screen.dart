@@ -35,6 +35,7 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
               "Orders",
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
             ),
+
             SizedBox(height: 20),
             BlocBuilder<OrderBloc, OrderState>(
               builder: (context, state) {

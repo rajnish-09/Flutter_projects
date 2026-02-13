@@ -14,8 +14,7 @@ class FirebaseService {
     'categories',
   );
   final productCollection = FirebaseFirestore.instance.collection('Products');
-  // final cartCollection = FirebaseFirestore.instance.collection('Cart');
-  // final orderCollection = FirebaseFirestore.instance.collection('Orders');
+  final orderCollection = FirebaseFirestore.instance.collection('Orders');
   final userCollection = FirebaseFirestore.instance.collection(
     'Ecommerce_users',
   );
@@ -70,7 +69,7 @@ class FirebaseService {
     await userCollection.doc(user!.uid).update(updatedUserData.toJson());
   }
 
-   Future<UserModel> getUser() async {
+  Future<UserModel> getUser() async {
     try {
       final User? user = FirebaseAuth.instance.currentUser;
       final response = await userCollection.doc(user!.uid).get();
@@ -189,15 +188,18 @@ class FirebaseService {
   //----------------Order-----------------------------
 
   Future<void> placeOrder(OrderModel order) async {
-    final User? user = FirebaseAuth.instance.currentUser;
-    await userCollection.doc(user!.uid).collection('Order').add(order.toJson());
+    // final User? user = FirebaseAuth.instance.currentUser;
+    await orderCollection.add(order.toJson());
+    // await userCollection.doc(user!.uid).collection('Order').add(order.toJson());
   }
 
   Future<List<OrderModel>> getOrderItems() async {
     final User? user = FirebaseAuth.instance.currentUser;
-    final response = await userCollection
-        .doc(user!.uid)
-        .collection('Order')
+    if (user == null) {
+      return [];
+    }
+    final response = await orderCollection
+        .where('userId', isEqualTo: user.uid)
         .orderBy('createdAt', descending: true)
         .get();
     return response.docs

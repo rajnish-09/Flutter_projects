@@ -13,6 +13,7 @@ import 'package:ecommerce_app/bloc/uploadImage/upload_state.dart';
 import 'package:ecommerce_app/models/category_model.dart';
 import 'package:ecommerce_app/models/product_model.dart';
 import 'package:ecommerce_app/screens/admin_module/add_product_screen.dart';
+import 'package:ecommerce_app/screens/admin_module/orders_screen.dart';
 import 'package:ecommerce_app/screens/login_screen.dart';
 import 'package:ecommerce_app/service/firebase_service.dart';
 import 'package:ecommerce_app/service/image_service.dart';
@@ -280,6 +281,16 @@ class _AdminDashboardState extends State<AdminDashboard> {
                   title: Text("Logout"),
                   onTap: () {
                     context.read<AuthBloc>().add(LogoutEvent());
+                  },
+                ),
+                ListTile(
+                  leading: Icon(Icons.shopping_bag),
+                  title: Text("Orders"),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => OrdersScreen()),
+                    );
                   },
                 ),
               ],

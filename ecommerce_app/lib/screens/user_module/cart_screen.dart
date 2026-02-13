@@ -13,6 +13,7 @@ import 'package:ecommerce_app/models/order_model.dart';
 import 'package:ecommerce_app/screens/user_module/checkout_screen.dart';
 import 'package:ecommerce_app/widgets/delivery_container.dart';
 import 'package:ecommerce_app/widgets/show_toast.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -593,8 +594,11 @@ class _CartScreenState extends State<CartScreen> {
                                           discount: item.product.discount,
                                         );
                                       }).toList();
+                                      final User? user =
+                                          FirebaseAuth.instance.currentUser;
 
                                       final order = OrderModel(
+                                        userId: user!.uid,
                                         totalItems: state.cartItems.length
                                             .toDouble(),
                                         cartItems: orderItems,
