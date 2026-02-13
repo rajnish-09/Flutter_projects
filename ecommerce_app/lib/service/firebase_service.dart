@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecommerce_app/models/cart_item_view_model.dart';
 import 'package:ecommerce_app/models/cart_model.dart';
@@ -58,6 +60,14 @@ class FirebaseService {
   Future<UserModel> getUserData() async {
     final User? user = FirebaseAuth.instance.currentUser;
     final response = await userCollection.doc(user!.uid).get();
+    return UserModel.fromJson(
+      response.data() as Map<String, dynamic>,
+      response.id,
+    );
+  }
+
+  Future<UserModel> getOrderUserData(String uid) async {
+    final response = await userCollection.doc(uid).get();
     return UserModel.fromJson(
       response.data() as Map<String, dynamic>,
       response.id,
@@ -205,6 +215,39 @@ class FirebaseService {
     return response.docs
         .map((e) => OrderModel.fromJson(e.data(), e.id))
         .toList();
+  }
+
+  Future<List<OrderModel>> getAllOrders() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return [];
+
+    // Fetch role from user document
+    final userDoc = await FirebaseFirestore.instance
+        .collection('Ecommerce_users')
+        .doc(user.uid)
+        .get();
+
+    final role = userDoc.data()?['role'] ?? 'user';
+
+    Query query = orderCollection.orderBy('createdAt', descending: true);
+
+    if (role != 'admin') {
+      // Normal user — fetch only their orders
+      query = query.where('userId', isEqualTo: user.uid);
+    }
+
+    final response = await query.get();
+
+    return response.docs
+        .map((e) => OrderModel.fromJson(e.data() as Map<String, dynamic>, e.id))
+        .toList();
+
+    // final response = await orderCollection
+    //     .orderBy('createdAt', descending: true)
+    //     .get();
+    // return response.docs
+    //     .map((e) => OrderModel.fromJson(e.data(), e.id))
+    //     .toList();
   }
 
   //-----------------------Favorite--------------------------------------------

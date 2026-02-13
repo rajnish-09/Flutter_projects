@@ -8,3 +8,5 @@ class PlaceOrder extends OrderEvent {
 }
 
 class FetchOrders extends OrderEvent {}
+
+class FetchAllOrders extends OrderEvent{}
