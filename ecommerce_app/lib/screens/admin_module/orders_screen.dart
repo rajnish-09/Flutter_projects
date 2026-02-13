@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecommerce_app/bloc/order/order_bloc.dart';
 import 'package:ecommerce_app/bloc/order/order_event.dart';
 import 'package:ecommerce_app/bloc/order/order_state.dart';
@@ -14,6 +15,7 @@ class OrdersScreen extends StatefulWidget {
 }
 
 class _OrdersScreenState extends State<OrdersScreen> {
+  FirebaseService firebaseService = FirebaseService();
   @override
   void initState() {
     super.initState();
@@ -33,48 +35,76 @@ class _OrdersScreenState extends State<OrdersScreen> {
                 return Center(child: CircularProgressIndicator());
               }
               if (state is AllOrdersLoaded) {
-                return Expanded(
-                  child: ListView.separated(
-                    separatorBuilder: (context, index) {
-                      return SizedBox(height: 10);
-                    },
-                    itemCount: state.orders.length,
-                    itemBuilder: (context, index) {
-                      final order = state.orders[index];
-                      return Container(
-                        padding: EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey.shade400),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  DateFormat(
-                                    'dd MMM yyyy • hh:mm a',
-                                  ).format(order.order.createdAt!),
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.grey,
+                return ListView.separated(
+                  separatorBuilder: (context, index) {
+                    return SizedBox(height: 10);
+                  },
+                  itemCount: state.orders.length,
+                  itemBuilder: (context, index) {
+                    final order = state.orders[index];
+                
+                    return Container(
+                      padding: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey.shade400),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                DateFormat(
+                                  'dd MMM yyyy • hh:mm a',
+                                ).format(order.order.createdAt!),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                              Text(
+                                order.user.name,
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              Text(order.user.email),
+                              DropdownButton<String>(
+                                value: order.order.orderStatus,
+                                items: [
+                                  DropdownMenuItem(
+                                    value: 'Pending',
+                                    child: Text("Pending"),
                                   ),
-                                ),
-                                Text(
-                                  order.user.name,
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                                Text(order.user.email),
-                              ],
-                            ),
-                            Text(order.order.orderStatus),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
+                                  DropdownMenuItem(
+                                    value: 'Shipped',
+                                    child: Text("Shipped"),
+                                  ),
+                                  DropdownMenuItem(
+                                    value: 'Delivered',
+                                    child: Text("Delivered"),
+                                  ),
+                                ],
+                                onChanged: (value) async {
+                                  if (value != null) {
+                                    firebaseService.updateOrderStatus(
+                                      order.order.id!,
+                                      value,
+                                    );
+                                    setState(() {
+                                      order.order.orderStatus = value;
+                                    });
+                                  }
+                                },
+                              ),
+                            ],
+                          ),
+                
+                          // Text(order.order.orderStatus),
+                        ],
+                      ),
+                    );
+                  },
                 );
               }
               return Text("TEst");

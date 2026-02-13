@@ -261,7 +261,9 @@ class _AdminDashboardState extends State<AdminDashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text("ShopEase", style: TextStyle(fontWeight: FontWeight.bold)),
+      ),
       endDrawer: Drawer(
         child: SafeArea(
           child: BlocListener<AuthBloc, AuthState>(

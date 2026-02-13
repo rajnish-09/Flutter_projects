@@ -13,7 +13,7 @@ class OrderModel {
   // final String deliveryAddress;
   final String paymentMethod, paymentStatus;
   final double total;
-  final String orderStatus;
+  String orderStatus;
   final DateTime? createdAt;
 
   OrderModel({

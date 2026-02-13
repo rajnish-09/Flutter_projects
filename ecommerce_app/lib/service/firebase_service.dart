@@ -250,6 +250,10 @@ class FirebaseService {
     //     .toList();
   }
 
+  Future<void> updateOrderStatus(String orderId, String newOrderStatus) async {
+    await orderCollection.doc(orderId).update({'orderStatus': newOrderStatus});
+  }
+
   //-----------------------Favorite--------------------------------------------
   Future<void> addFavoriteProduct(FavoriteModel favProduct) async {
     final User? user = FirebaseAuth.instance.currentUser;
