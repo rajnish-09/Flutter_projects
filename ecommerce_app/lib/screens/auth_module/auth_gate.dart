@@ -1,10 +1,10 @@
-import 'package:ecommerce_app/screens/login_screen.dart';
+import 'package:ecommerce_app/screens/auth_module/login/login_screen.dart';
 import 'package:ecommerce_app/screens/user_module/main_navigation_screen.dart';
 import 'package:ecommerce_app/service/firebase_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import 'admin_module/admin_dashboard.dart' show AdminDashboard;
+import '../admin_module/admin_dashboard.dart' show AdminDashboard;
 
 class AuthGate extends StatefulWidget {
   const AuthGate({super.key});

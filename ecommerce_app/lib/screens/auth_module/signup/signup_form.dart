@@ -2,7 +2,7 @@ import 'package:ecommerce_app/bloc/auth/auth_bloc.dart';
 import 'package:ecommerce_app/bloc/auth/auth_event.dart';
 import 'package:ecommerce_app/bloc/auth/auth_state.dart';
 import 'package:ecommerce_app/models/user_model.dart';
-import 'package:ecommerce_app/screens/login_screen.dart';
+import 'package:ecommerce_app/screens/auth_module/login/login_screen.dart';
 import 'package:ecommerce_app/widgets/input_textformfield.dart';
 import 'package:ecommerce_app/widgets/show_snackbar.dart';
 import 'package:ecommerce_app/widgets/submit_button.dart';

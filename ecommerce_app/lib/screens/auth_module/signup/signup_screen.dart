@@ -1,5 +1,5 @@
-import 'package:ecommerce_app/widgets/auth/signup_background.dart';
-import 'package:ecommerce_app/widgets/auth/signup_form.dart';
+import 'package:ecommerce_app/screens/auth_module/signup/signup_background.dart';
+import 'package:ecommerce_app/screens/auth_module/signup/signup_form.dart';
 import 'package:flutter/material.dart';
 
 class SignupScreen extends StatefulWidget {

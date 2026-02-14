@@ -14,7 +14,7 @@ import 'package:ecommerce_app/models/category_model.dart';
 import 'package:ecommerce_app/models/product_model.dart';
 import 'package:ecommerce_app/screens/admin_module/add_product_screen.dart';
 import 'package:ecommerce_app/screens/admin_module/orders_screen.dart';
-import 'package:ecommerce_app/screens/login_screen.dart';
+import 'package:ecommerce_app/screens/auth_module/login/login_screen.dart';
 import 'package:ecommerce_app/service/firebase_service.dart';
 import 'package:ecommerce_app/service/image_service.dart';
 import 'package:ecommerce_app/widgets/show_toast.dart';

@@ -118,14 +118,14 @@ class FirebaseService {
         .toList();
   }
 
-  Future<List<ProductModel>> getProductsByCategory(String categoryId) async {
-    final respnse = await productCollection
-        .where('categoryId', isEqualTo: categoryId)
-        .get();
-    return respnse.docs
-        .map((e) => ProductModel.fromJson(e.data(), e.id))
-        .toList();
-  }
+  // Future<List<ProductModel>> getProductsByCategory(String categoryId) async {
+  //   final respnse = await productCollection
+  //       .where('categoryId', isEqualTo: categoryId)
+  //       .get();
+  //   return respnse.docs
+  //       .map((e) => ProductModel.fromJson(e.data(), e.id))
+  //       .toList();
+  // }
 
   Future<void> editProduct(ProductModel product) async {
     await productCollection.doc(product.id).update(product.toJson());

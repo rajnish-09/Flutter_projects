@@ -1,5 +1,5 @@
-import 'package:ecommerce_app/screens/login_screen.dart';
-import 'package:ecommerce_app/screens/signup_screen.dart';
+import 'package:ecommerce_app/screens/auth_module/login/login_screen.dart';
+import 'package:ecommerce_app/screens/auth_module/signup/signup_screen.dart';
 import 'package:ecommerce_app/widgets/submit_button.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
