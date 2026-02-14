@@ -253,7 +253,15 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                                                         .add(
                                                           AddToCart(cart: cart),
                                                         );
+                                                    context
+                                                        .read<FavoriteBloc>()
+                                                        .add(
+                                                          DeleteFavorite(
+                                                            cart: cart,
+                                                          ),
+                                                        );
                                                   },
+
                                                   style: ElevatedButton.styleFrom(
                                                     shape: RoundedRectangleBorder(
                                                       borderRadius:
