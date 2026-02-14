@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:ecommerce_app/bloc/cart/cart_bloc.dart';
 import 'package:ecommerce_app/bloc/cart/cart_event.dart';
 import 'package:ecommerce_app/bloc/cart/cart_state.dart';
@@ -11,6 +13,7 @@ import 'package:ecommerce_app/bloc/user/user_state.dart';
 import 'package:ecommerce_app/models/order_item_model.dart';
 import 'package:ecommerce_app/models/order_model.dart';
 import 'package:ecommerce_app/screens/user_module/checkout_screen.dart';
+import 'package:ecommerce_app/service/khalti_service.dart';
 import 'package:ecommerce_app/widgets/delivery_container.dart';
 import 'package:ecommerce_app/widgets/show_toast.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -26,7 +29,9 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreenState extends State<CartScreen> {
+  String? pidx;
   double grandTotal = 0;
+  KhaltiServicePidx khaltiServicePidx = KhaltiServicePidx();
 
   String selectedDeliveryType = 'Standard';
   String deliveryTime = '5-7';
@@ -49,6 +54,17 @@ class _CartScreenState extends State<CartScreen> {
     getDeliveryInformation();
     context.read<UserBloc>().add(GetUser());
   }
+
+  // Future<void> getPidx() async {
+  //   final fetchedPidx = await khaltiServicePidx.getPidxFromKhalti();
+  //   if (fetchedPidx == null || fetchedPidx.isEmpty) {
+  //     print("Failed to get pidx");
+  //     return;
+  //   }
+  //   setState(() {
+  //     pidx = fetchedPidx;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -566,7 +582,11 @@ class _CartScreenState extends State<CartScreen> {
                               // },
                               onPressed: (isCartEmpty || !hasValidAddress)
                                   ? null
-                                  : () {
+                                  : () async {
+                                      final fetchedPidx =
+                                          await khaltiServicePidx
+                                              .getPidxFromKhalti();
+                                      pidx = fetchedPidx;
                                       final cartItems = state.cartItems;
 
                                       double subTotal = 0;
@@ -617,12 +637,13 @@ class _CartScreenState extends State<CartScreen> {
                                       //   subTotal: subTotal,
                                       //   grandTotal: subTotal + deliveryCost,
                                       // );
-
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (_) =>
-                                              CheckoutScreen(order: order),
+                                          builder: (_) => CheckoutScreen(
+                                            order: order,
+                                            pidx: fetchedPidx,
+                                          ),
                                         ),
                                       );
                                     },
@@ -645,6 +666,13 @@ class _CartScreenState extends State<CartScreen> {
                   },
                 ),
                 SizedBox(height: 25),
+                // ElevatedButton(
+                //   onPressed: () {
+                //     getPidx();
+                //   },
+                //   child: Text("data"),
+                // ),
+                // Text(pidx ?? 'null'),
               ],
             ),
           ),

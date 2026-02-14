@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:ecommerce_app/bloc/order/order_bloc.dart';
 import 'package:ecommerce_app/bloc/order/order_event.dart';
 import 'package:ecommerce_app/bloc/order/order_state.dart';
@@ -8,17 +10,61 @@ import 'package:ecommerce_app/widgets/delivery_container.dart';
 import 'package:ecommerce_app/widgets/show_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:khalti_checkout_flutter/khalti_checkout_flutter.dart';
 
 class CheckoutScreen extends StatefulWidget {
   final OrderModel order;
-  const CheckoutScreen({super.key, required this.order});
+  final String pidx;
+  const CheckoutScreen({super.key, required this.order, required this.pidx});
 
   @override
   State<CheckoutScreen> createState() => _CheckoutScreenState();
 }
 
 class _CheckoutScreenState extends State<CheckoutScreen> {
+  // late Future<Khalti> khalti;
   String selectedValue = '';
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  Future<void> payWithKhalti() async {
+    print("pidx ${widget.pidx}");
+    final khaltiPayConfig = KhaltiPayConfig(
+      publicKey: '4a6893e250b14e8f8303c4f45b3d1dec',
+      pidx: widget.pidx,
+      environment: Environment.test,
+    );
+    final khalti = await Khalti.init(
+      payConfig: khaltiPayConfig,
+      onPaymentResult: (paymentResult, khalti) {
+        final finalOrder = widget.order.copyWith(
+          paymentMethod: selectedValue,
+          paymentStatus: 'Completed',
+        );
+        context.read<OrderBloc>().add(PlaceOrder(orders: finalOrder));
+        khalti.close(context);
+      },
+      onMessage:
+          (
+            khalti, {
+            description,
+            statusCode,
+            event,
+            needsPaymentConfirmation,
+          }) async {
+            debugPrint(
+              'Description: $description, Status Code: $statusCode, Event: $event, NeedsPaymentConfirmation: $needsPaymentConfirmation',
+            );
+            khalti.close(context);
+          },
+      onReturn: () => debugPrint('Successfully redirected to return_url.'),
+    );
+    khalti.open(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,6 +90,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             },
             child: Column(
               children: [
+                Text(widget.pidx),
                 Text("Choose one of the following payment method:"),
                 SizedBox(height: 15),
                 GestureDetector(
@@ -150,15 +197,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         );
                         return;
                       }
-                      final finalOrder = widget.order.copyWith(
-                        paymentMethod: selectedValue,
-                        paymentStatus: selectedValue == 'cod'
-                            ? 'Pending'
-                            : 'Completed',
-                      );
-                      context.read<OrderBloc>().add(
-                        PlaceOrder(orders: finalOrder),
-                      );
+                      if (selectedValue == 'khalti') {
+                        payWithKhalti();
+                      }
                     },
                     child: Text(
                       "Place order",

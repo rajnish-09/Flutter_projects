@@ -13,6 +13,7 @@ import 'package:ecommerce_app/bloc/uploadImage/upload_state.dart';
 import 'package:ecommerce_app/models/category_model.dart';
 import 'package:ecommerce_app/models/product_model.dart';
 import 'package:ecommerce_app/screens/admin_module/add_product_screen.dart';
+import 'package:ecommerce_app/screens/admin_module/khalti_demo.dart';
 import 'package:ecommerce_app/screens/admin_module/orders_screen.dart';
 import 'package:ecommerce_app/screens/login_screen.dart';
 import 'package:ecommerce_app/service/firebase_service.dart';
@@ -292,6 +293,16 @@ class _AdminDashboardState extends State<AdminDashboard> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => OrdersScreen()),
+                    );
+                  },
+                ),
+                ListTile(
+                  leading: Icon(Icons.shopping_bag),
+                  title: Text("Khalti test"),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => KhaltiDemo()),
                     );
                   },
                 ),
