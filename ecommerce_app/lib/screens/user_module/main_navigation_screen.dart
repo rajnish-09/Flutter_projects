@@ -5,6 +5,9 @@ import 'package:ecommerce_app/bloc/cart/cart_state.dart';
 import 'package:ecommerce_app/bloc/favorite/favorite_bloc.dart';
 import 'package:ecommerce_app/bloc/favorite/favorite_event.dart';
 import 'package:ecommerce_app/bloc/favorite/favorite_state.dart';
+import 'package:ecommerce_app/bloc/order/order_bloc.dart';
+import 'package:ecommerce_app/bloc/order/order_event.dart';
+import 'package:ecommerce_app/bloc/order/order_state.dart';
 import 'package:ecommerce_app/screens/user_module/cart_screen.dart';
 import 'package:ecommerce_app/screens/user_module/favorite_screen.dart';
 import 'package:ecommerce_app/screens/user_module/order_history_screen.dart';
@@ -37,7 +40,15 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     ShopScreen(),
     FavoriteScreen(),
     CartScreen(),
-    OrderHistoryScreen(),
+    BlocListener<OrderBloc, OrderState>(
+      listener: (context, state) {
+        if(state is OrderSuccess){
+          context.read<OrderBloc>().add(FetchOrders()); 
+          context.read<CartBloc>().add(DeleteCartItem(cart: state.))
+        }
+      },
+      child: OrderHistoryScreen(),
+    ),
     ProfileScreen(),
   ];
 

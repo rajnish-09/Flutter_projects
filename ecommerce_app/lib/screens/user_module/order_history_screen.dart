@@ -26,37 +26,39 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: Text(
               "Orders",
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
             ),
+          ),
 
-            SizedBox(height: 20),
-            BlocBuilder<OrderBloc, OrderState>(
-              builder: (context, state) {
-                if (state is OrderLoading) {
-                  return Center(child: CircularProgressIndicator());
+          BlocBuilder<OrderBloc, OrderState>(
+            builder: (context, state) {
+              if (state is OrderLoading) {
+                return Center(child: CircularProgressIndicator());
+              }
+              if (state is OrderLoaded) {
+                if (state.orders.isEmpty) {
+                  return Center(child: Text("No orders yet."));
                 }
-                if (state is OrderLoaded) {
-                  if (state.orders.isEmpty) {
-                    return Center(child: Text("No orders yet."));
-                  }
-                  return Expanded(
-                    child: ListView.separated(
-                      separatorBuilder: (context, index) {
-                        return SizedBox(height: 20);
-                      },
-                      // shrinkWrap: true,
-                      // physics: NeverScrollableScrollPhysics(),
-                      itemCount: state.orders.length,
-                      itemBuilder: (context, index) {
-                        final order = state.orders[index];
-                        return Container(
+                return Expanded(
+                  child: ListView.separated(
+                    separatorBuilder: (context, index) {
+                      return SizedBox(height: 20);
+                    },
+                    // shrinkWrap: true,
+                    // physics: NeverScrollableScrollPhysics(),
+                    itemCount: state.orders.length,
+                    itemBuilder: (context, index) {
+                      final order = state.orders[index];
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Container(
                           padding: EdgeInsets.all(15),
                           decoration: BoxDecoration(
                             boxShadow: [
@@ -196,16 +198,16 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
                             ],
                           ),
                           // child: Text("Test"),
-                        );
-                      },
-                    ),
-                  );
-                }
-                return SizedBox();
-              },
-            ),
-          ],
-        ),
+                        ),
+                      );
+                    },
+                  ),
+                );
+              }
+              return SizedBox();
+            },
+          ),
+        ],
       ),
     );
   }

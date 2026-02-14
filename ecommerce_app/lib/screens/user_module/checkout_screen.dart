@@ -4,8 +4,10 @@ import 'package:ecommerce_app/bloc/order/order_bloc.dart';
 import 'package:ecommerce_app/bloc/order/order_event.dart';
 import 'package:ecommerce_app/bloc/order/order_state.dart';
 import 'package:ecommerce_app/models/order_model.dart';
+import 'package:ecommerce_app/screens/admin_module/orders_screen.dart';
 import 'package:ecommerce_app/screens/user_module/cart_screen.dart';
 import 'package:ecommerce_app/screens/user_module/main_navigation_screen.dart';
+import 'package:ecommerce_app/screens/user_module/order_history_screen.dart';
 import 'package:ecommerce_app/widgets/delivery_container.dart';
 import 'package:ecommerce_app/widgets/show_snackbar.dart';
 import 'package:flutter/material.dart';
@@ -25,10 +27,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   // late Future<Khalti> khalti;
   String selectedValue = '';
 
-  @override
-  void initState() {
-    super.initState();
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  // }
 
   Future<void> payWithKhalti() async {
     print("pidx ${widget.pidx}");
@@ -37,6 +39,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       pidx: widget.pidx,
       environment: Environment.test,
     );
+    
     final khalti = await Khalti.init(
       payConfig: khaltiPayConfig,
       onPaymentResult: (paymentResult, khalti) {
@@ -46,6 +49,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         );
         context.read<OrderBloc>().add(PlaceOrder(orders: finalOrder));
         khalti.close(context);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => MainNavigationScreen(currentIndex: 3,)),
+        );
       },
       onMessage:
           (
