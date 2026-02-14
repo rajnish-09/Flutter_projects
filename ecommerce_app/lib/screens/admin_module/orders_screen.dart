@@ -42,7 +42,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                   itemCount: state.orders.length,
                   itemBuilder: (context, index) {
                     final order = state.orders[index];
-                
+
                     return Container(
                       padding: EdgeInsets.all(10),
                       decoration: BoxDecoration(
@@ -66,7 +66,10 @@ class _OrdersScreenState extends State<OrdersScreen> {
                               ),
                               Text(
                                 order.user.name,
-                                style: TextStyle(fontWeight: FontWeight.bold),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
                               ),
                               Text(order.user.email),
                               DropdownButton<String>(
@@ -74,15 +77,26 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                 items: [
                                   DropdownMenuItem(
                                     value: 'Pending',
-                                    child: Text("Pending"),
+                                    child: Text(
+                                      "Pending",
+                                      style: TextStyle(color: Colors.red),
+                                    ),
                                   ),
                                   DropdownMenuItem(
                                     value: 'Shipped',
-                                    child: Text("Shipped"),
+                                    child: Text(
+                                      "Shipped",
+                                      style: TextStyle(
+                                        color: Colors.amber.shade800,
+                                      ),
+                                    ),
                                   ),
                                   DropdownMenuItem(
                                     value: 'Delivered',
-                                    child: Text("Delivered"),
+                                    child: Text(
+                                      "Delivered",
+                                      style: TextStyle(color: Colors.green),
+                                    ),
                                   ),
                                 ],
                                 onChanged: (value) async {
@@ -99,7 +113,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                               ),
                             ],
                           ),
-                
+
                           // Text(order.order.orderStatus),
                         ],
                       ),

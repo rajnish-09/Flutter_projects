@@ -131,7 +131,22 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
                                             Text(
                                               item.quantity.toStringAsFixed(0),
                                             ),
-                                            Text(order.orderStatus),
+                                            Text(
+                                              order.orderStatus,
+                                              style: TextStyle(
+                                                color:
+                                                    order.orderStatus ==
+                                                        'Pending'
+                                                    ? Colors.red.shade400
+                                                    : order.orderStatus ==
+                                                          'Shipped'
+                                                    ? Colors.amber.shade700
+                                                    : order.orderStatus ==
+                                                          'Delivered'
+                                                    ? Colors.green
+                                                    : Colors.black,
+                                              ),
+                                            ),
                                           ],
                                         ),
                                       ],

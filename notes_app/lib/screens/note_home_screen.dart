@@ -186,7 +186,7 @@ class _NoteHomeScreenState extends State<NoteHomeScreen> {
                   ),
                 ),
                 SizedBox(height: 20),
-                ElevatedButton(onPressed: () {}, child: Text("Nothing")),
+                // ElevatedButton(onPressed: () {}, child: Text("Nothing")),
               ],
             ),
           ),
