@@ -1,5 +1,7 @@
 import 'package:ecommerce_app/bloc/product/product_bloc.dart';
 import 'package:ecommerce_app/bloc/product/product_state.dart';
+import 'package:ecommerce_app/models/product_model.dart';
+import 'package:ecommerce_app/service/firebase_service.dart';
 import 'package:ecommerce_app/widgets/product_display_container.dart';
 import 'package:ecommerce_app/widgets/search_textformfield_style.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +9,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ProductListScreen extends StatefulWidget {
-  const ProductListScreen({super.key});
+  final String? categoryId;
+  const ProductListScreen({super.key, this.categoryId});
 
   @override
   State<ProductListScreen> createState() => _ProductListScreenState();
@@ -16,6 +19,11 @@ class ProductListScreen extends StatefulWidget {
 class _ProductListScreenState extends State<ProductListScreen> {
   final searchController = TextEditingController();
   String searchItem = '';
+  FirebaseService firebaseService = FirebaseService();
+
+  // void getProductByCategory() async {
+  //   final res = await firebaseService.getProductsByCategory(widget.categoryId!);
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -53,14 +61,20 @@ class _ProductListScreenState extends State<ProductListScreen> {
                       return Center(child: CircularProgressIndicator());
                     }
                     if (state is ProductLoaded) {
-                      final filterProduct =
-                          (searchItem == '' && searchItem.isEmpty)
-                          ? state.products
-                          : state.products.where((product) {
-                              return product.title.toLowerCase().contains(
-                                searchItem.toLowerCase(),
-                              );
-                            }).toList();
+                      List<ProductModel> filterProduct = state.products;
+                      if (widget.categoryId != null) {
+                        filterProduct = filterProduct.where((product) {
+                          return product.categoryId == widget.categoryId;
+                        }).toList();
+                      }
+                      if (searchItem.isNotEmpty) {
+                        filterProduct = state.products.where((product) {
+                          return product.title.toLowerCase().contains(
+                            searchItem.toLowerCase(),
+                          );
+                        }).toList();
+                      }
+
                       if (filterProduct.isEmpty) {
                         return Center(child: Text("No products."));
                       }

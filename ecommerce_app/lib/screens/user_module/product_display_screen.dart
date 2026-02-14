@@ -8,6 +8,7 @@ import 'package:ecommerce_app/models/cart_model.dart';
 import 'package:ecommerce_app/models/favorite_model.dart';
 import 'package:ecommerce_app/models/product_model.dart';
 import 'package:ecommerce_app/screens/user_module/cart_screen.dart';
+import 'package:ecommerce_app/screens/user_module/main_navigation_screen.dart';
 import 'package:ecommerce_app/service/firebase_service.dart';
 import 'package:ecommerce_app/widgets/delivery_container.dart';
 import 'package:ecommerce_app/widgets/show_toast.dart';
@@ -286,10 +287,18 @@ class _ProductDisplayScreenState extends State<ProductDisplayScreen> {
                               color: Colors.white,
                             ),
                             onPressed: () {
+                              final cart = CartModel(
+                                productId: widget.product.id!,
+                                quantity: count,
+                              );
+                              context.read<CartBloc>().add(
+                                AddToCart(cart: cart),
+                              );
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => CartScreen(),
+                                  builder: (context) =>
+                                      MainNavigationScreen(currentIndex: 2),
                                 ),
                               );
                             },

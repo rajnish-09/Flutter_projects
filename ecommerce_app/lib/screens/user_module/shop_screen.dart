@@ -103,20 +103,32 @@ class _ShopScreenState extends State<ShopScreen> {
                         itemCount: categories.length,
                         itemBuilder: (context, index) {
                           final category = categories[index];
-                          return Column(
-                            children: [
-                              CircleAvatar(
-                                backgroundImage: NetworkImage(
-                                  category.imagePath,
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ProductListScreen(
+                                    categoryId: category.id,
+                                  ),
                                 ),
-                                radius: 40,
-                              ),
-                              SizedBox(height: 10),
-                              Text(
-                                category.name,
-                                style: TextStyle(fontSize: 15),
-                              ),
-                            ],
+                              );
+                            },
+                            child: Column(
+                              children: [
+                                CircleAvatar(
+                                  backgroundImage: NetworkImage(
+                                    category.imagePath,
+                                  ),
+                                  radius: 40,
+                                ),
+                                SizedBox(height: 10),
+                                Text(
+                                  category.name,
+                                  style: TextStyle(fontSize: 15),
+                                ),
+                              ],
+                            ),
                           );
                         },
                       ),

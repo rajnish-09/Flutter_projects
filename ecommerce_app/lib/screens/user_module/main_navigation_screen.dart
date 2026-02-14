@@ -42,9 +42,9 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     CartScreen(),
     BlocListener<OrderBloc, OrderState>(
       listener: (context, state) {
-        if(state is OrderSuccess){
-          context.read<OrderBloc>().add(FetchOrders()); 
-          context.read<CartBloc>().add(DeleteCartItem(cart: state.))
+        if (state is OrderSuccess) {
+          context.read<OrderBloc>().add(FetchOrders());
+          context.read<CartBloc>().add((FetchCartItems()));
         }
       },
       child: OrderHistoryScreen(),
