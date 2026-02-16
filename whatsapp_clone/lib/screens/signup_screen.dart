@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:whatsapp_clone/bloc/auth/auth_bloc.dart';
+import 'package:whatsapp_clone/bloc/auth/auth_event.dart';
+import 'package:whatsapp_clone/models/user_model.dart';
 import 'package:whatsapp_clone/screens/login_screen.dart';
 import 'package:whatsapp_clone/widgets/input_textformfield.dart';
 import 'package:whatsapp_clone/widgets/submit_button.dart';
@@ -124,7 +128,19 @@ class _SignupScreenState extends State<SignupScreen> {
                   SubmitButton(
                     buttonText: 'Signup',
                     onPressed: () {
-                      if (_formKey.currentState!.validate()) {}
+                      if (_formKey.currentState!.validate()) {
+                        final userData = UserModel(
+                          name: nameController.text.trim(),
+                          phone: phoneController.text.trim(),
+                          email: emailController.text.trim(),
+                        );
+                        context.read<AuthBloc>().add(
+                          SignupEvent(
+                            userData: userData,
+                            password: passwordController.text.trim(),
+                          ),
+                        );
+                      }
                     },
                   ),
                   SizedBox(height: 15),
