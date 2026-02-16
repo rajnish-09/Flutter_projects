@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:whatsapp_clone/screens/user_module/chat_screen.dart';
+import 'package:whatsapp_clone/screens/user_module/explore_screen.dart';
 
 class MainNavigationScreen extends StatefulWidget {
   const MainNavigationScreen({super.key});
@@ -14,7 +15,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   final List<Widget> _pages = [
     ChatScreen(),
     Center(child: Text("Fav")),
-    Center(child: Text("ExpFav")),
+    ExploreScreen(),
   ];
   @override
   Widget build(BuildContext context) {

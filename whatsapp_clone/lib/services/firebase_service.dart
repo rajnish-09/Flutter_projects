@@ -31,4 +31,11 @@ class FirebaseService {
   Future<void> logoutUser() async {
     await _auth.signOut();
   }
+
+  Future<List<UserModel>> getUsers() async {
+    final response = await whatsappUserCollection.get();
+    return response.docs
+        .map((user) => UserModel.fromJson(user.data(), user.id))
+        .toList();
+  }
 }
