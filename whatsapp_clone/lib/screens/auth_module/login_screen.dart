@@ -5,7 +5,7 @@ import 'package:whatsapp_clone/bloc/auth/auth_bloc.dart';
 import 'package:whatsapp_clone/bloc/auth/auth_event.dart';
 import 'package:whatsapp_clone/bloc/auth/auth_state.dart';
 import 'package:whatsapp_clone/screens/home_screen.dart';
-import 'package:whatsapp_clone/screens/signup_screen.dart';
+import 'package:whatsapp_clone/screens/auth_module/signup_screen.dart';
 import 'package:whatsapp_clone/widgets/input_textformfield.dart';
 import 'package:whatsapp_clone/widgets/show_snackbar.dart';
 import 'package:whatsapp_clone/widgets/submit_button.dart';

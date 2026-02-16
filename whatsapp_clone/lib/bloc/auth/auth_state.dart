@@ -22,3 +22,10 @@ class AuthLoginFailed extends AuthState {
   final String msg;
   AuthLoginFailed({required this.msg});
 }
+
+class AuthLogoutSuccess extends AuthState {}
+
+class AuthLogoutFailed extends AuthState {
+  final String msg;
+  AuthLogoutFailed({required this.msg});
+}
