@@ -3,11 +3,22 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:whatsapp_clone/bloc/auth/auth_event.dart';
 import 'package:whatsapp_clone/bloc/auth/auth_state.dart';
 import 'package:whatsapp_clone/services/firebase_service.dart';
+import 'package:whatsapp_clone/utils/map_firebase_error_message.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   FirebaseService firebaseService;
   AuthBloc(this.firebaseService) : super(AuthInitial()) {
-    on<LoginEvent>((event, emit) {});
+    on<LoginEvent>((event, emit) async {
+      try {
+        emit(AuthLoading());
+        await firebaseService.loginUser(event.email, event.password);
+        emit(AuthLoginSuccess());
+      } on FirebaseAuthException catch (e) {
+        emit(AuthLoginFailed(msg: mapFirebaseErrorToMessage(e.code)));
+      } catch (e) {
+        emit(AuthLoginFailed(msg: e.toString()));
+      }
+    });
 
     on<SignupEvent>((event, emit) async {
       try {
@@ -16,11 +27,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           userData: event.userData,
           password: event.password,
         );
-        emit(AuthSuccess());
+        emit(AuthSignupSuccess(msg: 'Signup successfully. Proceed to login.'));
       } on FirebaseAuthException catch (e) {
-        print(e.toString());
+        emit(AuthSignupFailed(msg: e.toString()));
       } catch (e) {
-        print(e.toString());
+        emit(AuthSignupFailed(msg: e.toString()));
       }
     });
   }

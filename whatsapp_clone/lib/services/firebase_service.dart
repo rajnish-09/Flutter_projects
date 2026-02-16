@@ -11,7 +11,10 @@ class FirebaseService {
     'whatsappUser',
   );
 
-  Future<String> createUsers({required UserModel userData, required String password}) async {
+  Future<String> createUsers({
+    required UserModel userData,
+    required String password,
+  }) async {
     UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
       email: userData.email,
       password: password,
@@ -19,5 +22,9 @@ class FirebaseService {
     String uid = userCredential.user!.uid;
     whatsappUserCollection.doc(uid).set(userData.toJson());
     return uid;
+  }
+
+  Future<void> loginUser(String email, String password) async {
+    await _auth.signInWithEmailAndPassword(email: email, password: password);
   }
 }
