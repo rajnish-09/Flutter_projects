@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:whatsapp_clone/screens/user_module/chat_screen.dart';
+import 'package:whatsapp_clone/screens/user_module/chat_list_screen.dart';
 import 'package:whatsapp_clone/screens/user_module/explore_screen.dart';
 
 class MainNavigationScreen extends StatefulWidget {
@@ -13,7 +13,7 @@ class MainNavigationScreen extends StatefulWidget {
 class _MainNavigationScreenState extends State<MainNavigationScreen> {
   int _currentIndex = 0;
   final List<Widget> _pages = [
-    ChatScreen(),
+    ChatListScreen(),
     Center(child: Text("Fav")),
     ExploreScreen(),
   ];

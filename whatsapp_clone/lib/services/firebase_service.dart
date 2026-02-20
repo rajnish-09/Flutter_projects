@@ -1,15 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:whatsapp_clone/models/chat_model.dart';
+import 'package:whatsapp_clone/models/message_model.dart';
 import 'package:whatsapp_clone/models/user_model.dart';
 import 'package:whatsapp_clone/widgets/show_snackbar.dart';
 
 class FirebaseService {
-  FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   final whatsappUserCollection = FirebaseFirestore.instance.collection(
     'whatsappUser',
   );
+  final chatCollection = FirebaseFirestore.instance.collection('chats');
+  // final messageCollection = FirebaseFirestore.instance.collection('messages');
 
   Future<String> createUsers({
     required UserModel userData,
@@ -37,5 +41,23 @@ class FirebaseService {
     return response.docs
         .map((user) => UserModel.fromJson(user.data(), user.id))
         .toList();
+  }
+
+  //---------------------MESSAGE-----------------------------------------------
+
+  Future<void> sendMessage(
+    MessageModel msg,
+    String chatId,
+    ChatModel chat,
+  ) async {
+    final chatRef = chatCollection.doc(chatId);
+    await chatRef.set(chat.toJson(), SetOptions(merge: true));
+    await chatRef.collection('messages').add(msg.toJson());
+
+    // 3️⃣ Update last message info
+    await chatRef.update({
+      'lastMessage': msg.message,
+      'lastMessageTime': FieldValue.serverTimestamp(),
+    });
   }
 }

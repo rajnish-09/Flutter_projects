@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class ChatScreen extends StatefulWidget {
-  const ChatScreen({super.key});
+class ChatListScreen extends StatefulWidget {
+  const ChatListScreen({super.key});
 
   @override
-  State<ChatScreen> createState() => _ChatScreenState();
+  State<ChatListScreen> createState() => _ChatListScreenState();
 }
 
-class _ChatScreenState extends State<ChatScreen> {
+class _ChatListScreenState extends State<ChatListScreen> {
   final searchController = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -27,6 +27,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
+              SizedBox(height: 20),
               TextFormField(
                 controller: searchController,
                 decoration: InputDecoration(
