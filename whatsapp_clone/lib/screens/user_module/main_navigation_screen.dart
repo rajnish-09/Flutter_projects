@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:whatsapp_clone/screens/user_module/chat_list_screen.dart';
 import 'package:whatsapp_clone/screens/user_module/explore_screen.dart';
+import 'package:whatsapp_clone/screens/user_module/profile_screen.dart';
 
 class MainNavigationScreen extends StatefulWidget {
   const MainNavigationScreen({super.key});
@@ -16,6 +17,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     ChatListScreen(),
     Center(child: Text("Fav")),
     ExploreScreen(),
+    ProfileScreen(),
   ];
   @override
   Widget build(BuildContext context) {
@@ -34,6 +36,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
             icon: Icon(Icons.person_add_alt),
             label: 'Explore',
           ),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
         ],
         onTap: (value) {
           setState(() {

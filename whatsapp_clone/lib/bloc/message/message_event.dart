@@ -9,3 +9,13 @@ class SendMessage extends MessageEvent {
   final ChatModel chat;
   SendMessage({required this.chat, required this.msg, required this.chatId});
 }
+
+class LoadMessages extends MessageEvent {
+  final String chatId;
+  LoadMessages({required this.chatId});
+}
+
+class MessagesUpdated extends MessageEvent {
+  final List<MessageModel> msgs;
+  MessagesUpdated(this.msgs);
+}

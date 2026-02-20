@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:whatsapp_clone/bloc/message/message_bloc.dart';
 import 'package:whatsapp_clone/bloc/message/message_event.dart';
+import 'package:whatsapp_clone/bloc/message/message_state.dart';
 import 'package:whatsapp_clone/models/chat_model.dart';
 import 'package:whatsapp_clone/models/message_model.dart';
 import 'package:whatsapp_clone/models/user_model.dart';
+import 'package:whatsapp_clone/services/firebase_service.dart';
 
 class ChatDetailScreen extends StatefulWidget {
   final UserModel user;
@@ -17,9 +19,20 @@ class ChatDetailScreen extends StatefulWidget {
 
 class _ChatDetailScreenState extends State<ChatDetailScreen> {
   final messageController = TextEditingController();
+  String chatId = '';
 
   String generateChatId(String uid1, String uid2) {
     return uid1.compareTo(uid2) < 0 ? '${uid1}_$uid2' : '${uid2}_$uid1';
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    final currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser != null && widget.user.uid != null) {
+      chatId = generateChatId(currentUser.uid, widget.user.uid!);
+    }
+    context.read<MessageBloc>().add(LoadMessages(chatId: chatId));
   }
 
   @override
@@ -45,16 +58,89 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                padding: EdgeInsets.all(5),
-                width: MediaQuery.of(context).size.width * 0.5,
-                decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 245, 245, 245),
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: Text("datsdfklsdjfklsdjlkfjsdlkfjl;ksdjflksdjlfkja"),
+              // Container(
+              //   padding: EdgeInsets.all(5),
+              //   width: MediaQuery.of(context).size.width * 0.5,
+              //   decoration: BoxDecoration(
+              //     color: const Color.fromARGB(255, 245, 245, 245),
+              //     borderRadius: BorderRadius.circular(15),
+              //   ),
+              //   child: Text("datsdfklsdjfklsdjlkfjsdlkfjl;ksdjflksdjlfkja"),
+              // ),
+
+              // Spacer(),
+              BlocBuilder<MessageBloc, MessageState>(
+                builder: (context, state) {
+                  if (state is MessageLoading) {
+                    return Center(child: CircularProgressIndicator());
+                  }
+                  if (state is MessageError) {
+                    return Center(child: Text(state.error));
+                  }
+                  if (state is MessageLoaded) {
+                    bool isMe;
+                    final message = state.msgs;
+                    if (message.isEmpty) {
+                      return Center(child: Text("No message yet. Say hi"));
+                    }
+                    return Expanded(
+                      child: ListView.separated(
+                        reverse: true,
+                        separatorBuilder: (context, index) {
+                          return SizedBox(height: 15);
+                        },
+                        itemCount: message.length,
+                        itemBuilder: (context, index) {
+                          final msg = state.msgs[index];
+                          final currentUser = FirebaseAuth.instance.currentUser;
+                          if (currentUser == null) return null;
+                          if (msg.senderId == currentUser.uid) {
+                            isMe = true;
+                          } else {
+                            isMe = false;
+                          }
+                          return Align(
+                            alignment: isMe
+                                ? Alignment.centerRight
+                                : Alignment.centerLeft,
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                vertical: 5,
+                                horizontal: 10,
+                              ),
+                              width: MediaQuery.of(context).size.width * 0.5,
+                              decoration: BoxDecoration(
+                                color: isMe
+                                    ? Colors.blue[100]
+                                    : Colors.grey[200],
+                                borderRadius: isMe
+                                    ? BorderRadius.only(
+                                        topLeft: Radius.circular(20),
+                                        bottomLeft: Radius.circular(20),
+                                        topRight: Radius.circular(0),
+                                        bottomRight: Radius.circular(20),
+                                      )
+                                    : BorderRadius.only(
+                                        topLeft: Radius.zero,
+                                        bottomLeft: Radius.circular(20),
+                                        topRight: Radius.circular(20),
+                                        bottomRight: Radius.circular(20),
+                                      ),
+                              ),
+                              child: Text(
+                                msg.message,
+                                style: TextStyle(fontSize: 13),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    );
+                  }
+                  return Text("Error");
+                },
               ),
-              Spacer(),
+              SizedBox(height: 20),
               Row(
                 children: [
                   IconButton(

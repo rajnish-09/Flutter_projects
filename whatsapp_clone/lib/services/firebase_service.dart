@@ -60,4 +60,17 @@ class FirebaseService {
       'lastMessageTime': FieldValue.serverTimestamp(),
     });
   }
+
+  Stream<List<MessageModel>> getMessages(String chatId) {
+    return chatCollection
+        .doc(chatId)
+        .collection('messages')
+        .orderBy('timestamp')
+        .snapshots()
+        .map(
+          (snapshot) => snapshot.docs
+              .map((msg) => MessageModel.fromJson(msg.data()))
+              .toList(),
+        );
+  }
 }
