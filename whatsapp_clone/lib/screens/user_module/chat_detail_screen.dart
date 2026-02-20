@@ -8,6 +8,7 @@ import 'package:whatsapp_clone/models/chat_model.dart';
 import 'package:whatsapp_clone/models/message_model.dart';
 import 'package:whatsapp_clone/models/user_model.dart';
 import 'package:whatsapp_clone/services/firebase_service.dart';
+import 'package:intl/intl.dart';
 
 class ChatDetailScreen extends StatefulWidget {
   final UserModel user;
@@ -99,6 +100,14 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
                           } else {
                             isMe = false;
                           }
+                          String formattedTime = '';
+                          if (msg.timestamp != null) {
+                            formattedTime = DateFormat(
+                              'hh:mm a',
+                            ).format(msg.timestamp!);
+                          } else {
+                            formattedTime = '...';
+                          }
                           return Align(
                             alignment: isMe
                                 ? Alignment.centerRight
@@ -108,7 +117,10 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
                                 vertical: 5,
                                 horizontal: 10,
                               ),
-                              width: MediaQuery.of(context).size.width * 0.5,
+                              constraints: BoxConstraints(
+                                maxWidth:
+                                    MediaQuery.of(context).size.width * 0.6,
+                              ),
                               decoration: BoxDecoration(
                                 color: isMe
                                     ? Colors.blue[100]
@@ -127,9 +139,20 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
                                         bottomRight: Radius.circular(20),
                                       ),
                               ),
-                              child: Text(
-                                msg.message,
-                                style: TextStyle(fontSize: 13),
+                              child: Column(
+                                crossAxisAlignment: isMe
+                                    ? CrossAxisAlignment.end
+                                    : CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    msg.message,
+                                    style: TextStyle(fontSize: 13),
+                                  ),
+                                  Text(
+                                    formattedTime,
+                                    style: TextStyle(fontSize: 10),
+                                  ),
+                                ],
                               ),
                             ),
                           );
@@ -223,31 +246,3 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
     );
   }
 }
-
-
-// Expanded(
-//                       child: TextFormField(
-//                         controller: searchController,
-//                         decoration: InputDecoration(
-//                           hintText: 'Message...',
-//                           hintStyle: TextStyle(color: Colors.grey.shade500),
-//                           border: OutlineInputBorder(
-//                             borderRadius: BorderRadius.circular(30),
-//                           ),
-//                           enabledBorder: OutlineInputBorder(
-//                             borderRadius: BorderRadius.circular(30),
-//                             borderSide: BorderSide(color: Colors.transparent),
-//                           ),
-//                           filled: true,
-//                           fillColor: const Color.fromARGB(166, 238, 238, 238),
-//                           prefixIcon: Icon(
-//                             Icons.search,
-//                             color: Colors.grey.shade500,
-//                           ),
-//                           suffix: IconButton(
-//                             onPressed: () {},
-//                             icon: Icon(Icons.emoji_emotions),
-//                           ),
-//                         ),
-//                       ),
-//                     ),

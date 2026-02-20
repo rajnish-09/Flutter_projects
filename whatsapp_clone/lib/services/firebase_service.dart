@@ -56,7 +56,7 @@ class FirebaseService {
 
     // 3️⃣ Update last message info
     await chatRef.update({
-      'lastMessage': msg.message,
+      'lastMsg': msg.message,
       'lastMessageTime': FieldValue.serverTimestamp(),
     });
   }
@@ -65,11 +65,22 @@ class FirebaseService {
     return chatCollection
         .doc(chatId)
         .collection('messages')
-        .orderBy('timestamp')
+        .orderBy('timestamp', descending: true)
         .snapshots()
         .map(
           (snapshot) => snapshot.docs
               .map((msg) => MessageModel.fromJson(msg.data()))
+              .toList(),
+        );
+  }
+
+  Stream<List<ChatModel>> getChats(String uid) {
+    return chatCollection
+        .where('participants', arrayContains: uid)
+        .snapshots()
+        .map(
+          (snapshot) => snapshot.docs
+              .map((chat) => ChatModel.fromJson(chat.data(), chat.id))
               .toList(),
         );
   }

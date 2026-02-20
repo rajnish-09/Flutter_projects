@@ -23,7 +23,6 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
 
     on<LoadMessages>((event, emit) async {
       emit(MessageLoading());
-      // final response = await firebaseService.getMessages(event.chatId);
       await emit.forEach<List<MessageModel>>(
         firebaseService.getMessages(event.chatId),
         onData: (List<MessageModel> messages) {
@@ -33,25 +32,6 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
           return MessageError(error: error.toString());
         },
       );
-      // _messagesSub?.cancel();
-      // final chatRef = FirebaseFirestore.instance
-      //     .collection('chats')
-      //     .doc(event.chatId);
-      // _messagesSub = chatRef
-      //     .collection('messages')
-      //     .orderBy('timestamp', descending: true)
-      //     .snapshots()
-      //     .listen(
-      //       (snapshot) {
-      //         final messages = snapshot.docs
-      //             .map((doc) => MessageModel.fromJson(doc.data()))
-      //             .toList();
-      //         add(MessagesUpdated(messages));
-      //       },
-      //       onError: (error) {
-      //         emit(MessageError(error: error.toString()));
-      //       },
-      //     );
     });
   }
 }
