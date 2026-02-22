@@ -21,6 +21,7 @@ class ChatDetailScreen extends StatefulWidget {
 class _ChatDetailScreenState extends State<ChatDetailScreen> {
   final messageController = TextEditingController();
   String chatId = '';
+  bool isSending = false;
 
   String generateChatId(String uid1, String uid2) {
     return uid1.compareTo(uid2) < 0 ? '${uid1}_$uid2' : '${uid2}_$uid1';
@@ -40,7 +41,12 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(onPressed: () {}, icon: Icon(Icons.arrow_back_ios)),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(Icons.arrow_back_ios),
+        ),
         title: Row(
           children: [
             CircleAvatar(
@@ -59,17 +65,6 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Container(
-              //   padding: EdgeInsets.all(5),
-              //   width: MediaQuery.of(context).size.width * 0.5,
-              //   decoration: BoxDecoration(
-              //     color: const Color.fromARGB(255, 245, 245, 245),
-              //     borderRadius: BorderRadius.circular(15),
-              //   ),
-              //   child: Text("datsdfklsdjfklsdjlkfjsdlkfjl;ksdjflksdjlfkja"),
-              // ),
-
-              // Spacer(),
               BlocBuilder<MessageBloc, MessageState>(
                 builder: (context, state) {
                   if (state is MessageLoading) {
@@ -82,7 +77,9 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
                     bool isMe;
                     final message = state.msgs;
                     if (message.isEmpty) {
-                      return Center(child: Text("No message yet. Say hi"));
+                      return Expanded(
+                        child: Center(child: Text("No message yet. Say hi")),
+                      );
                     }
                     return Expanded(
                       child: ListView.separated(
@@ -160,7 +157,7 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
                       ),
                     );
                   }
-                  return Text("Error");
+                  return SizedBox();
                 },
               ),
               SizedBox(height: 20),
@@ -212,27 +209,53 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
                   ValueListenableBuilder(
                     valueListenable: messageController,
                     builder: (context, TextEditingValue value, _) {
-                      return value.text.isNotEmpty
+                      return (value.text.isNotEmpty || isSending)
                           ? IconButton(
-                              onPressed: () {
-                                final user = FirebaseAuth.instance.currentUser;
-                                if (user == null) return;
-                                final uid1 = user.uid;
-                                final uid2 = widget.user.uid;
-                                final chatId = generateChatId(uid1, uid2!);
-                                context.read<MessageBloc>().add(
-                                  SendMessage(
-                                    chat: ChatModel(participants: [uid1, uid2]),
-                                    msg: MessageModel(
-                                      senderId: uid1,
-                                      message: messageController.text.trim(),
-                                    ),
-                                    chatId: chatId,
-                                  ),
-                                );
-                                messageController.clear();
-                              },
-                              icon: Icon(Icons.send),
+                              onPressed: isSending
+                                  ? null
+                                  : () {
+                                      final user =
+                                          FirebaseAuth.instance.currentUser;
+                                      if (user == null) return;
+                                      final uid1 = user.uid;
+                                      final uid2 = widget.user.uid;
+                                      final chatId = generateChatId(
+                                        uid1,
+                                        uid2!,
+                                      );
+                                      setState(() {
+                                        isSending = true;
+                                      });
+                                      context.read<MessageBloc>().add(
+                                        SendMessage(
+                                          chat: ChatModel(
+                                            participants: [uid1, uid2],
+                                          ),
+                                          msg: MessageModel(
+                                            senderId: uid1,
+                                            message: messageController.text
+                                                .trim(),
+                                          ),
+                                          chatId: chatId,
+                                        ),
+                                      );
+
+                                      messageController.clear();
+                                      Future.delayed(
+                                        const Duration(milliseconds: 500),
+                                        () {
+                                          if (mounted) {
+                                            setState(() => isSending = false);
+                                          }
+                                        },
+                                      );
+                                    },
+                              icon: isSending
+                                  ? Padding(
+                                      padding: EdgeInsets.all(5),
+                                      child: CircularProgressIndicator(),
+                                    )
+                                  : Icon(Icons.send),
                             )
                           : SizedBox();
                     },

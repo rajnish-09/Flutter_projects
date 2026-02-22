@@ -43,6 +43,14 @@ class FirebaseService {
         .toList();
   }
 
+  Future<UserModel> getChatUser(String uid) async {
+    final response = await whatsappUserCollection.doc(uid).get();
+    return UserModel.fromJson(
+      response.data() as Map<String, dynamic>,
+      response.id,
+    );
+  }
+
   //---------------------MESSAGE-----------------------------------------------
 
   Future<void> sendMessage(

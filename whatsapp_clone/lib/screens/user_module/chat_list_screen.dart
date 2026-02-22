@@ -5,6 +5,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:whatsapp_clone/bloc/chat/chat_bloc.dart';
 import 'package:whatsapp_clone/bloc/chat/chat_event.dart';
 import 'package:whatsapp_clone/bloc/chat/chat_state.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:whatsapp_clone/models/user_model.dart';
+import 'package:whatsapp_clone/models/chat_model.dart';
+import 'package:whatsapp_clone/services/firebase_service.dart';
+import 'chat_detail_screen.dart';
 
 class ChatListScreen extends StatefulWidget {
   const ChatListScreen({super.key});
@@ -24,8 +29,18 @@ class _ChatListScreenState extends State<ChatListScreen> {
     context.read<ChatBloc>().add(LoadChat(uid: user.uid));
   }
 
+  // Future<UserModel> getUser(String uid) async {
+  //   final doc = await FirebaseFirestore.instance
+  //       .collection('users')
+  //       .doc(uid)
+  //       .get();
+  //   return UserModel.fromJson(doc.data()!, doc.id);
+  // }
+
   @override
   Widget build(BuildContext context) {
+    final currentUserId = FirebaseAuth.instance.currentUser!.uid;
+
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -52,7 +67,6 @@ class _ChatListScreenState extends State<ChatListScreen> {
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30),
-
                     borderSide: BorderSide(color: Colors.transparent),
                   ),
                   filled: true,
@@ -62,57 +76,87 @@ class _ChatListScreenState extends State<ChatListScreen> {
                 ),
               ),
               SizedBox(height: 20),
-              BlocBuilder<ChatBloc, ChatState>(
-                builder: (context, state) {
-                  if (state is ChatLoading) {
-                    return Center(child: CircularProgressIndicator());
-                  }
-                  if (state is ChatLoaded) {
-                    final chats = state.chats;
-                    return Expanded(
-                      child: ListView.separated(
-                        separatorBuilder: (context, index) {
-                          return SizedBox(height: 15);
-                        },
+              Expanded(
+                child: BlocBuilder<ChatBloc, ChatState>(
+                  builder: (context, state) {
+                    if (state is ChatLoading) {
+                      return Center(child: CircularProgressIndicator());
+                    }
+
+                    if (state is ChatLoaded) {
+                      final chats = state.chats;
+
+                      if (chats.isEmpty) {
+                        return Center(child: Text("No chats found"));
+                      }
+
+                      return ListView.separated(
                         itemCount: chats.length,
+                        separatorBuilder: (context, index) =>
+                            SizedBox(height: 15),
                         itemBuilder: (context, index) {
                           final chat = chats[index];
-                          return SizedBox(
-                            child: Row(
-                              children: [
-                                CircleAvatar(
+                          final otherUserId = chat.participants.firstWhere(
+                            (uid) => uid != currentUserId,
+                            orElse: () =>
+                                currentUserId,
+                          );
+
+                          return FutureBuilder<UserModel>(
+                            future: FirebaseService().getChatUser(otherUserId),
+                            builder: (context, snapshot) {
+                              if (!snapshot.hasData) {
+                                return ListTile(
+                                  leading: CircleAvatar(
+                                    backgroundImage: AssetImage(
+                                      'assets/images/male_icon.png',
+                                    ),
+                                  ),
+                                  title: Text("Loading..."),
+                                );
+                              }
+
+                              final otherUser = snapshot.data!;
+                              return ListTile(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) =>
+                                          ChatDetailScreen(user: otherUser),
+                                    ),
+                                  );
+                                },
+                                leading: CircleAvatar(
                                   radius: 30,
-                                  backgroundImage: AssetImage(
-                                    'assets/images/male_icon.png',
+                                  backgroundImage: otherUser.imagePath != null
+                                      ? NetworkImage(otherUser.imagePath!)
+                                      : AssetImage(
+                                              'assets/images/male_icon.png',
+                                            )
+                                            as ImageProvider,
+                                ),
+                                title: Text(
+                                  otherUser.name,
+                                  style: GoogleFonts.roboto(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
                                   ),
                                 ),
-                                SizedBox(width: 10),
-                                Column(
-                                  children: [
-                                    Text(
-                                      "Name",
-                                      style: GoogleFonts.roboto(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                    Text(
-                                      chat.lastMsg,
-                                      style: TextStyle(
-                                        color: Colors.grey.shade600,
-                                      ),
-                                    ),
-                                  ],
+                                subtitle: Text(
+                                  chat.lastMsg,
+                                  style: TextStyle(color: Colors.grey.shade600),
                                 ),
-                              ],
-                            ),
+                              );
+                            },
                           );
                         },
-                      ),
-                    );
-                  }
-                  return SizedBox(child: Text("Error!"));
-                },
+                      );
+                    }
+
+                    return Center(child: Text("Error loading chats"));
+                  },
+                ),
               ),
             ],
           ),
