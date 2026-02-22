@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:popover/popover.dart';
 import 'package:whatsapp_clone/bloc/message/message_bloc.dart';
 import 'package:whatsapp_clone/bloc/message/message_event.dart';
 import 'package:whatsapp_clone/bloc/message/message_state.dart';
@@ -37,6 +39,55 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
     context.read<MessageBloc>().add(LoadMessages(chatId: chatId));
   }
 
+  void _showMessageMenu(
+    BuildContext context,
+    Offset position,
+    MessageModel message,
+  ) async {
+    final selected = await showMenu(
+      context: context,
+      position: RelativeRect.fromLTRB(
+        position.dx,
+        position.dy,
+        position.dx,
+        position.dy,
+      ),
+      items: [
+        PopupMenuItem(
+          value: 'delete',
+          child: Row(
+            children: const [
+              Icon(Icons.delete, color: Colors.red),
+              SizedBox(width: 10),
+              Text('Delete'),
+            ],
+          ),
+        ),
+        PopupMenuItem(
+          value: 'copy',
+          child: Row(
+            children: const [
+              Icon(Icons.copy),
+              SizedBox(width: 10),
+              Text('Copy'),
+            ],
+          ),
+        ),
+      ],
+    );
+
+    if (selected == 'delete') {
+      await FirebaseService().deleteMessage(chatId, message.messageId!);
+    }
+
+    if (selected == 'copy') {
+      Clipboard.setData(ClipboardData(text: message.message));
+      // ScaffoldMessenger.of(
+      //   context,
+      // ).showSnackBar(const SnackBar(content: Text('Message copied')));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,8 +107,6 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
             Text(widget.user.name),
           ],
         ),
-        actions: [Icon(Icons.call)],
-        actionsPadding: EdgeInsets.only(right: 15),
       ),
       body: SafeArea(
         child: Padding(
@@ -105,51 +154,60 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
                           } else {
                             formattedTime = '...';
                           }
-                          return Align(
-                            alignment: isMe
-                                ? Alignment.centerRight
-                                : Alignment.centerLeft,
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                vertical: 5,
-                                horizontal: 10,
-                              ),
-                              constraints: BoxConstraints(
-                                maxWidth:
-                                    MediaQuery.of(context).size.width * 0.6,
-                              ),
-                              decoration: BoxDecoration(
-                                color: isMe
-                                    ? Colors.blue[100]
-                                    : Colors.grey[200],
-                                borderRadius: isMe
-                                    ? BorderRadius.only(
-                                        topLeft: Radius.circular(20),
-                                        bottomLeft: Radius.circular(20),
-                                        topRight: Radius.circular(0),
-                                        bottomRight: Radius.circular(20),
-                                      )
-                                    : BorderRadius.only(
-                                        topLeft: Radius.zero,
-                                        bottomLeft: Radius.circular(20),
-                                        topRight: Radius.circular(20),
-                                        bottomRight: Radius.circular(20),
-                                      ),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: isMe
-                                    ? CrossAxisAlignment.end
-                                    : CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    msg.message,
-                                    style: TextStyle(fontSize: 13),
-                                  ),
-                                  Text(
-                                    formattedTime,
-                                    style: TextStyle(fontSize: 10),
-                                  ),
-                                ],
+                          return GestureDetector(
+                            onLongPressStart: (details) {
+                              _showMessageMenu(
+                                context,
+                                details.globalPosition,
+                                msg,
+                              );
+                            },
+                            child: Align(
+                              alignment: isMe
+                                  ? Alignment.centerRight
+                                  : Alignment.centerLeft,
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 5,
+                                  horizontal: 10,
+                                ),
+                                constraints: BoxConstraints(
+                                  maxWidth:
+                                      MediaQuery.of(context).size.width * 0.6,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: isMe
+                                      ? Colors.blue[100]
+                                      : Colors.grey[200],
+                                  borderRadius: isMe
+                                      ? BorderRadius.only(
+                                          topLeft: Radius.circular(20),
+                                          bottomLeft: Radius.circular(20),
+                                          topRight: Radius.circular(0),
+                                          bottomRight: Radius.circular(20),
+                                        )
+                                      : BorderRadius.only(
+                                          topLeft: Radius.zero,
+                                          bottomLeft: Radius.circular(20),
+                                          topRight: Radius.circular(20),
+                                          bottomRight: Radius.circular(20),
+                                        ),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: isMe
+                                      ? CrossAxisAlignment.end
+                                      : CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      msg.message,
+                                      style: TextStyle(fontSize: 13),
+                                    ),
+                                    Text(
+                                      formattedTime,
+                                      style: TextStyle(fontSize: 10),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           );

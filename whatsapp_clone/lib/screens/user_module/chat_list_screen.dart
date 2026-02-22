@@ -36,121 +36,134 @@ class _ChatListScreenState extends State<ChatListScreen> {
 
     return Scaffold(
       body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 10),
-              Text(
-                "Chats",
-                style: GoogleFonts.raleway(
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(height: 20),
-              TextFormField(
-                controller: searchController,
-                decoration: InputDecoration(
-                  hintText: 'Search chats',
-                  hintStyle: TextStyle(color: Colors.grey.shade500),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
+        child: RefreshIndicator(
+          onRefresh: () async {
+            final user = FirebaseAuth.instance.currentUser;
+            if (user != null) {
+              context.read<ChatBloc>().add(LoadChat(uid: user.uid));
+            }
+            return await Future.delayed(Duration(milliseconds: 100)); 
+          },
+          child: Padding(
+            padding: EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 10),
+                Text(
+                  "Chats",
+                  style: GoogleFonts.raleway(
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
                   ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                    borderSide: BorderSide(color: Colors.transparent),
-                  ),
-                  filled: true,
-                  fillColor: const Color.fromARGB(166, 238, 238, 238),
-                  contentPadding: EdgeInsets.zero,
-                  prefixIcon: Icon(Icons.search, color: Colors.grey.shade500),
                 ),
-              ),
-              SizedBox(height: 20),
-              Expanded(
-                child: BlocBuilder<ChatBloc, ChatState>(
-                  builder: (context, state) {
-                    if (state is ChatLoading) {
-                      return Center(child: CircularProgressIndicator());
-                    }
-
-                    if (state is ChatLoaded) {
-                      final chats = state.chats;
-
-                      if (chats.isEmpty) {
-                        return Center(child: Text("No chats found"));
+                SizedBox(height: 20),
+                TextFormField(
+                  controller: searchController,
+                  decoration: InputDecoration(
+                    hintText: 'Search chats',
+                    hintStyle: TextStyle(color: Colors.grey.shade500),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                      borderSide: BorderSide(color: Colors.transparent),
+                    ),
+                    filled: true,
+                    fillColor: const Color.fromARGB(166, 238, 238, 238),
+                    contentPadding: EdgeInsets.zero,
+                    prefixIcon: Icon(Icons.search, color: Colors.grey.shade500),
+                  ),
+                ),
+                SizedBox(height: 20),
+                Expanded(
+                  child: BlocBuilder<ChatBloc, ChatState>(
+                    builder: (context, state) {
+                      if (state is ChatLoading) {
+                        return Center(child: CircularProgressIndicator());
                       }
 
-                      return ListView.separated(
-                        itemCount: chats.length,
-                        separatorBuilder: (context, index) =>
-                            SizedBox(height: 15),
-                        itemBuilder: (context, index) {
-                          final chat = chats[index];
-                          final otherUserId = chat.participants.firstWhere(
-                            (uid) => uid != currentUserId,
-                            orElse: () => currentUserId,
-                          );
+                      if (state is ChatLoaded) {
+                        final chats = state.chats;
 
-                          return FutureBuilder<UserModel>(
-                            future: FirebaseService().getChatUser(otherUserId),
-                            builder: (context, snapshot) {
-                              if (!snapshot.hasData) {
-                                return ListTile(
-                                  leading: CircleAvatar(
-                                    backgroundImage: AssetImage(
-                                      'assets/images/male_icon.png',
-                                    ),
-                                  ),
-                                  title: Text("Loading..."),
-                                );
-                              }
+                        if (chats.isEmpty) {
+                          return Center(child: Text("No chats found"));
+                        }
 
-                              final otherUser = snapshot.data!;
-                              return ListTile(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_) =>
-                                          ChatDetailScreen(user: otherUser),
+                        return ListView.separated(
+                          itemCount: chats.length,
+                          separatorBuilder: (context, index) =>
+                              SizedBox(height: 15),
+                          itemBuilder: (context, index) {
+                            final chat = chats[index];
+                            final otherUserId = chat.participants.firstWhere(
+                              (uid) => uid != currentUserId,
+                              orElse: () => currentUserId,
+                            );
+
+                            return FutureBuilder<UserModel>(
+                              future: FirebaseService().getChatUser(
+                                otherUserId,
+                              ),
+                              builder: (context, snapshot) {
+                                if (!snapshot.hasData) {
+                                  return ListTile(
+                                    leading: CircleAvatar(
+                                      backgroundImage: AssetImage(
+                                        'assets/images/male_icon.png',
+                                      ),
                                     ),
+                                    title: Text("Loading..."),
                                   );
-                                },
-                                leading: CircleAvatar(
-                                  radius: 30,
-                                  backgroundImage: otherUser.imagePath != null
-                                      ? NetworkImage(otherUser.imagePath!)
-                                      : AssetImage(
-                                              'assets/images/male_icon.png',
-                                            )
-                                            as ImageProvider,
-                                ),
-                                title: Text(
-                                  otherUser.name,
-                                  style: GoogleFonts.roboto(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                subtitle: Text(
-                                  CryptoHelper.decrypt(chat.lastMsg),
-                                  style: TextStyle(color: Colors.grey.shade600),
-                                ),
-                              );
-                            },
-                          );
-                        },
-                      );
-                    }
+                                }
 
-                    return Center(child: Text("Error loading chats"));
-                  },
+                                final otherUser = snapshot.data!;
+                                return ListTile(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) =>
+                                            ChatDetailScreen(user: otherUser),
+                                      ),
+                                    );
+                                  },
+                                  leading: CircleAvatar(
+                                    radius: 30,
+                                    backgroundImage: otherUser.imagePath != null
+                                        ? NetworkImage(otherUser.imagePath!)
+                                        : AssetImage(
+                                                'assets/images/male_icon.png',
+                                              )
+                                              as ImageProvider,
+                                  ),
+                                  title: Text(
+                                    otherUser.name,
+                                    style: GoogleFonts.roboto(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  subtitle: Text(
+                                    CryptoHelper.decrypt(chat.lastMsg),
+                                    style: TextStyle(
+                                      color: Colors.grey.shade600,
+                                    ),
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                        );
+                      }
+
+                      return Center(child: Text("Error loading chats"));
+                    },
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

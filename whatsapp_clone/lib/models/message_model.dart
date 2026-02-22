@@ -1,11 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MessageModel {
+  final String? messageId;
   final String senderId;
   final String message;
   final DateTime? timestamp;
 
-  MessageModel({required this.senderId, required this.message, this.timestamp});
+  MessageModel({required this.senderId, required this.message, this.timestamp, this.messageId});
 
   MessageModel copyWith({
     String? senderId,
@@ -13,14 +14,16 @@ class MessageModel {
     DateTime? timestamp,
   }) {
     return MessageModel(
+      messageId: messageId,
       senderId: senderId ?? this.senderId,
       message: message ?? this.message,
       timestamp: timestamp ?? this.timestamp,
     );
   }
 
-  factory MessageModel.fromJson(Map<String, dynamic> json) {
+  factory MessageModel.fromJson(Map<String, dynamic> json, String id) {
     return MessageModel(
+      messageId: id,
       senderId: json['senderId'],
       message: json['message'],
       timestamp: json['timestamp'] != null

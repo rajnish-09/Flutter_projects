@@ -52,6 +52,22 @@ class FirebaseService {
     );
   }
 
+  Future<UserModel> getUserData() async {
+    final User? user = FirebaseAuth.instance.currentUser;
+    final response = await whatsappUserCollection.doc(user!.uid).get();
+    return UserModel.fromJson(
+      response.data() as Map<String, dynamic>,
+      response.id,
+    );
+  }
+
+  Future<void> updateUserData(UserModel updatedUserData) async {
+    final User? user = FirebaseAuth.instance.currentUser;
+    await whatsappUserCollection
+        .doc(user!.uid)
+        .update(updatedUserData.toJson());
+  }
+
   //---------------------MESSAGE-----------------------------------------------
 
   Future<void> sendMessage(
@@ -86,10 +102,18 @@ class FirebaseService {
             return MessageModel.fromJson({
               ...data,
               'message': CryptoHelper.decrypt(encryptedMessage),
-            });
+            }, doc.id);
           }).toList(),
         );
   }
+
+  Future<void> deleteMessage(String chatId, String messageId) async {
+  await chatCollection
+      .doc(chatId)
+      .collection('messages')
+      .doc(messageId)
+      .delete();
+}
 
   Stream<List<ChatModel>> getChats(String uid) {
     return chatCollection

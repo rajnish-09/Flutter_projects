@@ -15,7 +15,6 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   int _currentIndex = 0;
   final List<Widget> _pages = [
     ChatListScreen(),
-    Center(child: Text("Fav")),
     ExploreScreen(),
     ProfileScreen(),
   ];
@@ -28,10 +27,6 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
         unselectedItemColor: Colors.grey,
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.chat_bubble), label: 'Chat'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.call_outlined),
-            label: 'Calls',
-          ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person_add_alt),
             label: 'Explore',
