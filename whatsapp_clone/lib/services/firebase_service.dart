@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:whatsapp_clone/models/chat_model.dart';
 import 'package:whatsapp_clone/models/message_model.dart';
 import 'package:whatsapp_clone/models/user_model.dart';
+import 'package:whatsapp_clone/utils/crypto_helper.dart';
 import 'package:whatsapp_clone/widgets/show_snackbar.dart';
 
 class FirebaseService {
@@ -59,12 +60,15 @@ class FirebaseService {
     ChatModel chat,
   ) async {
     final chatRef = chatCollection.doc(chatId);
+    final encryptedMsg = msg.copyWith(
+      message: CryptoHelper.encrypt(msg.message),
+    );
     await chatRef.set(chat.toJson(), SetOptions(merge: true));
-    await chatRef.collection('messages').add(msg.toJson());
+    await chatRef.collection('messages').add(encryptedMsg.toJson());
 
     // 3️⃣ Update last message info
     await chatRef.update({
-      'lastMsg': msg.message,
+      'lastMsg': encryptedMsg.message,
       'lastMessageTime': FieldValue.serverTimestamp(),
     });
   }
@@ -76,9 +80,14 @@ class FirebaseService {
         .orderBy('timestamp', descending: true)
         .snapshots()
         .map(
-          (snapshot) => snapshot.docs
-              .map((msg) => MessageModel.fromJson(msg.data()))
-              .toList(),
+          (snapshot) => snapshot.docs.map((doc) {
+            final data = doc.data();
+            final encryptedMessage = data['message'] ?? '';
+            return MessageModel.fromJson({
+              ...data,
+              'message': CryptoHelper.decrypt(encryptedMessage),
+            });
+          }).toList(),
         );
   }
 
