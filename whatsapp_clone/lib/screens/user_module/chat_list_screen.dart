@@ -9,6 +9,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:whatsapp_clone/models/user_model.dart';
 import 'package:whatsapp_clone/models/chat_model.dart';
 import 'package:whatsapp_clone/services/firebase_service.dart';
+import 'package:whatsapp_clone/utils/crypto_helper.dart';
 import 'chat_detail_screen.dart';
 
 class ChatListScreen extends StatefulWidget {
@@ -28,14 +29,6 @@ class _ChatListScreenState extends State<ChatListScreen> {
     if (user == null) return;
     context.read<ChatBloc>().add(LoadChat(uid: user.uid));
   }
-
-  // Future<UserModel> getUser(String uid) async {
-  //   final doc = await FirebaseFirestore.instance
-  //       .collection('users')
-  //       .doc(uid)
-  //       .get();
-  //   return UserModel.fromJson(doc.data()!, doc.id);
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -98,8 +91,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
                           final chat = chats[index];
                           final otherUserId = chat.participants.firstWhere(
                             (uid) => uid != currentUserId,
-                            orElse: () =>
-                                currentUserId,
+                            orElse: () => currentUserId,
                           );
 
                           return FutureBuilder<UserModel>(
@@ -144,7 +136,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
                                   ),
                                 ),
                                 subtitle: Text(
-                                  chat.lastMsg,
+                                  CryptoHelper.decrypt(chat.lastMsg),
                                   style: TextStyle(color: Colors.grey.shade600),
                                 ),
                               );

@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:whatsapp_clone/bloc/auth/auth_bloc.dart';
 import 'package:whatsapp_clone/bloc/auth/auth_event.dart';
 import 'package:whatsapp_clone/bloc/auth/auth_state.dart';
+import 'package:whatsapp_clone/screens/user_module/main_navigation_screen.dart';
 import 'package:whatsapp_clone/screens/user_module/profile_screen.dart';
 import 'package:whatsapp_clone/screens/auth_module/signup_screen.dart';
 import 'package:whatsapp_clone/widgets/input_textformfield.dart';
@@ -38,7 +39,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 if (state is AuthLoginSuccess) {
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => ProfileScreen()),
+                    MaterialPageRoute(
+                      builder: (context) => MainNavigationScreen(),
+                    ),
                   );
                 }
               },

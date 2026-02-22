@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:whatsapp_clone/bloc/auth/auth_bloc.dart';
 import 'package:whatsapp_clone/bloc/auth/auth_event.dart';
+import 'package:whatsapp_clone/bloc/auth/auth_state.dart';
+import 'package:whatsapp_clone/screens/auth_module/login_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -15,11 +17,21 @@ class ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            context.read<AuthBloc>().add(LogoutEvent());
+        child: BlocListener<AuthBloc, AuthState>(
+          listener: (context, state) {
+            if (state is AuthLogoutSuccess) {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => LoginScreen()),
+              );
+            }
           },
-          child: Text("Logout"),
+          child: ElevatedButton(
+            onPressed: () {
+              context.read<AuthBloc>().add(LogoutEvent());
+            },
+            child: Text("Logout"),
+          ),
         ),
       ),
     );

@@ -173,6 +173,7 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
                   Expanded(
                     child: TextFormField(
                       controller: messageController,
+                      textCapitalization: TextCapitalization.sentences,
                       style: TextStyle(fontSize: 13),
                       decoration: InputDecoration(
                         hintText: 'Message...',

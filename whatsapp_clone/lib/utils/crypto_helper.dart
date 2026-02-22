@@ -9,29 +9,21 @@ String generate32CharKey() {
 }
 
 class CryptoHelper {
-  static final _key = Key.fromUtf8(generate32CharKey()); // 32 chars
-  static final _iv = IV.fromLength(16); // 16 bytes IV
+  static final _key = Key.fromUtf8('vG7p9sL4qW8xZ2rT6bH1kM5dC3nQ0aY2');
+  static final _iv = IV.fromLength(16);
 
   // Encrypt plain text
   static String encrypt(String plainText) {
     final encrypter = Encrypter(AES(_key));
     final encrypted = encrypter.encrypt(plainText, iv: _iv);
-    return encrypted.base64; // store this in Firebase
+    return encrypted.base64;
   }
-
-  // // Decrypt encrypted text
-  // static String decrypt(String encryptedText) {
-  //   final encrypter = Encrypter(AES(_key));
-  //   return encrypter.decrypt64(encryptedText, iv: _iv);
-  // }
 
   static String decrypt(String encryptedText) {
     try {
       final encrypter = Encrypter(AES(_key));
       return encrypter.decrypt64(encryptedText, iv: _iv);
     } catch (e) {
-      // If decryption fails (e.g. malformed data), return the original text
-      // or an error message so the app doesn't crash
       return "[Decryption Error]";
     }
   }
