@@ -210,7 +210,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   );
                 }
-                return Text("Test");
+                return Text("Error loading profile");
               },
             ),
           ),

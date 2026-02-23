@@ -43,6 +43,9 @@ dependencies:
   encrypt: ^5.0.1
   fluttertoast: ^9.0.0
   popover: ^0.4.0
+  flutter_slidable: ^4.0.3
+  firebase_messaging: ^16.1.1
+  # flutter_local_notifications: ^20.1.0
 
 
 dev_dependencies:

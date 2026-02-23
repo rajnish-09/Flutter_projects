@@ -24,5 +24,14 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         debugPrint(e.toString());
       }
     });
+
+    on<DeleteChat>((event, emit) async {
+      try {
+        await firebaseService.deleteChat(event.chatId);
+        emit(ChatDeleted(msg: 'Deleted successfully'));
+      } catch (e) {
+        emit(ChatError(error: e.toString()));
+      }
+    });
   }
 }

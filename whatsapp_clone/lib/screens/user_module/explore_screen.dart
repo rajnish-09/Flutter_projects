@@ -121,7 +121,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                         },
                       );
                     }
-                    return Center(child: Text("Error"));
+                    return Center(child: Text("Error loading users"));
                   },
                 ),
               ),

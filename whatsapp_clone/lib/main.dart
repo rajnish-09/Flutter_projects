@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -12,11 +13,13 @@ import 'package:whatsapp_clone/screens/auth_module/auth_gate.dart';
 import 'package:whatsapp_clone/screens/auth_module/login_screen.dart';
 import 'package:whatsapp_clone/screens/auth_module/signup_screen.dart';
 import 'package:whatsapp_clone/screens/user_module/chat_detail_screen.dart';
+// import 'package:whatsapp_clone/screens/user_module/slidable.dart';
 import 'package:whatsapp_clone/services/firebase_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+ 
   runApp(MyApp());
 }
 

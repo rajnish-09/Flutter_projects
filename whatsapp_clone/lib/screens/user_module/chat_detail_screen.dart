@@ -11,6 +11,7 @@ import 'package:whatsapp_clone/models/message_model.dart';
 import 'package:whatsapp_clone/models/user_model.dart';
 import 'package:whatsapp_clone/services/firebase_service.dart';
 import 'package:intl/intl.dart';
+import 'package:whatsapp_clone/utils/crypto_helper.dart';
 
 class ChatDetailScreen extends StatefulWidget {
   final UserModel user;
@@ -308,6 +309,7 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
                                           }
                                         },
                                       );
+                                      
                                     },
                               icon: isSending
                                   ? Padding(

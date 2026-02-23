@@ -115,6 +115,7 @@ class FirebaseService {
         .delete();
   }
 
+  //--------------------------------CHATS----------------------------
   Stream<List<ChatModel>> getChats(String uid) {
     return chatCollection
         .where('participants', arrayContains: uid)
@@ -124,5 +125,9 @@ class FirebaseService {
               .map((chat) => ChatModel.fromJson(chat.data(), chat.id))
               .toList(),
         );
+  }
+
+  Future<void> deleteChat(String chatId) async {
+    await chatCollection.doc(chatId).delete();
   }
 }
