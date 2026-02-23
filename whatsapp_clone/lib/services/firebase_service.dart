@@ -134,4 +134,15 @@ class FirebaseService {
   Future<void> createGroup(GroupModel group) async {
     await groupCollection.add(group.toJson());
   }
+
+  Stream<List<GroupModel>> getGroup(String uid) {
+    return groupCollection
+        .where('members', arrayContains: uid)
+        .snapshots()
+        .map(
+          (snapshot) => snapshot.docs
+              .map((e) => GroupModel.fromJson(e.data(), e.id))
+              .toList(),
+        );
+  }
 }

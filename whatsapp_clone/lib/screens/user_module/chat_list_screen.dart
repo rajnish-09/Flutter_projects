@@ -7,11 +7,14 @@ import 'package:whatsapp_clone/bloc/chat/chat_event.dart';
 import 'package:whatsapp_clone/bloc/chat/chat_state.dart';
 import 'package:whatsapp_clone/bloc/group/group_bloc.dart';
 import 'package:whatsapp_clone/bloc/group/group_event.dart';
+import 'package:whatsapp_clone/bloc/group/group_state.dart';
 import 'package:whatsapp_clone/bloc/users/user_bloc.dart';
 import 'package:whatsapp_clone/bloc/users/user_event.dart';
 import 'package:whatsapp_clone/bloc/users/user_state.dart';
 import 'package:whatsapp_clone/models/group_model.dart';
 import 'package:whatsapp_clone/models/user_model.dart';
+import 'package:whatsapp_clone/screens/user_module/build_chat_list.dart';
+import 'package:whatsapp_clone/screens/user_module/build_group_list.dart';
 import 'package:whatsapp_clone/services/firebase_service.dart';
 import 'package:whatsapp_clone/utils/crypto_helper.dart';
 import 'package:whatsapp_clone/widgets/show_toast.dart';
@@ -31,6 +34,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
   String filteredSearch = '';
   Set<String> selectedUserIds = {};
   final _formKey = GlobalKey<FormState>();
+  int selectedTab = 0;
 
   @override
   void initState() {
@@ -39,6 +43,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
     if (user == null) return;
     context.read<ChatBloc>().add(LoadChat(uid: user.uid));
     context.read<UserBloc>().add(LoadUsers());
+    context.read<GroupBloc>().add(LoadGroup(uid: user.uid));
   }
 
   @override
@@ -277,126 +282,78 @@ class _ChatListScreenState extends State<ChatListScreen> {
                     prefixIcon: Icon(Icons.search, color: Colors.grey.shade500),
                   ),
                 ),
+                SizedBox(height: 10),
+                Row(
+                  children: [
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            selectedTab = 0;
+                          });
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          decoration: BoxDecoration(
+                            color: selectedTab == 0
+                                ? Colors.blue
+                                : Colors.grey.shade200,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Center(
+                            child: Text(
+                              "Chats",
+                              style: TextStyle(
+                                color: selectedTab == 0
+                                    ? Colors.white
+                                    : Colors.black,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            selectedTab = 1;
+                          });
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          decoration: BoxDecoration(
+                            color: selectedTab == 1
+                                ? Colors.blue
+                                : Colors.grey.shade200,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Center(
+                            child: Text(
+                              "Groups",
+                              style: TextStyle(
+                                color: selectedTab == 1
+                                    ? Colors.white
+                                    : Colors.black,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
                 SizedBox(height: 20),
                 Expanded(
-                  child: BlocBuilder<ChatBloc, ChatState>(
-                    builder: (context, state) {
-                      if (state is ChatLoading) {
-                        return Center(child: CircularProgressIndicator());
-                      }
-                      if (state is ChatDeleted) {
-                        // showSnackBar(context, state.msg, Colors.green);
-                        showToastWidget(state.msg, Colors.green);
-                      }
-
-                      if (state is ChatLoaded) {
-                        final chats = state.chats;
-
-                        if (chats.isEmpty) {
-                          return Center(child: Text("No chats found"));
-                        }
-                        // if (searchController.text.isNotEmpty) {
-                        //   chats = state.chats.where((chat){
-
-                        //     return chat.chatId
-                        //   })
-                        // }
-                        return ListView.separated(
-                          itemCount: chats.length,
-                          separatorBuilder: (context, index) =>
-                              SizedBox(height: 15),
-                          itemBuilder: (context, index) {
-                            final chat = chats[index];
-                            final otherUserId = chat.participants.firstWhere(
-                              (uid) => uid != currentUserId,
-                              orElse: () => currentUserId,
-                            );
-
-                            return Slidable(
-                              key: ValueKey(chats[index]),
-                              endActionPane: ActionPane(
-                                motion: StretchMotion(),
-                                children: [
-                                  SlidableAction(
-                                    onPressed: (context) {
-                                      context.read<ChatBloc>().add(
-                                        DeleteChat(chatId: chat.chatId!),
-                                      );
-                                      // print(chat.chatId);
-                                    },
-                                    backgroundColor: Colors.red,
-                                    icon: Icons.delete,
-                                    // label: 'Delete',
-                                  ),
-                                ],
-                              ),
-                              child: GestureDetector(
-                                onLongPress: () {
-                                  // print(otherUserId);
-                                  showAllUserBottomSheet(otherUserId);
-                                },
-                                child: FutureBuilder<UserModel>(
-                                  future: FirebaseService().getChatUser(
-                                    otherUserId,
-                                  ),
-                                  builder: (context, snapshot) {
-                                    if (!snapshot.hasData) {
-                                      return ListTile(
-                                        leading: CircleAvatar(
-                                          backgroundImage: AssetImage(
-                                            'assets/images/male_icon.png',
-                                          ),
-                                        ),
-                                        title: Text("Loading..."),
-                                      );
-                                    }
-
-                                    final otherUser = snapshot.data!;
-                                    return ListTile(
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (_) => ChatDetailScreen(
-                                              user: otherUser,
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                      leading: CircleAvatar(
-                                        radius: 30,
-                                        backgroundImage:
-                                            otherUser.imagePath != null
-                                            ? NetworkImage(otherUser.imagePath!)
-                                            : AssetImage(
-                                                    'assets/images/male_icon.png',
-                                                  )
-                                                  as ImageProvider,
-                                      ),
-                                      title: Text(
-                                        otherUser.name,
-                                        style: GoogleFonts.roboto(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16,
-                                        ),
-                                      ),
-                                      subtitle: Text(
-                                        CryptoHelper.decrypt(chat.lastMsg),
-                                        style: TextStyle(
-                                          color: Colors.grey.shade600,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
-                            );
-                          },
-                        );
-                      }
-                      return Center(child: Text("Error loading chats"));
-                    },
-                  ),
+                  child: selectedTab == 0
+                      ? BuildChatList(
+                          currentUserId: currentUserId,
+                          showModalSheet: showAllUserBottomSheet,
+                        )
+                      : BuildGroupList(),
                 ),
               ],
             ),

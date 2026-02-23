@@ -25,7 +25,7 @@ class GroupModel {
       lastMessageTime: json['lastMessageTime'] != null
           ? (json['lastMessageTime'] as Timestamp).toDate()
           : null,
-      members: json['members'],
+      members: Set<String>.from(json['members'] ?? []).toList(),
       createdBy: json['createdBy'],
     );
   }
