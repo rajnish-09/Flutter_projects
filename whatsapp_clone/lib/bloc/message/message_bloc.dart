@@ -14,7 +14,7 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
   MessageBloc(this.firebaseService) : super(MessageInitial()) {
     on<SendMessage>((event, emit) async {
       try {
-        await firebaseService.sendMessage(event.msg, event.chatId, event.chat);
+        await firebaseService.sendMessage(event.msg, event.chatId, event.chat, event.isGroup);
       } catch (e) {
         debugPrint(e.toString());
       }
@@ -23,7 +23,7 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
     on<LoadMessages>((event, emit) async {
       // emit(MessageLoading());
       await emit.forEach<List<MessageModel>>(
-        firebaseService.getMessages(event.chatId),
+        firebaseService.getMessages(event.chatId, event.isGroup),
         onData: (List<MessageModel> messages) {
           return MessageLoaded(msgs: messages);
         },

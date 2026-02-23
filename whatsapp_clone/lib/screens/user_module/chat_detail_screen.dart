@@ -2,20 +2,20 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:popover/popover.dart';
 import 'package:whatsapp_clone/bloc/message/message_bloc.dart';
 import 'package:whatsapp_clone/bloc/message/message_event.dart';
 import 'package:whatsapp_clone/bloc/message/message_state.dart';
 import 'package:whatsapp_clone/models/chat_model.dart';
+import 'package:whatsapp_clone/models/group_model.dart';
 import 'package:whatsapp_clone/models/message_model.dart';
 import 'package:whatsapp_clone/models/user_model.dart';
 import 'package:whatsapp_clone/services/firebase_service.dart';
 import 'package:intl/intl.dart';
-import 'package:whatsapp_clone/utils/crypto_helper.dart';
 
 class ChatDetailScreen extends StatefulWidget {
-  final UserModel user;
-  const ChatDetailScreen({super.key, required this.user});
+  final UserModel? user;
+  final GroupModel? group;
+  const ChatDetailScreen({super.key, this.user, this.group});
 
   @override
   State<ChatDetailScreen> createState() => _ChatDetailScreenState();
@@ -34,10 +34,20 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
   void initState() {
     super.initState();
     final currentUser = FirebaseAuth.instance.currentUser;
-    if (currentUser != null && widget.user.uid != null) {
-      chatId = generateChatId(currentUser.uid, widget.user.uid!);
+    if (widget.user != null) {
+      if (currentUser != null && widget.user!.uid != null) {
+        chatId = generateChatId(currentUser.uid, widget.user!.uid!);
+      }
+      context.read<MessageBloc>().add(
+        LoadMessages(chatId: chatId, isGroup: false),
+      );
     }
-    context.read<MessageBloc>().add(LoadMessages(chatId: chatId));
+    if (widget.group != null) {
+      chatId = widget.group!.groupId!;
+      context.read<MessageBloc>().add(
+        LoadMessages(chatId: chatId, isGroup: true),
+      );
+    }
   }
 
   void _showMessageMenu(
@@ -78,14 +88,20 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
     );
 
     if (selected == 'delete') {
-      await FirebaseService().deleteMessage(chatId, message.messageId!);
+      if (widget.user != null) {
+        await FirebaseService().deleteMessage(
+          chatId,
+          message.messageId!,
+          false,
+        );
+      }
+      if (widget.group != null) {
+        await FirebaseService().deleteMessage(chatId, message.messageId!, true);
+      }
     }
 
     if (selected == 'copy') {
       Clipboard.setData(ClipboardData(text: message.message));
-      // ScaffoldMessenger.of(
-      //   context,
-      // ).showSnackBar(const SnackBar(content: Text('Message copied')));
     }
   }
 
@@ -105,7 +121,9 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
               backgroundImage: AssetImage('assets/images/male_icon.png'),
             ),
             SizedBox(width: 10),
-            Text(widget.user.name),
+            Text(
+              widget.user != null ? widget.user!.name : widget.group!.groupName,
+            ),
           ],
         ),
       ),
@@ -155,6 +173,7 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
                           } else {
                             formattedTime = '...';
                           }
+
                           return GestureDetector(
                             onLongPressStart: (details) {
                               _showMessageMenu(
@@ -199,6 +218,23 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
                                       ? CrossAxisAlignment.end
                                       : CrossAxisAlignment.start,
                                   children: [
+                                    if (widget.group != null)
+                                      FutureBuilder<UserModel>(
+                                        future: FirebaseService().getChatUser(
+                                          msg.senderId,
+                                        ),
+                                        builder: (context, snapshot) {
+                                          if (snapshot.hasData) {
+                                            return Text(
+                                              snapshot.data!.name,
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            );
+                                          }
+                                          return SizedBox();
+                                        },
+                                      ),
                                     Text(
                                       msg.message,
                                       style: TextStyle(fontSize: 13),
@@ -274,42 +310,73 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
                               onPressed: isSending
                                   ? null
                                   : () {
-                                      final user =
-                                          FirebaseAuth.instance.currentUser;
-                                      if (user == null) return;
-                                      final uid1 = user.uid;
-                                      final uid2 = widget.user.uid;
-                                      final chatId = generateChatId(
-                                        uid1,
-                                        uid2!,
-                                      );
-                                      setState(() {
-                                        isSending = true;
-                                      });
-                                      context.read<MessageBloc>().add(
-                                        SendMessage(
-                                          chat: ChatModel(
-                                            participants: [uid1, uid2],
+                                      if (widget.group != null) {
+                                        final user =
+                                            FirebaseAuth.instance.currentUser;
+                                        if (user == null) return;
+                                        context.read<MessageBloc>().add(
+                                          SendMessage(
+                                            chat: ChatModel(
+                                              participants:
+                                                  widget.group!.members,
+                                            ),
+                                            msg: MessageModel(
+                                              senderId: user.uid,
+                                              message: messageController.text
+                                                  .trim(),
+                                            ),
+                                            chatId: chatId,
+                                            isGroup: true,
                                           ),
-                                          msg: MessageModel(
-                                            senderId: uid1,
-                                            message: messageController.text
-                                                .trim(),
+                                        );
+                                        messageController.clear();
+                                        Future.delayed(
+                                          const Duration(milliseconds: 500),
+                                          () {
+                                            if (mounted) {
+                                              setState(() => isSending = false);
+                                            }
+                                          },
+                                        );
+                                      }
+                                      if (widget.user != null) {
+                                        final user =
+                                            FirebaseAuth.instance.currentUser;
+                                        if (user == null) return;
+                                        final uid1 = user.uid;
+                                        final uid2 = widget.user!.uid;
+                                        final chatId = generateChatId(
+                                          uid1,
+                                          uid2!,
+                                        );
+                                        setState(() {
+                                          isSending = true;
+                                        });
+                                        context.read<MessageBloc>().add(
+                                          SendMessage(
+                                            chat: ChatModel(
+                                              participants: [uid1, uid2],
+                                            ),
+                                            msg: MessageModel(
+                                              senderId: uid1,
+                                              message: messageController.text
+                                                  .trim(),
+                                            ),
+                                            chatId: chatId,
+                                            isGroup: false,
                                           ),
-                                          chatId: chatId,
-                                        ),
-                                      );
+                                        );
 
-                                      messageController.clear();
-                                      Future.delayed(
-                                        const Duration(milliseconds: 500),
-                                        () {
-                                          if (mounted) {
-                                            setState(() => isSending = false);
-                                          }
-                                        },
-                                      );
-                                      
+                                        messageController.clear();
+                                        Future.delayed(
+                                          const Duration(milliseconds: 500),
+                                          () {
+                                            if (mounted) {
+                                              setState(() => isSending = false);
+                                            }
+                                          },
+                                        );
+                                      }
                                     },
                               icon: isSending
                                   ? Padding(

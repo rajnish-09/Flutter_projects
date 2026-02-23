@@ -6,6 +6,8 @@ import 'package:whatsapp_clone/bloc/chat/chat_bloc.dart';
 import 'package:whatsapp_clone/bloc/chat/chat_event.dart';
 import 'package:whatsapp_clone/bloc/group/group_bloc.dart';
 import 'package:whatsapp_clone/bloc/group/group_state.dart';
+import 'package:whatsapp_clone/screens/user_module/chat_detail_screen.dart';
+import 'package:whatsapp_clone/utils/crypto_helper.dart';
 
 class BuildGroupList extends StatelessWidget {
   const BuildGroupList({super.key});
@@ -44,7 +46,6 @@ class BuildGroupList extends StatelessWidget {
                         context.read<ChatBloc>().add(
                           DeleteChat(chatId: group.groupId!),
                         );
-                        // print(chat.chatId);
                       },
                       backgroundColor: Colors.red,
                       icon: Icons.delete,
@@ -53,14 +54,13 @@ class BuildGroupList extends StatelessWidget {
                 ),
                 child: ListTile(
                   onTap: () {
-                    // Navigate to group chat screen
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (_) =>
-                    //         GroupChatScreen(group: group),
-                    //   ),
-                    // );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => ChatDetailScreen(group: group),
+                      ),
+                    );
+                    // print(group.groupId);
                   },
                   leading: CircleAvatar(
                     radius: 30,
@@ -83,7 +83,7 @@ class BuildGroupList extends StatelessWidget {
                     ),
                   ),
                   subtitle: Text(
-                    group.lastMsg,
+                    CryptoHelper.decrypt(group.lastMsg),
                     style: TextStyle(color: Colors.grey.shade600),
                   ),
                 ),

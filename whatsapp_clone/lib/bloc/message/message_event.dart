@@ -7,12 +7,19 @@ class SendMessage extends MessageEvent {
   final String chatId;
   final MessageModel msg;
   final ChatModel chat;
-  SendMessage({required this.chat, required this.msg, required this.chatId});
+  final bool isGroup;
+  SendMessage({
+    required this.chat,
+    required this.msg,
+    required this.chatId,
+    required this.isGroup,
+  });
 }
 
 class LoadMessages extends MessageEvent {
   final String chatId;
-  LoadMessages({required this.chatId});
+  final bool isGroup;
+  LoadMessages({required this.chatId, required this.isGroup});
 }
 
 class MessagesUpdated extends MessageEvent {

@@ -24,6 +24,21 @@ class BuildChatList extends StatefulWidget {
 }
 
 class _BuildChatListState extends State<BuildChatList> {
+  Map<String, UserModel> usersMap = {};
+
+  void loadAllUsers() async {
+    final users = await FirebaseService().getUsers(); // fetch all users once
+    setState(() {
+      usersMap = {for (var u in users) u.uid!: u};
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loadAllUsers();
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ChatBloc, ChatState>(
@@ -46,7 +61,7 @@ class _BuildChatListState extends State<BuildChatList> {
                 (uid) => uid != widget.currentUserId,
                 orElse: () => widget.currentUserId,
               );
-
+              final otherUser = usersMap[otherUserId];
               return Slidable(
                 key: ValueKey(chats[index].chatId),
                 endActionPane: ActionPane(
@@ -69,50 +84,35 @@ class _BuildChatListState extends State<BuildChatList> {
                     // showAllUserBottomSheet(otherUserId);
                     widget.showModalSheet(otherUserId);
                   },
-                  child: FutureBuilder<UserModel>(
-                    future: FirebaseService().getChatUser(otherUserId),
-                    builder: (context, snapshot) {
-                      if (!snapshot.hasData) {
-                        return ListTile(
-                          leading: CircleAvatar(
-                            backgroundImage: AssetImage(
-                              'assets/images/male_icon.png',
-                            ),
-                          ),
-                          title: Text("Loading..."),
-                        );
-                      }
-
-                      final otherUser = snapshot.data!;
-                      return ListTile(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => ChatDetailScreen(user: otherUser),
-                            ),
-                          );
-                        },
-                        leading: CircleAvatar(
-                          radius: 30,
-                          backgroundImage: otherUser.imagePath != null
-                              ? NetworkImage(otherUser.imagePath!)
-                              : AssetImage('assets/images/male_icon.png')
-                                    as ImageProvider,
-                        ),
-                        title: Text(
-                          otherUser.name,
-                          style: GoogleFonts.roboto(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
-                        subtitle: Text(
-                          CryptoHelper.decrypt(chat.lastMsg),
-                          style: TextStyle(color: Colors.grey.shade600),
+                  child: ListTile(
+                    onTap: () async {
+                      // final otherUser = await FirebaseService().getChatUser(
+                      //   otherUserId,
+                      // );
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => ChatDetailScreen(user: otherUser!),
                         ),
                       );
                     },
+                    leading: CircleAvatar(
+                      radius: 30,
+                      backgroundImage:
+                          AssetImage('assets/images/male_icon.png')
+                              as ImageProvider,
+                    ),
+                    title: Text(
+                      otherUser?.name ?? 'Unknown',
+                      style: GoogleFonts.roboto(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                    subtitle: Text(
+                      CryptoHelper.decrypt(chat.lastMsg),
+                      style: TextStyle(color: Colors.grey.shade600),
+                    ),
                   ),
                 ),
               );

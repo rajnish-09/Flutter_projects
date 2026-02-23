@@ -73,22 +73,55 @@ class FirebaseService {
     MessageModel msg,
     String chatId,
     ChatModel chat,
+    bool isGroup,
   ) async {
-    final chatRef = chatCollection.doc(chatId);
-    final encryptedMsg = msg.copyWith(
-      message: CryptoHelper.encrypt(msg.message),
-    );
-    await chatRef.set(chat.toJson(), SetOptions(merge: true));
-    await chatRef.collection('messages').add(encryptedMsg.toJson());
+    if (isGroup) {
+      final groupRef = groupCollection.doc(chatId);
+      final encryptedMsg = msg.copyWith(
+        message: CryptoHelper.encrypt(msg.message),
+      );
+      await groupRef.set(chat.toJson(), SetOptions(merge: true));
+      await groupRef.collection('messages').add(encryptedMsg.toJson());
 
-    // 3️⃣ Update last message info
-    await chatRef.update({
-      'lastMsg': encryptedMsg.message,
-      'lastMessageTime': FieldValue.serverTimestamp(),
-    });
+      // 3️⃣ Update last message info
+      await groupRef.update({
+        'lastMsg': encryptedMsg.message,
+        'lastMessageTime': FieldValue.serverTimestamp(),
+      });
+    } else {
+      final chatRef = chatCollection.doc(chatId);
+      final encryptedMsg = msg.copyWith(
+        message: CryptoHelper.encrypt(msg.message),
+      );
+      await chatRef.set(chat.toJson(), SetOptions(merge: true));
+      await chatRef.collection('messages').add(encryptedMsg.toJson());
+
+      // 3️⃣ Update last message info
+      await chatRef.update({
+        'lastMsg': encryptedMsg.message,
+        'lastMessageTime': FieldValue.serverTimestamp(),
+      });
+    }
   }
 
-  Stream<List<MessageModel>> getMessages(String chatId) {
+  Stream<List<MessageModel>> getMessages(String chatId, bool isGroup) {
+    if (isGroup) {
+      return groupCollection
+          .doc(chatId)
+          .collection('messages')
+          .orderBy('timestamp', descending: true)
+          .snapshots()
+          .map(
+            (snapshot) => snapshot.docs.map((doc) {
+              final data = doc.data();
+              final encryptedMessage = data['message'] ?? '';
+              return MessageModel.fromJson({
+                ...data,
+                'message': CryptoHelper.decrypt(encryptedMessage),
+              }, doc.id);
+            }).toList(),
+          );
+    }
     return chatCollection
         .doc(chatId)
         .collection('messages')
@@ -106,7 +139,19 @@ class FirebaseService {
         );
   }
 
-  Future<void> deleteMessage(String chatId, String messageId) async {
+  Future<void> deleteMessage(
+    String chatId,
+    String messageId,
+    bool isGroup,
+  ) async {
+    if (isGroup) {
+      await groupCollection
+          .doc(chatId)
+          .collection('messages')
+          .doc(messageId)
+          .delete();
+      return;
+    }
     await chatCollection
         .doc(chatId)
         .collection('messages')
