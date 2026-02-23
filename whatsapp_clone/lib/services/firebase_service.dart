@@ -1,11 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:whatsapp_clone/models/chat_model.dart';
+import 'package:whatsapp_clone/models/group_model.dart';
 import 'package:whatsapp_clone/models/message_model.dart';
 import 'package:whatsapp_clone/models/user_model.dart';
 import 'package:whatsapp_clone/utils/crypto_helper.dart';
-import 'package:whatsapp_clone/widgets/show_snackbar.dart';
 
 class FirebaseService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -14,7 +13,7 @@ class FirebaseService {
     'whatsappUser',
   );
   final chatCollection = FirebaseFirestore.instance.collection('chats');
-  // final messageCollection = FirebaseFirestore.instance.collection('messages');
+  final groupCollection = FirebaseFirestore.instance.collection('groups');
 
   Future<String> createUsers({
     required UserModel userData,
@@ -129,5 +128,10 @@ class FirebaseService {
 
   Future<void> deleteChat(String chatId) async {
     await chatCollection.doc(chatId).delete();
+  }
+
+  //--------------------------------GROUP ----------------------------
+  Future<void> createGroup(GroupModel group) async {
+    await groupCollection.add(group.toJson());
   }
 }

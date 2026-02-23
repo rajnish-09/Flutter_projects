@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class GroupModel {
   final String? groupId;
-  final String? groupName;
+  final String groupName;
   final List<String> members;
   final String createdBy;
   final String lastMsg;
@@ -10,7 +10,7 @@ class GroupModel {
 
   GroupModel({
     this.groupId,
-    this.groupName,
+    required this.groupName,
     required this.members,
     required this.createdBy,
     this.lastMsg = '',
