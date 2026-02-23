@@ -52,7 +52,7 @@ class FirebaseService {
     );
   }
 
-  Future<UserModel> getUserData() async {
+  Future<UserModel> getPersonalDetail() async {
     final User? user = FirebaseAuth.instance.currentUser;
     final response = await whatsappUserCollection.doc(user!.uid).get();
     return UserModel.fromJson(
@@ -108,12 +108,12 @@ class FirebaseService {
   }
 
   Future<void> deleteMessage(String chatId, String messageId) async {
-  await chatCollection
-      .doc(chatId)
-      .collection('messages')
-      .doc(messageId)
-      .delete();
-}
+    await chatCollection
+        .doc(chatId)
+        .collection('messages')
+        .doc(messageId)
+        .delete();
+  }
 
   Stream<List<ChatModel>> getChats(String uid) {
     return chatCollection

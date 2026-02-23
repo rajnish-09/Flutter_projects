@@ -6,6 +6,7 @@ import 'package:whatsapp_clone/bloc/auth/auth_bloc.dart';
 import 'package:whatsapp_clone/bloc/auth/auth_state.dart';
 import 'package:whatsapp_clone/bloc/chat/chat_bloc.dart';
 import 'package:whatsapp_clone/bloc/message/message_bloc.dart';
+import 'package:whatsapp_clone/bloc/profile/profile_bloc.dart';
 import 'package:whatsapp_clone/bloc/users/user_bloc.dart';
 import 'package:whatsapp_clone/screens/auth_module/auth_gate.dart';
 import 'package:whatsapp_clone/screens/auth_module/login_screen.dart';
@@ -32,6 +33,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => MessageBloc(FirebaseService())),
         BlocProvider(create: (_) => UserBloc(FirebaseService())),
         BlocProvider(create: (_) => ChatBloc(FirebaseService())),
+        BlocProvider(create: (_) => ProfileBloc(FirebaseService())),
       ],
       child: MaterialApp(
         home: AuthGate(),

@@ -3,6 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:whatsapp_clone/bloc/auth/auth_bloc.dart';
 import 'package:whatsapp_clone/bloc/auth/auth_event.dart';
 import 'package:whatsapp_clone/bloc/auth/auth_state.dart';
+import 'package:whatsapp_clone/bloc/profile/profile_bloc.dart';
+import 'package:whatsapp_clone/bloc/profile/profile_event.dart';
+import 'package:whatsapp_clone/bloc/profile/profile_state.dart';
 import 'package:whatsapp_clone/bloc/users/user_bloc.dart';
 import 'package:whatsapp_clone/bloc/users/user_event.dart';
 import 'package:whatsapp_clone/bloc/users/user_state.dart';
@@ -22,7 +25,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<UserBloc>().add(GetUser());
+    context.read<ProfileBloc>().add(LoadProfile());
   }
 
   TextEditingController nameController = TextEditingController();
@@ -51,17 +54,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
             }
           },
         ),
-        //        final String name, phone, email, password;
-        // final String? uid;
-        // final String? country, province, city, street;
-        // final String role = 'user';
-        // final String? imagePath;
-        BlocListener<UserBloc, UserState>(
+
+        BlocListener<ProfileBloc, ProfileState>(
           listener: (context, state) {
-            if (state is UserUpdated) {
+            if (state is ProfileUpdated) {
               showToastWidget('Profile updated successfully', Colors.green);
             }
-            if (state is UserError) {
+            if (state is ProfileError) {
               showToastWidget(state.msg, Colors.red);
             }
             if (state is LoadPersonalDetail) {
@@ -69,10 +68,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               nameController.text = user.name;
               emailController.text = user.email;
               phoneController.text = user.phone;
-              // countryController.text = user.country ?? '';
-              // provinceController.text = user.province ?? '';
-              // cityController.text = user.city ?? '';
-              // streetController.text = user.street ?? '';
             }
           },
         ),
@@ -81,9 +76,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(20),
-            child: BlocBuilder<UserBloc, UserState>(
+            child: BlocBuilder<ProfileBloc, ProfileState>(
               builder: (context, state) {
-                if (state is UserLoading) {
+                if (state is ProfileLoading) {
                   return Center(child: CircularProgressIndicator());
                 }
                 if (state is LoadPersonalDetail) {
@@ -192,8 +187,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   // city: cityController.text.trim(),
                                   // street: streetController.text.trim(),
                                 );
-                                context.read<UserBloc>().add(
-                                  UpdateUser(userData: updatedUserData),
+                                context.read<ProfileBloc>().add(
+                                  UpdateProfile(userData: updatedUserData),
                                 );
                                 setState(() {
                                   isTextFieldEnabled = false;

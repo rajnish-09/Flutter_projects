@@ -17,6 +17,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     ChatListScreen(),
     ExploreScreen(),
     ProfileScreen(),
+    // Center(child: Text("data")),
   ];
   @override
   Widget build(BuildContext context) {

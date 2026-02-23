@@ -11,13 +11,6 @@ class UserLoaded extends UserState {
   UserLoaded({required this.users});
 }
 
-class LoadPersonalDetail extends UserState {
-  final UserModel userData;
-  LoadPersonalDetail({required this.userData});
-}
-
-class UserUpdated extends UserState {}
-
 class UserError extends UserState {
   final String msg;
   UserError({required this.msg});

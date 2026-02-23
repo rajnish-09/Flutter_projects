@@ -71,6 +71,9 @@ class _ExploreScreenState extends State<ExploreScreen> {
                     if (state is UserLoading) {
                       return Center(child: CircularProgressIndicator());
                     }
+                    if (state is UserError) {
+                      return Expanded(child: Center(child: Text(state.msg)));
+                    }
                     if (state is UserLoaded) {
                       List<UserModel> filteredUser = state.users;
                       if (filterSearch.isNotEmpty) {
@@ -86,13 +89,14 @@ class _ExploreScreenState extends State<ExploreScreen> {
                         },
                         itemCount: filteredUser.length,
                         itemBuilder: (context, index) {
-                          final user = state.users[index];
+                          final user = filteredUser[index];
                           return GestureDetector(
                             onTap: () {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => ChatDetailScreen(user: user,),
+                                  builder: (context) =>
+                                      ChatDetailScreen(user: user),
                                 ),
                               );
                             },
