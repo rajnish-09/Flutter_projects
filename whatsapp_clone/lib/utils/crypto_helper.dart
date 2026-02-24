@@ -1,12 +1,4 @@
 import 'package:encrypt/encrypt.dart';
-import 'dart:math';
-
-String generate32CharKey() {
-  const chars =
-      'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-  final rand = Random.secure();
-  return List.generate(32, (_) => chars[rand.nextInt(chars.length)]).join();
-}
 
 class CryptoHelper {
   static final _key = Key.fromUtf8('vG7p9sL4qW8xZ2rT6bH1kM5dC3nQ0aY2');
