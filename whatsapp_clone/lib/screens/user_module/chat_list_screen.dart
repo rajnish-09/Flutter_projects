@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -44,6 +46,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
     context.read<ChatBloc>().add(LoadChat(uid: user.uid));
     context.read<UserBloc>().add(LoadUsers());
     context.read<GroupBloc>().add(LoadGroup(uid: user.uid));
+    saveFCMToken();
   }
 
   @override
@@ -51,6 +54,10 @@ class _ChatListScreenState extends State<ChatListScreen> {
     super.dispose();
     searchController.dispose();
     groupNameController.dispose();
+  }
+
+  void saveFCMToken() async {
+    await FirebaseService().saveFCMToken();
   }
 
   void showAllUserBottomSheet(String selectedPersonUid) {

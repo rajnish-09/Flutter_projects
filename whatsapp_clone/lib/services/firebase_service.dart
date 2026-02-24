@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:whatsapp_clone/models/chat_model.dart';
 import 'package:whatsapp_clone/models/group_model.dart';
 import 'package:whatsapp_clone/models/message_model.dart';
@@ -58,6 +59,17 @@ class FirebaseService {
       response.data() as Map<String, dynamic>,
       response.id,
     );
+  }
+
+  Future<void> saveFCMToken() async {
+    final User? user = FirebaseAuth.instance.currentUser;
+    String? token = await FirebaseMessaging.instance.getToken();
+
+    if (user == null) return;
+    await FirebaseFirestore.instance
+        .collection('whatsappUser')
+        .doc(user.uid)
+        .update({'fcmToken': token});
   }
 
   Future<void> updateUserData(UserModel updatedUserData) async {

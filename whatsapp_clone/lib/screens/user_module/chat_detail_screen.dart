@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,6 +12,7 @@ import 'package:whatsapp_clone/models/message_model.dart';
 import 'package:whatsapp_clone/models/user_model.dart';
 import 'package:whatsapp_clone/services/firebase_service.dart';
 import 'package:intl/intl.dart';
+import 'package:whatsapp_clone/services/notification_service.dart';
 
 class ChatDetailScreen extends StatefulWidget {
   final UserModel? user;
@@ -309,7 +311,7 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
                           ? IconButton(
                               onPressed: isSending
                                   ? null
-                                  : () {
+                                  : () async {
                                       if (widget.group != null) {
                                         final user =
                                             FirebaseAuth.instance.currentUser;
@@ -376,6 +378,24 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
                                             }
                                           },
                                         );
+
+                                        DocumentSnapshot userDoc =
+                                            await FirebaseFirestore.instance
+                                                .collection('users')
+                                                .doc(uid2)
+                                                .get();
+
+                                        String token = userDoc['fcmToken'];
+                                        NotificationService
+                                        notificationService =
+                                            NotificationService();
+                                        notificationService
+                                            .sendPushNotification(
+                                              token: token,
+                                              senderName: user.uid,
+                                              message: messageController.text
+                                                  .trim(),
+                                            );
                                       }
                                     },
                               icon: isSending

@@ -14,13 +14,13 @@ import 'package:whatsapp_clone/screens/auth_module/auth_gate.dart';
 import 'package:whatsapp_clone/screens/auth_module/login_screen.dart';
 import 'package:whatsapp_clone/screens/auth_module/signup_screen.dart';
 import 'package:whatsapp_clone/screens/user_module/chat_detail_screen.dart';
-// import 'package:whatsapp_clone/screens/user_module/slidable.dart';
 import 'package:whatsapp_clone/services/firebase_service.dart';
+import 'package:whatsapp_clone/services/notification_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
- 
+  NotificationService().initNotification();
   runApp(MyApp());
 }
 
