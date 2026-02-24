@@ -10,6 +10,7 @@ import 'package:whatsapp_clone/models/chat_model.dart';
 import 'package:whatsapp_clone/models/group_model.dart';
 import 'package:whatsapp_clone/models/message_model.dart';
 import 'package:whatsapp_clone/models/user_model.dart';
+import 'package:whatsapp_clone/screens/user_module/group_detail_screen.dart';
 import 'package:whatsapp_clone/services/firebase_service.dart';
 import 'package:intl/intl.dart';
 import 'package:whatsapp_clone/services/notification_service.dart';
@@ -117,16 +118,30 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
           },
           icon: Icon(Icons.arrow_back_ios),
         ),
-        title: Row(
-          children: [
-            CircleAvatar(
-              backgroundImage: AssetImage('assets/images/male_icon.png'),
-            ),
-            SizedBox(width: 10),
-            Text(
-              widget.user != null ? widget.user!.name : widget.group!.groupName,
-            ),
-          ],
+        title: GestureDetector(
+          onTap: widget.group != null
+              ? () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => GroupDetailScreen(group: widget.group!,),
+                    ),
+                  );
+                }
+              : null,
+          child: Row(
+            children: [
+              CircleAvatar(
+                backgroundImage: AssetImage('assets/images/male_icon.png'),
+              ),
+              SizedBox(width: 10),
+              Text(
+                widget.user != null
+                    ? widget.user!.name
+                    : widget.group!.groupName,
+              ),
+            ],
+          ),
         ),
       ),
       body: SafeArea(

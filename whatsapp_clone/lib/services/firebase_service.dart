@@ -209,4 +209,8 @@ class FirebaseService {
               .toList(),
         );
   }
+
+  Future<void> getGroupUsers(String chatId) async{
+    
+  }
 }
