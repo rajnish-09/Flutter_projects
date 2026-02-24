@@ -11,3 +11,8 @@ class LoadGroup extends GroupEvent {
   final String uid;
   LoadGroup({required this.uid});
 }
+
+class LeaveGroup extends GroupEvent {
+  final String groupId;
+  LeaveGroup({required this.groupId});
+}

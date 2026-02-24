@@ -249,6 +249,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
             final user = FirebaseAuth.instance.currentUser;
             if (user != null) {
               context.read<ChatBloc>().add(LoadChat(uid: user.uid));
+              context.read<GroupBloc>().add(LoadGroup(uid: user.uid));
             }
             return await Future.delayed(Duration(milliseconds: 100));
           },

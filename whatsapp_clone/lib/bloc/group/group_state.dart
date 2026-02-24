@@ -12,3 +12,5 @@ class GroupLoaded extends GroupState {
   final List<GroupModel> groups;
   GroupLoaded({required this.groups});
 }
+
+class Groupleaved extends GroupState{}

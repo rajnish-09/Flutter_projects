@@ -29,5 +29,14 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
         debugPrint(e.toString());
       }
     });
+
+    on<LeaveGroup>((event, emit) async {
+      try {
+        await firebaseService.leaveGroup(event.groupId);
+        emit(Groupleaved());
+      } catch (e) {
+        debugPrint(e.toString());
+      }
+    });
   }
 }

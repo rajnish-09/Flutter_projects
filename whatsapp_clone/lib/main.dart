@@ -41,6 +41,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => GroupBloc(FirebaseService())),
       ],
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         home: AuthGate(),
         theme: ThemeData(textTheme: GoogleFonts.nunitoSansTextTheme()),
       ),

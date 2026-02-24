@@ -210,7 +210,29 @@ class FirebaseService {
         );
   }
 
-  Future<void> getGroupUsers(String chatId) async{
-    
+  Future<void> leaveGroup(String groupId) async {
+    final uid = FirebaseAuth.instance.currentUser!.uid;
+
+    final groupRef = FirebaseFirestore.instance
+        .collection('groups')
+        .doc(groupId);
+
+    await FirebaseFirestore.instance.runTransaction((transaction) async {
+      final snapshot = await transaction.get(groupRef);
+
+      if (!snapshot.exists) return;
+
+      List members = List.from(snapshot['members']);
+
+      // Remove current user
+      members.remove(uid);
+
+      if (members.isEmpty) {
+        // If no members left → delete group completely
+        transaction.delete(groupRef);
+      } else {
+        transaction.update(groupRef, {'members': members});
+      }
+    });
   }
 }
