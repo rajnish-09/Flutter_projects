@@ -52,6 +52,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 MaterialPageRoute(builder: (context) => LoginScreen()),
               );
             }
+            if (state is AccountDeleted) {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => LoginScreen()),
+              );
+              showToastWidget('Account delete successfully.', Colors.green);
+            }
           },
         ),
 
@@ -97,7 +104,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   isTextFieldEnabled = true;
                                 });
                               }
-                              if (value == 'delete') {}
+                              if (value == 'delete') {
+                                context.read<AuthBloc>().add(
+                                  DeleteAccountEvent(),
+                                );
+                              }
                             },
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),

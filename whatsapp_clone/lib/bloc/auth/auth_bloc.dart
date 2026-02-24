@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:whatsapp_clone/bloc/auth/auth_event.dart';
 import 'package:whatsapp_clone/bloc/auth/auth_state.dart';
@@ -43,6 +44,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         emit(AuthLoginFailed(msg: 'Failed to logout'));
       } catch (e) {
         AuthLogoutFailed(msg: e.toString());
+      }
+    });
+
+    on<DeleteAccountEvent>((event, emit) async {
+      try {
+        await firebaseService.deleteAccount();
+        emit(AccountDeleted());
+      } catch (e) {
+        debugPrint(e.toString());
       }
     });
   }

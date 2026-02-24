@@ -14,3 +14,5 @@ class SignupEvent extends AuthEvent {
   final String password;
   SignupEvent({required this.userData, required this.password});
 }
+
+class DeleteAccountEvent extends AuthEvent{}

@@ -29,3 +29,5 @@ class AuthLogoutFailed extends AuthState {
   final String msg;
   AuthLogoutFailed({required this.msg});
 }
+
+class AccountDeleted extends AuthState{}

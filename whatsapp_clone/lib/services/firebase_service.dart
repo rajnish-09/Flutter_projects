@@ -44,6 +44,13 @@ class FirebaseService {
         .toList();
   }
 
+  Future<void> deleteAccount() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      await user.delete();
+    }
+  }
+
   Future<UserModel> getChatUser(String uid) async {
     final response = await whatsappUserCollection.doc(uid).get();
     return UserModel.fromJson(

@@ -379,23 +379,23 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
                                           },
                                         );
 
-                                        DocumentSnapshot userDoc =
-                                            await FirebaseFirestore.instance
-                                                .collection('users')
-                                                .doc(uid2)
-                                                .get();
+                                        // DocumentSnapshot userDoc =
+                                        //     await FirebaseFirestore.instance
+                                        //         .collection('users')
+                                        //         .doc(uid2)
+                                        //         .get();
 
-                                        String token = userDoc['fcmToken'];
-                                        NotificationService
-                                        notificationService =
-                                            NotificationService();
-                                        notificationService
-                                            .sendPushNotification(
-                                              token: token,
-                                              senderName: user.uid,
-                                              message: messageController.text
-                                                  .trim(),
-                                            );
+                                        // String token = userDoc['fcmToken'];
+                                        // NotificationService
+                                        // notificationService =
+                                        //     NotificationService();
+                                        // notificationService
+                                        //     .sendPushNotification(
+                                        //       token: token,
+                                        //       senderName: user.uid,
+                                        //       message: messageController.text
+                                        //           .trim(),
+                                        //     );
                                       }
                                     },
                               icon: isSending
