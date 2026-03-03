@@ -1,4 +1,5 @@
 import 'package:whatsapp_clone/models/group_model.dart';
+import 'package:whatsapp_clone/models/group_model.dart';
 
 abstract class GroupEvent {}
 
