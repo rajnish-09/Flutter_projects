@@ -108,7 +108,7 @@ class _SignupViewState extends State<SignupView> {
                       "Google",
                       style: TextStyle(color: Colors.black),
                     ),
-                    icon: Icon(Icons.abc),
+                    icon: Icon(Icons.g_mobiledata),
                     style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
