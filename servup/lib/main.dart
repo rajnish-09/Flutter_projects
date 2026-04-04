@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:servup/views/login/login_view.dart';
+import 'package:servup/views/auth/login_view.dart';
+import 'package:servup/views/auth/signup_view.dart';
+import 'package:servup/views/user/home_view.dart';
 
 void main() {
-  runApp( MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -15,7 +17,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         textTheme: GoogleFonts.nunitoSansTextTheme(Theme.of(context).textTheme),
       ),
-      home: LoginView(),
+      home: HomeView(),
     );
   }
 }
