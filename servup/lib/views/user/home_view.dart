@@ -9,6 +9,13 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   TextEditingController searchController = TextEditingController();
+  List<Map<String, dynamic>> services = [
+    {"name": "Plumbing", "icon": Icons.plumbing},
+    {"name": "Cleaning", "icon": Icons.cleaning_services},
+    {"name": "Electrician", "icon": Icons.electrical_services},
+    {"name": "Tutor", "icon": Icons.cast_for_education_rounded},
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,65 +84,43 @@ class _HomeViewState extends State<HomeView> {
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                 ),
                 const SizedBox(height: 20),
-                GestureDetector(
-                  onTap: () {},
-                  child: Container(
-                    width: 100,
-                    height: 100,
-                    decoration: BoxDecoration(
-                      color: Color(0xffF1F3FD),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    padding: const EdgeInsets.all(10),
-                    child: Column(
-                      children: [
-                        Icon(
-                          Icons.plumbing,
-                          size: 50,
-                          color: Color(0xff2554D8),
-                        ),
-                        const SizedBox(height: 5),
-                        const Text(
-                          "Plumbing",
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Color.fromARGB(255, 102, 102, 102),
-                          ),
-                        ),
-                      ],
-                    ),
+                GridView.builder(
+                  itemCount: services.length,
+                  physics: NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
                   ),
-                ),
-                const SizedBox(height: 10),
-                GestureDetector(
-                  onTap: () {},
-                  child: Container(
-                    width: 100,
-                    height: 100,
-                    decoration: BoxDecoration(
-                      color: Color(0xffF1F3FD),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    padding: const EdgeInsets.all(10),
-                    child: Column(
-                      children: [
-                        Icon(
-                          Icons.cleaning_services,
-                          size: 50,
-                          color: Color(0xff2554D8),
-                        ),
-                        const SizedBox(height: 5),
-                        const Text(
-                          "Cleaner",
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Color.fromARGB(255, 102, 102, 102),
+                  itemBuilder: (context, index) {
+                    return Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: const Color(0xffF1F3FD),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Column(
+                        children: [
+                          Icon(
+                            services[index]['icon'],
+                            size: 50,
+                            color: Color(0xff2554D8),
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
+                          const SizedBox(height: 10),
+                          Text(
+                            services[index]['name'],
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Color.fromARGB(255, 102, 102, 102),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
                 ),
+
                 const SizedBox(height: 25),
                 const Text(
                   "Top Rated Nearby",
