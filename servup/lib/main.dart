@@ -5,6 +5,7 @@ import 'package:servup/views/auth/signup_view.dart';
 import 'package:servup/views/user/book_now_view.dart';
 import 'package:servup/views/user/home_view.dart';
 import 'package:servup/views/user/provider_profile_view.dart';
+import 'package:servup/views/user/service_listing_view.dart';
 import 'package:servup/views/user/user_profile_view.dart';
 
 void main() {
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         textTheme: GoogleFonts.nunitoSansTextTheme(Theme.of(context).textTheme),
       ),
-      home: UserProfileView(),
+      home: ServiceListingView(),
     );
   }
 }
