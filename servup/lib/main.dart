@@ -7,6 +7,7 @@ import 'package:servup/screens/user/booking_confirmation_screen.dart';
 import 'package:servup/screens/user/favorites_screen.dart';
 import 'package:servup/screens/user/home_screen.dart';
 import 'package:servup/screens/user/provider_profile_screen.dart';
+import 'package:servup/screens/user/reviews_ratings_screen.dart';
 import 'package:servup/screens/user/service_listing_screen.dart';
 import 'package:servup/screens/user/user_profile_screen.dart';
 
@@ -23,7 +24,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         textTheme: GoogleFonts.nunitoSansTextTheme(Theme.of(context).textTheme),
       ),
-      home: BookingConfirmationScreen(),
+      home: ReviewsRatingsScreen(),
     );
   }
 }
