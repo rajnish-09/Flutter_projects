@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:servup/themes/app_colors.dart';
+import 'package:servup/utils/app_colors.dart';
 
-class UserProfileView extends StatefulWidget {
-  const UserProfileView({super.key});
+class UserProfileScreen extends StatefulWidget {
+  const UserProfileScreen({super.key});
 
   @override
-  State<UserProfileView> createState() => _UserProfileViewState();
+  State<UserProfileScreen> createState() => _UserProfileScreenState();
 }
 
-class _UserProfileViewState extends State<UserProfileView> {
+class _UserProfileScreenState extends State<UserProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

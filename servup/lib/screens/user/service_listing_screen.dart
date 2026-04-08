@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:servup/themes/app_colors.dart';
+import 'package:servup/utils/app_colors.dart';
 
-class ServiceListingView extends StatefulWidget {
-  const ServiceListingView({super.key});
+class ServiceListingScreen extends StatefulWidget {
+  const ServiceListingScreen({super.key});
 
   @override
-  State<ServiceListingView> createState() => _ServiceListingViewState();
+  State<ServiceListingScreen> createState() => _ServiceListingScreenState();
 }
 
-class _ServiceListingViewState extends State<ServiceListingView> {
+class _ServiceListingScreenState extends State<ServiceListingScreen> {
   bool isSelected = true;
   @override
   Widget build(BuildContext context) {

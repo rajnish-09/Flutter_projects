@@ -15,4 +15,5 @@ class AppColors {
   static const Color secondaryText = Color(0xff6F747D);
 
   static const Color starColor = Colors.orange;
+  static const Color darkOrangeColor = Color(0xffA36700);
 }

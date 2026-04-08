@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class BookNowView extends StatefulWidget {
-  const BookNowView({super.key});
+class BookNowScreen extends StatefulWidget {
+  const BookNowScreen({super.key});
 
   @override
-  State<BookNowView> createState() => _BookNowViewState();
+  State<BookNowScreen> createState() => _BookNowScreenState();
 }
 
-class _BookNowViewState extends State<BookNowView> {
+class _BookNowScreenState extends State<BookNowScreen> {
   DateTime selectedDateTime = DateTime.now().add(const Duration(days: 1));
   TimeOfDay? selectedTime;
   @override

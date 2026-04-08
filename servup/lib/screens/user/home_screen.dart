@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class HomeView extends StatefulWidget {
-  const HomeView({super.key});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
 
   @override
-  State<HomeView> createState() => _HomeViewState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeViewState extends State<HomeView> {
+class _HomeScreenState extends State<HomeScreen> {
   TextEditingController searchController = TextEditingController();
   List<Map<String, dynamic>> services = [
     {"name": "Plumbing", "icon": Icons.plumbing},

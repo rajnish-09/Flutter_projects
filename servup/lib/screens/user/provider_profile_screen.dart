@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class ProviderProfileView extends StatefulWidget {
-  const ProviderProfileView({super.key});
+class ProviderProfileScreen extends StatefulWidget {
+  const ProviderProfileScreen({super.key});
 
   @override
-  State<ProviderProfileView> createState() => _ProviderProfileViewState();
+  State<ProviderProfileScreen> createState() => _ProviderProfileScreenState();
 }
 
-class _ProviderProfileViewState extends State<ProviderProfileView> {
+class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
