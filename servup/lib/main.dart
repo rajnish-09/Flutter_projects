@@ -10,6 +10,7 @@ import 'package:servup/screens/user/provider_profile_screen.dart';
 import 'package:servup/screens/user/reviews_ratings_screen.dart';
 import 'package:servup/screens/user/service_listing_screen.dart';
 import 'package:servup/screens/user/user_profile_screen.dart';
+import 'package:servup/utils/app_router.dart';
 
 void main() {
   runApp(MyApp());
@@ -20,11 +21,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       theme: ThemeData(
         textTheme: GoogleFonts.nunitoSansTextTheme(Theme.of(context).textTheme),
       ),
-      home: ReviewsRatingsScreen(),
+      title: 'Local Service Finder',
+      routerConfig: AppRouter().router,
+      // home: ReviewsRatingsScreen(),
     );
   }
 }
