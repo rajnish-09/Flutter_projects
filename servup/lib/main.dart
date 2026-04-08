@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:servup/screens/auth/login_view.dart';
 import 'package:servup/screens/auth/signup_view.dart';
 import 'package:servup/screens/user/book_now_screen.dart';
+import 'package:servup/screens/user/booking_confirmation_screen.dart';
 import 'package:servup/screens/user/favorites_screen.dart';
 import 'package:servup/screens/user/home_screen.dart';
 import 'package:servup/screens/user/provider_profile_screen.dart';
@@ -22,7 +23,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         textTheme: GoogleFonts.nunitoSansTextTheme(Theme.of(context).textTheme),
       ),
-      home: FavoritesScreen(),
+      home: BookingConfirmationScreen(),
     );
   }
 }

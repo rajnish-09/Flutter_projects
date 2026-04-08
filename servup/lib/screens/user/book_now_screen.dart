@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:servup/widgets/custom_button.dart';
 
 class BookNowScreen extends StatefulWidget {
   const BookNowScreen({super.key});
@@ -303,23 +304,7 @@ class _BookNowScreenState extends State<BookNowScreen> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xff005CAB),
-                      padding: const EdgeInsets.symmetric(vertical: 15),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    child: Text(
-                      "Confirm Booking",
-                      style: TextStyle(color: Colors.white, fontSize: 16),
-                    ),
-                  ),
-                ),
+                CustomButton(buttonText: "Confirm Booking"),
               ],
             ),
           ),
