@@ -17,6 +17,7 @@ class MainWrapper extends StatelessWidget {
         selectedItemColor: AppColors.primary,
         unselectedItemColor: AppColors.secondary,
         showUnselectedLabels: true,
+        selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(
@@ -35,10 +36,10 @@ class MainWrapper extends StatelessWidget {
 
   int calculateSelectedIndex(BuildContext context) {
     final String location = GoRouterState.of(context).uri.path;
-    if (location.startsWith('/')) return 0;
     if (location.startsWith('/favorites')) return 1;
     if (location.startsWith('/bookings')) return 2;
     if (location.startsWith('/profile')) return 3;
+    if (location == '/') return 0;
     return 0;
   }
 

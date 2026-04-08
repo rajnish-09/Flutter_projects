@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:servup/utils/app_colors.dart';
 import 'package:servup/widgets/custom_button.dart';
 
 class BookNowScreen extends StatefulWidget {
@@ -11,6 +12,9 @@ class BookNowScreen extends StatefulWidget {
 class _BookNowScreenState extends State<BookNowScreen> {
   DateTime selectedDateTime = DateTime.now().add(const Duration(days: 1));
   TimeOfDay? selectedTime;
+  final problemController = TextEditingController();
+  final priceController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -128,73 +132,30 @@ class _BookNowScreenState extends State<BookNowScreen> {
                 ),
                 const SizedBox(height: 20),
                 const Text(
-                  "Select time",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  "Problem Description",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                 ),
-                const SizedBox(height: 10),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
+                TextFormField(
+                  controller: problemController,
+                  maxLines: 5,
+                  minLines: 5,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: 'Describe your problem',
                   ),
-                  padding: const EdgeInsets.all(10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        selectedTime == null
-                            ? "Select time"
-                            : selectedTime!.format(context),
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xff595F6A),
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () async {
-                          final now = DateTime.now();
-
-                          TimeOfDay? picked = await showTimePicker(
-                            context: context,
-                            initialTime: TimeOfDay.now(),
-                          );
-
-                          if (picked == null) return;
-
-                          // If selected date is today, validate time
-                          if (selectedDateTime.year == now.year &&
-                              selectedDateTime.month == now.month &&
-                              selectedDateTime.day == now.day) {
-                            final selectedDateTimeWithTime = DateTime(
-                              selectedDateTime.year,
-                              selectedDateTime.month,
-                              selectedDateTime.day,
-                              picked.hour,
-                              picked.minute,
-                            );
-                            if (!mounted) return;
-
-                            if (selectedDateTimeWithTime.isBefore(now)) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                    "Cannot select past time",
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                  backgroundColor: Colors.red,
-                                ),
-                              );
-                              return;
-                            }
-                          }
-
-                          setState(() {
-                            selectedTime = picked;
-                          });
-                        },
-                        child: const Text("Change"),
-                      ),
-                    ],
+                  textCapitalization: TextCapitalization.sentences,
+                ),
+                const SizedBox(height: 20),
+                const Text(
+                  "Price Your Offer",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                ),
+                TextFormField(
+                  controller: priceController,
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: 'Enter your offer price',
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -304,11 +265,30 @@ class _BookNowScreenState extends State<BookNowScreen> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                CustomButton(buttonText: "Confirm Booking"),
+                CustomButton(buttonText: "Request Service"),
               ],
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class CustomTimeContainer extends StatelessWidget {
+  const CustomTimeContainer({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.secondaryContainer,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+      child: Text(
+        "09:00 AM",
+        style: const TextStyle(fontWeight: FontWeight.bold),
       ),
     );
   }
