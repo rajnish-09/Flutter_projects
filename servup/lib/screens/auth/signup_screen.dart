@@ -24,6 +24,9 @@ class _SignupScreenState extends State<SignupScreen> {
   TextEditingController phoneController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
+  
+  String _selectedRole = 'user';
+
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -76,6 +79,67 @@ class _SignupScreenState extends State<SignupScreen> {
                             color: Color.fromARGB(255, 129, 129, 129),
                             fontWeight: FontWeight.bold,
                           ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      Container(
+                        height: 50,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          borderRadius: BorderRadius.circular(25),
+                        ),
+                        padding: const EdgeInsets.all(4),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: GestureDetector(
+                                onTap: () => setState(() => _selectedRole = 'user'),
+                                child: AnimatedContainer(
+                                  duration: const Duration(milliseconds: 250),
+                                  curve: Curves.easeInOut,
+                                  decoration: BoxDecoration(
+                                    color: _selectedRole == 'user' ? const Color(0xff005CAB) : Colors.transparent,
+                                    borderRadius: BorderRadius.circular(25),
+                                    boxShadow: _selectedRole == 'user' ? [
+                                      const BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2))
+                                    ] : [],
+                                  ),
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    "User",
+                                    style: TextStyle(
+                                      color: _selectedRole == 'user' ? Colors.white : Colors.grey[700],
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: GestureDetector(
+                                onTap: () => setState(() => _selectedRole = 'provider'),
+                                child: AnimatedContainer(
+                                  duration: const Duration(milliseconds: 250),
+                                  curve: Curves.easeInOut,
+                                  decoration: BoxDecoration(
+                                    color: _selectedRole == 'provider' ? const Color(0xff005CAB) : Colors.transparent,
+                                    borderRadius: BorderRadius.circular(25),
+                                    boxShadow: _selectedRole == 'provider' ? [
+                                      const BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2))
+                                    ] : [],
+                                  ),
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    "Provider",
+                                    style: TextStyle(
+                                      color: _selectedRole == 'provider' ? Colors.white : Colors.grey[700],
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                       const SizedBox(height: 20),
@@ -164,6 +228,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         },
                         textInputType: TextInputType.visiblePassword,
                       ),
+
                       const SizedBox(height: 20),
                       SizedBox(
                         width: double.infinity,
@@ -175,6 +240,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                 email: emailController.text.trim(),
                                 phone: phoneController.text.trim(),
                                 password: passwordController.text.trim(),
+                                role: _selectedRole,
                               );
                               context.read<AuthBloc>().add(
                                 SignupEvent(user: user),
@@ -188,10 +254,19 @@ class _SignupScreenState extends State<SignupScreen> {
                             ),
                             padding: const EdgeInsets.symmetric(vertical: 15),
                           ),
-                          child: Text(
-                            "Signup",
-                            style: TextStyle(color: Colors.white),
-                          ),
+                          child: state is AuthLoading
+                              ? SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                    strokeWidth: 2,
+                                  ),
+                                )
+                              : Text(
+                                  "Signup",
+                                  style: TextStyle(color: Colors.white),
+                                ),
                         ),
                       ),
                       SizedBox(height: 10),

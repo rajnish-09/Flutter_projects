@@ -7,6 +7,9 @@ import 'package:servup/screens/user/home_screen.dart';
 import 'package:servup/screens/user/main_wrapper.dart';
 import 'package:servup/screens/user/user_profile_screen.dart';
 
+import 'package:servup/screens/provider/provider_dashboard_screen.dart';
+import 'package:servup/screens/provider/provider_booking_history_screen.dart';
+
 class AppRouter {
   static const String login = '/login';
   static const String signup = '/signup';
@@ -14,12 +17,16 @@ class AppRouter {
   static const String favorites = '/favorites';
   static const String bookings = '/bookings';
   static const String profile = '/profile';
+  static const String providerDashboard = '/provider-dashboard';
+  static const String providerBookingHistory = '/provider-booking-history';
 
   GoRouter router = GoRouter(
     initialLocation: login,
     routes: [
       GoRoute(path: login, builder: (context, state) => const LoginScreen()),
       GoRoute(path: signup, builder: (context, state) => const SignupScreen()),
+      GoRoute(path: providerDashboard, builder: (context, state) => const ProviderDashboardScreen()),
+      GoRoute(path: providerBookingHistory, builder: (context, state) => const ProviderBookingHistoryScreen()),
       ShellRoute(
         builder: (context, state, child) => MainWrapper(child: child),
         routes: [

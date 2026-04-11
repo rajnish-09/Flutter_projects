@@ -15,4 +15,10 @@ class FirebaseService {
     String uid = userCredential.user!.uid;
     servUpUsers.doc(uid).set(userData.toJson());
   }
+
+  // Login Users
+  Future<void> loginUsers({required String email, required String password}) async {
+    await FirebaseAuth.instance
+        .signInWithEmailAndPassword(email: email, password: password);
+  }
 }
