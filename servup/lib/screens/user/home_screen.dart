@@ -15,7 +15,9 @@ class _HomeScreenState extends State<HomeScreen> {
     {"name": "Plumbing", "icon": Icons.plumbing},
     {"name": "Cleaning", "icon": Icons.cleaning_services},
     {"name": "Electrician", "icon": Icons.electrical_services},
-    {"name": "Tutor", "icon": Icons.cast_for_education_rounded},
+    {"name": "Tutor", "icon": Icons.school},
+    {"name": "Painter", "icon": Icons.format_paint},
+    {"name": "More", "icon": Icons.more_horiz},
   ];
 
   @override

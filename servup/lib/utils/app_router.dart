@@ -9,6 +9,7 @@ import 'package:servup/screens/user/user_profile_screen.dart';
 
 import 'package:servup/screens/provider/provider_dashboard_screen.dart';
 import 'package:servup/screens/provider/provider_booking_history_screen.dart';
+import 'package:servup/screens/categories/all_categories_screen.dart';
 
 class AppRouter {
   static const String login = '/login';
@@ -19,14 +20,25 @@ class AppRouter {
   static const String profile = '/profile';
   static const String providerDashboard = '/provider-dashboard';
   static const String providerBookingHistory = '/provider-booking-history';
+  static const String allCategories = '/all-categories';
 
   GoRouter router = GoRouter(
-    initialLocation: login,
+    initialLocation: home,
     routes: [
       GoRoute(path: login, builder: (context, state) => const LoginScreen()),
       GoRoute(path: signup, builder: (context, state) => const SignupScreen()),
-      GoRoute(path: providerDashboard, builder: (context, state) => const ProviderDashboardScreen()),
-      GoRoute(path: providerBookingHistory, builder: (context, state) => const ProviderBookingHistoryScreen()),
+      GoRoute(
+        path: providerDashboard,
+        builder: (context, state) => const ProviderDashboardScreen(),
+      ),
+      GoRoute(
+        path: providerBookingHistory,
+        builder: (context, state) => const ProviderBookingHistoryScreen(),
+      ),
+      GoRoute(
+        path: allCategories,
+        builder: (context, state) => const AllCategoriesScreen(),
+      ),
       ShellRoute(
         builder: (context, state, child) => MainWrapper(child: child),
         routes: [
