@@ -1,4 +1,6 @@
 import 'package:go_router/go_router.dart';
+import 'package:servup/screens/auth/login_screen.dart';
+import 'package:servup/screens/auth/signup_screen.dart';
 import 'package:servup/screens/user/book_now_screen.dart';
 import 'package:servup/screens/user/favorites_screen.dart';
 import 'package:servup/screens/user/home_screen.dart';
@@ -6,14 +8,18 @@ import 'package:servup/screens/user/main_wrapper.dart';
 import 'package:servup/screens/user/user_profile_screen.dart';
 
 class AppRouter {
-  static const String home = '/';
+  static const String login = '/login';
+  static const String signup = '/signup';
+  static const String home = '/home';
   static const String favorites = '/favorites';
   static const String bookings = '/bookings';
   static const String profile = '/profile';
 
   GoRouter router = GoRouter(
-    initialLocation: home,
+    initialLocation: login,
     routes: [
+      GoRoute(path: login, builder: (context, state) => const LoginScreen()),
+      GoRoute(path: signup, builder: (context, state) => const SignupScreen()),
       ShellRoute(
         builder: (context, state, child) => MainWrapper(child: child),
         routes: [

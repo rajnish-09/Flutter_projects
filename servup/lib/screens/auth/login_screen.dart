@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:servup/utils/app_router.dart';
 import 'package:servup/widgets/custom_input_field.dart';
 
-class LoginView extends StatefulWidget {
-  const LoginView({super.key});
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
 
   @override
-  State<LoginView> createState() => _LoginViewState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginViewState extends State<LoginView> {
+class _LoginScreenState extends State<LoginScreen> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
@@ -55,6 +57,15 @@ class _LoginViewState extends State<LoginView> {
                       CustomInputField(
                         controller: emailController,
                         hintText: 'Enter email address',
+                        validate: (value) {
+                          if (value == null || value.trim().isEmpty) {
+                            return 'Email is required';
+                          }
+                          if (!RegExp(r'\S+@\S+\.\S+').hasMatch(value)) {
+                            return 'Enter valid email';
+                          }
+                          return null;
+                        },
                       ),
                       SizedBox(height: 20),
                       Row(
@@ -76,12 +87,20 @@ class _LoginViewState extends State<LoginView> {
                       CustomInputField(
                         controller: passwordController,
                         hintText: 'Enter password',
+                        validate: (value) {
+                          if (value == null || value.trim().isEmpty) {
+                            return 'Email is required';
+                          }
+                          return null;
+                        },
                       ),
                       SizedBox(height: 20),
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            context.go(AppRouter.home);
+                          },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Color(0xff005CAB),
                             shape: RoundedRectangleBorder(
@@ -123,7 +142,9 @@ class _LoginViewState extends State<LoginView> {
                   children: [
                     Text("Don't have an account?"),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        context.push(AppRouter.signup);
+                      },
                       child: Text(
                         "Signup",
                         style: TextStyle(color: Color(0xff005CAB)),

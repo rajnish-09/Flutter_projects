@@ -16,4 +16,7 @@ class AppColors {
 
   static const Color starColor = Colors.orange;
   static const Color darkOrangeColor = Color(0xffA36700);
+
+  static const Color successBackground = Colors.green;
+  static const Color failedBackground = Colors.red;
 }

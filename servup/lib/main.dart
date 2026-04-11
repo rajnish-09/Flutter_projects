@@ -1,18 +1,15 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:servup/screens/auth/login_view.dart';
-import 'package:servup/screens/auth/signup_view.dart';
-import 'package:servup/screens/user/book_now_screen.dart';
-import 'package:servup/screens/user/booking_confirmation_screen.dart';
-import 'package:servup/screens/user/favorites_screen.dart';
-import 'package:servup/screens/user/home_screen.dart';
-import 'package:servup/screens/user/provider_profile_screen.dart';
-import 'package:servup/screens/user/reviews_ratings_screen.dart';
-import 'package:servup/screens/user/service_listing_screen.dart';
-import 'package:servup/screens/user/user_profile_screen.dart';
+import 'package:servup/bloc/auth/auth_bloc.dart';
+import 'package:servup/firebase_options.dart';
+import 'package:servup/services/firebase_service.dart';
 import 'package:servup/utils/app_router.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(MyApp());
 }
 
@@ -21,13 +18,17 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      theme: ThemeData(
-        textTheme: GoogleFonts.nunitoSansTextTheme(Theme.of(context).textTheme),
+    return MultiBlocProvider(
+      providers: [BlocProvider(create: (_) => AuthBloc(FirebaseService()))],
+      child: MaterialApp.router(
+        theme: ThemeData(
+          textTheme: GoogleFonts.nunitoSansTextTheme(
+            Theme.of(context).textTheme,
+          ),
+        ),
+        title: 'Local Service Finder',
+        routerConfig: AppRouter().router,
       ),
-      title: 'Local Service Finder',
-      routerConfig: AppRouter().router,
-      // home: ReviewsRatingsScreen(),
     );
   }
 }

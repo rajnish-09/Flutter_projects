@@ -5,10 +5,18 @@ class CustomInputField extends StatelessWidget {
     super.key,
     required this.controller,
     required this.hintText,
+    required this.validate,
+    this.textCapitalization,
+    this.textInputType,
+    this.obscureText,
   });
 
   final TextEditingController controller;
   final String hintText;
+  final String? Function(String?)? validate;
+  final TextCapitalization? textCapitalization;
+  final TextInputType? textInputType;
+  final bool? obscureText;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +32,11 @@ class CustomInputField extends StatelessWidget {
         hintText: hintText,
         hintStyle: TextStyle(color: const Color.fromARGB(255, 124, 124, 124)),
       ),
-      keyboardType: TextInputType.emailAddress,
+      keyboardType: textInputType ?? TextInputType.name,
+      autovalidateMode: AutovalidateMode.onUserInteractionIfError,
+      validator: validate,
+      textCapitalization: textCapitalization ?? TextCapitalization.none,
+      obscureText: obscureText ?? false,
     );
   }
 }

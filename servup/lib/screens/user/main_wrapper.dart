@@ -46,16 +46,16 @@ class MainWrapper extends StatelessWidget {
   void onItemTapped(int index, BuildContext context) {
     switch (index) {
       case 0:
-        context.go(AppRouter.home);
+        context.push(AppRouter.home);
         break;
       case 1:
-        context.go(AppRouter.favorites);
+        context.push(AppRouter.favorites);
         break;
       case 2:
-        context.go(AppRouter.bookings);
+        context.push(AppRouter.bookings);
         break;
       case 3:
-        context.go(AppRouter.profile);
+        context.push(AppRouter.profile);
         break;
     }
   }
