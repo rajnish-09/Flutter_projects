@@ -24,10 +24,20 @@ class _SignupScreenState extends State<SignupScreen> {
   TextEditingController phoneController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
-  
+
   String _selectedRole = 'user';
 
   final _formKey = GlobalKey<FormState>();
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    emailController.dispose();
+    phoneController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -93,22 +103,33 @@ class _SignupScreenState extends State<SignupScreen> {
                           children: [
                             Expanded(
                               child: GestureDetector(
-                                onTap: () => setState(() => _selectedRole = 'user'),
+                                onTap: () =>
+                                    setState(() => _selectedRole = 'user'),
                                 child: AnimatedContainer(
                                   duration: const Duration(milliseconds: 250),
                                   curve: Curves.easeInOut,
                                   decoration: BoxDecoration(
-                                    color: _selectedRole == 'user' ? const Color(0xff005CAB) : Colors.transparent,
+                                    color: _selectedRole == 'user'
+                                        ? const Color(0xff005CAB)
+                                        : Colors.transparent,
                                     borderRadius: BorderRadius.circular(25),
-                                    boxShadow: _selectedRole == 'user' ? [
-                                      const BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2))
-                                    ] : [],
+                                    boxShadow: _selectedRole == 'user'
+                                        ? [
+                                            const BoxShadow(
+                                              color: Colors.black12,
+                                              blurRadius: 4,
+                                              offset: Offset(0, 2),
+                                            ),
+                                          ]
+                                        : [],
                                   ),
                                   alignment: Alignment.center,
                                   child: Text(
                                     "User",
                                     style: TextStyle(
-                                      color: _selectedRole == 'user' ? Colors.white : Colors.grey[700],
+                                      color: _selectedRole == 'user'
+                                          ? Colors.white
+                                          : Colors.grey[700],
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
@@ -117,22 +138,33 @@ class _SignupScreenState extends State<SignupScreen> {
                             ),
                             Expanded(
                               child: GestureDetector(
-                                onTap: () => setState(() => _selectedRole = 'provider'),
+                                onTap: () =>
+                                    setState(() => _selectedRole = 'provider'),
                                 child: AnimatedContainer(
                                   duration: const Duration(milliseconds: 250),
                                   curve: Curves.easeInOut,
                                   decoration: BoxDecoration(
-                                    color: _selectedRole == 'provider' ? const Color(0xff005CAB) : Colors.transparent,
+                                    color: _selectedRole == 'provider'
+                                        ? const Color(0xff005CAB)
+                                        : Colors.transparent,
                                     borderRadius: BorderRadius.circular(25),
-                                    boxShadow: _selectedRole == 'provider' ? [
-                                      const BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2))
-                                    ] : [],
+                                    boxShadow: _selectedRole == 'provider'
+                                        ? [
+                                            const BoxShadow(
+                                              color: Colors.black12,
+                                              blurRadius: 4,
+                                              offset: Offset(0, 2),
+                                            ),
+                                          ]
+                                        : [],
                                   ),
                                   alignment: Alignment.center,
                                   child: Text(
                                     "Provider",
                                     style: TextStyle(
-                                      color: _selectedRole == 'provider' ? Colors.white : Colors.grey[700],
+                                      color: _selectedRole == 'provider'
+                                          ? Colors.white
+                                          : Colors.grey[700],
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
@@ -245,6 +277,11 @@ class _SignupScreenState extends State<SignupScreen> {
                               context.read<AuthBloc>().add(
                                 SignupEvent(user: user),
                               );
+                              nameController.clear();
+                              emailController.clear();
+                              phoneController.clear();
+                              passwordController.clear();
+                              confirmPasswordController.clear();
                             }
                           },
                           style: ElevatedButton.styleFrom(

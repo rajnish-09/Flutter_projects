@@ -22,6 +22,13 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
 
   @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xffE9EDF6),
@@ -138,6 +145,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                     ),
                                   );
                                 }
+                                emailController.clear();
+                                passwordController.clear();
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Color(0xff005CAB),

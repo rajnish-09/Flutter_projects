@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:servup/models/service_model.dart';
 import 'package:servup/utils/app_router.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -11,13 +12,13 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   TextEditingController searchController = TextEditingController();
-  List<Map<String, dynamic>> services = [
-    {"name": "Plumbing", "icon": Icons.plumbing},
-    {"name": "Cleaning", "icon": Icons.cleaning_services},
-    {"name": "Electrician", "icon": Icons.electrical_services},
-    {"name": "Tutor", "icon": Icons.school},
-    {"name": "Painter", "icon": Icons.format_paint},
-    {"name": "More", "icon": Icons.more_horiz},
+  List<ServiceModel> services = [
+    ServiceModel(name: "Plumbing", icon: Icons.plumbing),
+    ServiceModel(name: "Cleaning", icon: Icons.cleaning_services),
+    ServiceModel(name: "Electrician", icon: Icons.electrical_services),
+    ServiceModel(name: "Tutor", icon: Icons.school),
+    ServiceModel(name: "Painter", icon: Icons.format_paint),
+    ServiceModel(name: "More", icon: Icons.more_horiz),
   ];
 
   @override
@@ -98,28 +99,40 @@ class _HomeScreenState extends State<HomeScreen> {
                     mainAxisSpacing: 10,
                   ),
                   itemBuilder: (context, index) {
-                    return Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: const Color(0xffF1F3FD),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Column(
-                        children: [
-                          Icon(
-                            services[index]['icon'],
-                            size: 50,
-                            color: Color(0xff2554D8),
-                          ),
-                          const SizedBox(height: 10),
-                          Text(
-                            services[index]['name'],
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Color.fromARGB(255, 102, 102, 102),
+                    return GestureDetector(
+                      onTap: () {
+                        if (services[index].name == "More") {
+                          context.push('/all-categories');
+                        } else {
+                          context.push(
+                            '/service-listing',
+                            extra: services[index].name,
+                          );
+                        }
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: const Color(0xffF1F3FD),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Column(
+                          children: [
+                            Icon(
+                              services[index].icon,
+                              size: 50,
+                              color: Color(0xff2554D8),
                             ),
-                          ),
-                        ],
+                            const SizedBox(height: 10),
+                            Text(
+                              services[index].name,
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Color.fromARGB(255, 102, 102, 102),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     );
                   },

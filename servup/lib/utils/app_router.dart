@@ -5,6 +5,7 @@ import 'package:servup/screens/user/book_now_screen.dart';
 import 'package:servup/screens/user/favorites_screen.dart';
 import 'package:servup/screens/user/home_screen.dart';
 import 'package:servup/screens/user/main_wrapper.dart';
+import 'package:servup/screens/user/service_listing_screen.dart';
 import 'package:servup/screens/user/user_profile_screen.dart';
 
 import 'package:servup/screens/provider/provider_dashboard_screen.dart';
@@ -23,7 +24,7 @@ class AppRouter {
   static const String allCategories = '/all-categories';
 
   GoRouter router = GoRouter(
-    initialLocation: home,
+    initialLocation: signup,
     routes: [
       GoRoute(path: login, builder: (context, state) => const LoginScreen()),
       GoRoute(path: signup, builder: (context, state) => const SignupScreen()),
@@ -63,6 +64,18 @@ class AppRouter {
             builder: (context, state) => const UserProfileScreen(),
           ),
         ],
+      ),
+      GoRoute(
+        path: '/service-listing',
+        builder: (context, state) {
+          final category = state.extra as String;
+          return ServiceListingScreen(category: category);
+        },
+      ),
+
+      GoRoute(
+        path: '/all-categories',
+        builder: (context, state) => const AllCategoriesScreen(),
       ),
     ],
   );

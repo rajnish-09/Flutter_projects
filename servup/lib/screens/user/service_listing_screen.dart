@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:servup/utils/app_colors.dart';
 
 class ServiceListingScreen extends StatefulWidget {
-  const ServiceListingScreen({super.key});
+  final String category;
+  const ServiceListingScreen({super.key, required this.category});
 
   @override
   State<ServiceListingScreen> createState() => _ServiceListingScreenState();
@@ -14,9 +16,14 @@ class _ServiceListingScreenState extends State<ServiceListingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: Icon(Icons.arrow_back_ios),
+        leading: IconButton(
+          onPressed: () {
+            context.pop();
+          },
+          icon: Icon(Icons.arrow_back_ios),
+        ),
         title: Text(
-          "Plumbers",
+          widget.category,
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
       ),
