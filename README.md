@@ -55,16 +55,6 @@ Welcome to my Flutter projects repository! This repo contains **5 complete Flutt
 
 ---
 
-### 6. **Servup (Ongoing Project)**
-- **Description:** A local services platform connecting users with service providers.
-- **Features (in progress):**
-  - User authentication and profiles 
-  - Service booking system
-  - Clean, responsive, and structured UI
-  - Smooth workflow for real-world app functionality
-
----
-
 ## 📌 Skills Demonstrated
 - **Flutter & Dart**: UI design, state management, navigation  
 - **State Management**: BLoC pattern  
